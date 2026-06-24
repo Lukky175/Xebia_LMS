@@ -8,7 +8,8 @@ import BorderGlow from '../components/BorderGlow.jsx';
 import Typewriter from '../components/Typewriter.jsx';
 import CountUp from '../components/CountUp.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
-import heroImg from '../assets/hero.png';
+import heroImg from '../assets/hero2.png';
+import bg1Img from '../assets/BG1.png';
 
 const featuredCourses = [
   {
@@ -139,129 +140,138 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-blueish-grey overflow-x-hidden">
       <HeaderNav />
 
-      {/* Hero Section */}
-      <section className="relative py-16 lg:py-24 px-8 md:px-16 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="absolute right-0 top-0 w-80 h-80 rounded-full bg-bright-velvet/5 blur-3xl pointer-events-none -z-10"></div>
-        <div className="absolute left-10 bottom-10 w-96 h-96 rounded-full bg-tranquil-velvet/5 blur-3xl pointer-events-none -z-10"></div>
+      {/* Hero Section Wrapper with Background Image */}
+      <div
+        className="relative bg-cover bg-center overflow-hidden border-b border-medium-grey"
+        style={{ backgroundImage: `url(${bg1Img})` }}
+      >
+        {/* Semi-transparent color overlay for premium look & legibility */}
+        <div className="absolute inset-0 bg-white/20 dark:bg-[#0F1015]/90 pointer-events-none z-0"></div>
 
-        <motion.div
-          className="lg:col-span-7 space-y-6 text-center lg:text-left"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div
-            variants={fadeUpItem}
-            whileHover="hover"
-            className="inline-flex items-center gap-2 bg-tranquil-velvet/10 border border-tranquil-velvet/20 px-3.5 py-1.5 rounded-full text-tranquil-velvet font-bold text-xs select-none cursor-default"
-          >
-            <motion.span
-              variants={{
-                hover: { rotate: 180 }
-              }}
-              transition={{ type: "spring", stiffness: 200, damping: 10 }}
-              className="inline-flex"
-            >
-              <Shield className="h-4 w-4" />
-            </motion.span>
-            <span>Next-Generation Enterprise Learning Platform</span>
-          </motion.div>
-
-          <motion.h1
-            variants={fadeUpItem}
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-black tracking-tight leading-[110%] font-extrabold"
-          >
-            Accelerate your{' '}
-            <br></br>
-            <Typewriter
-              words={[
-                "Team’s Expertise",
-                "Frontend Mastery",
-                "Cloud Capabilities",
-                "System Architectures",
-                "Engineering Scale"
-              ]}
-              className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent"
-            />{' '}
-            <br></br>
-            with <span className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent">Xebia</span>
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUpItem}
-            className="text-dark-grey text-base md:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed"
-          >
-            Empower your engineers with tailored learning paths, interactive sandbox simulations, and certified corporate curriculum designed by leading software authorities.
-          </motion.p>
+        {/* Hero Section */}
+        <section className="relative py-16 lg:py-24 px-8 md:px-16 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
+          <div className="absolute right-0 top-0 w-80 h-80 rounded-full bg-bright-velvet/5 blur-3xl pointer-events-none z-0"></div>
+          <div className="absolute left-10 bottom-10 w-96 h-96 rounded-full bg-tranquil-velvet/5 blur-3xl pointer-events-none z-0"></div>
 
           <motion.div
-            variants={fadeUpItem}
-            className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4"
+            className="lg:col-span-7 space-y-6 text-center lg:text-left"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
           >
-            <motion.button
-              onClick={() => handleGoToDashboard()}
-              variants={{
-                hover: { scale: 1.03 }
-              }}
+            <motion.div
+              variants={fadeUpItem}
               whileHover="hover"
-              whileTap={{ scale: 0.97 }}
-              className="px-6 py-3.5 bg-cta-orange hover:bg-[#E05600] text-white font-bold rounded-xl text-sm shadow-lg shadow-cta-orange/20 transition-colors duration-150 flex items-center gap-2 cursor-pointer border border-transparent group"
+              className="inline-flex items-center gap-2 bg-tranquil-velvet/10 border border-tranquil-velvet/20 px-3.5 py-1.5 rounded-full text-tranquil-velvet font-bold text-xs select-none cursor-default"
             >
-              <span>Start Enrolling Now</span>
               <motion.span
                 variants={{
-                  hover: { x: 5 }
+                  hover: { rotate: 180 }
                 }}
-                transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                transition={{ type: "spring", stiffness: 200, damping: 10 }}
                 className="inline-flex"
               >
-                <ArrowRight className="h-4 w-4" />
+                <Shield className="h-4 w-4" />
               </motion.span>
-            </motion.button>
-            <motion.a
-              href="#curriculum"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="px-6 py-3.5 bg-white hover:bg-light-grey/20 text-black border border-medium-grey font-bold rounded-xl text-sm transition-colors duration-150 text-center"
-            >
-              Explore Curriculum
-            </motion.a>
-          </motion.div>
-        </motion.div>
+              <span>Next-Generation Enterprise Learning Platform</span>
+            </motion.div>
 
-        {/* Right side floating image */}
-        <motion.div
-          className="lg:col-span-5 relative flex justify-center"
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <motion.div
-            className="w-full max-w-md relative"
-            animate={{ y: [0, -12, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-tranquil-velvet to-bright-velvet rounded-2xl transform rotate-3 scale-[1.02] opacity-15 pointer-events-none"></div>
-            <BorderGlow
-              edgeSensitivity={15}
-              glowColor="304 76 30"
-              backgroundColor={theme === 'dark' ? '#16171F' : '#FFFFFF'}
-              borderRadius={16}
-              glowRadius={60}
-              glowIntensity={2.5}
-              fillOpacity={0.85}
-              coneSpread={28}
-              animated={true}
-              colors={['#6C1D5F', '#84117C', '#FF6200']}
-              className="shadow-xl"
+            <motion.h1
+              variants={fadeUpItem}
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-black tracking-tight leading-[110%] font-extrabold"
             >
-              <div className="bg-white p-4 rounded-2xl relative overflow-hidden">
-                <img src={heroImg} className="w-full h-auto object-cover rounded-xl" alt="LMS Hero Visual" />
-              </div>
-            </BorderGlow>
+              Accelerate your{' '}
+              <br></br>
+              <Typewriter
+                words={[
+                  "Team’s Expertise",
+                  "Frontend Mastery",
+                  "Cloud Capabilities",
+                  "System Architectures",
+                  "Engineering Scale"
+                ]}
+                className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent"
+              />{' '}
+              <br></br>
+              with <span className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent">Xebia</span>
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUpItem}
+              className="text-dark-grey text-base md:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+            >
+              Empower your engineers with tailored learning paths, interactive sandbox simulations, and certified corporate curriculum designed by leading software authorities.
+            </motion.p>
+
+            <motion.div
+              variants={fadeUpItem}
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4"
+            >
+              <motion.button
+                onClick={() => handleGoToDashboard()}
+                variants={{
+                  hover: { scale: 1.03 }
+                }}
+                whileHover="hover"
+                whileTap={{ scale: 0.97 }}
+                className="px-6 py-3.5 bg-cta-orange hover:bg-[#E05600] text-white font-bold rounded-xl text-sm shadow-lg shadow-cta-orange/20 transition-colors duration-150 flex items-center gap-2 cursor-pointer border border-transparent group"
+              >
+                <span>Start Enrolling Now</span>
+                <motion.span
+                  variants={{
+                    hover: { x: 5 }
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                  className="inline-flex"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </motion.span>
+              </motion.button>
+              <motion.a
+                href="#curriculum"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-6 py-3.5 bg-white hover:bg-light-grey/20 text-black border border-medium-grey font-bold rounded-xl text-sm transition-colors duration-150 text-center"
+              >
+                Explore Curriculum
+              </motion.a>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      </section>
+
+          {/* Right side floating image */}
+          <motion.div
+            className="lg:col-span-5 relative flex justify-center"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              className="w-full max-w-md relative"
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-tr from-tranquil-velvet to-bright-velvet rounded-2xl transform rotate-3 scale-[1.02] opacity-15 pointer-events-none"></div>
+              <BorderGlow
+                edgeSensitivity={15}
+                glowColor="304 76 30"
+                backgroundColor={theme === 'dark' ? '#16171F' : '#FFFFFF'}
+                borderRadius={16}
+                glowRadius={60}
+                glowIntensity={2.5}
+                fillOpacity={0.85}
+                coneSpread={28}
+                animated={true}
+                colors={['#6C1D5F', '#84117C', '#FF6200']}
+                className="shadow-xl"
+              >
+                <div className="bg-white p-4 rounded-2xl relative overflow-hidden">
+                  <img src={heroImg} className="w-full h-auto object-cover rounded-xl" alt="LMS Hero Visual" />
+                </div>
+              </BorderGlow>
+            </motion.div>
+          </motion.div>
+        </section>
+      </div>
 
       {/* Features Section */}
       <section id="features" className="py-20 bg-white border-y border-medium-grey">
