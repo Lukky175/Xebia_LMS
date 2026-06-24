@@ -140,11 +140,11 @@ export default function Contact() {
           {/* Office grid on right */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-white border border-medium-grey rounded-2xl p-8 shadow-sm space-y-4">
-              <h3 className="text-lg font-bold text-black border-b border-blueish-grey pb-4">Corporate Office Directory</h3>
-              <div className="space-y-6 max-h-[400px] overflow-y-auto pr-1">
+              <h3 className="text-lg font-bold text-black border-b border-blueish-grey dark:border-[#282A3A] pb-4">Corporate Office Directory</h3>
+              <div className="space-y-6 max-h-[400px] overflow-y-auto sleek-scrollbar pr-2">
                 {officeLocations.map((loc, idx) => (
-                  <div key={idx} className="space-y-2 border-b border-blueish-grey/50 pb-4 last:border-0 last:pb-0">
-                    <h4 className="text-sm font-bold text-tranquil-velvet flex items-center gap-1.5">
+                  <div key={idx} className="space-y-2 border-b border-blueish-grey/50 dark:border-[#282A3A]/50 pb-4 last:border-0 last:pb-0">
+                    <h4 className="text-sm font-bold text-tranquil-velvet dark:text-[#d38bca] flex items-center gap-1.5">
                       <MapPin className="h-4 w-4 text-cta-orange" />
                       <span>{loc.city} Office</span>
                     </h4>

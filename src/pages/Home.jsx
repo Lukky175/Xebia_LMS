@@ -87,6 +87,15 @@ const scrollReveal = {
   }
 };
 
+const tabItemVariant = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 120, damping: 18 }
+  }
+};
+
 const getBorderGlowConfig = (category) => {
   switch (category) {
     case 'Frontend':
@@ -114,6 +123,7 @@ const getBorderGlowConfig = (category) => {
 
 export default function Home() {
   const [activeCurriculumTab, setActiveCurriculumTab] = useState('frontend');
+  const [hoveredCourseId, setHoveredCourseId] = useState(null);
   const navigate = useNavigate();
   const { theme } = useTheme();
 
@@ -173,6 +183,7 @@ export default function Home() {
               ]}
               className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent"
             />{' '}
+            <br></br>
             with <span className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet bg-clip-text text-transparent">Xebia</span>
           </motion.h1>
 
@@ -373,9 +384,9 @@ export default function Home() {
           </p>
         </motion.div>
 
-        {/* Tab Controls with Layout Transitions */}
-        <div className="flex justify-center border-b border-medium-grey">
-          <div className="flex gap-2 -mb-px relative">
+        {/* Tab Controls with Vercel-style Sliding Pill */}
+        <div className="flex justify-center">
+          <div className="flex bg-[#F0F1F5] dark:bg-[#16171F] p-1.5 rounded-2xl border border-medium-grey/40 dark:border-[#282A3A] relative">
             {[
               { id: 'frontend', label: 'Frontend Development' },
               { id: 'devops', label: 'DevOps & Infrastructure' },
@@ -386,14 +397,14 @@ export default function Home() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveCurriculumTab(tab.id)}
-                  className={`relative px-6 py-4.5 text-sm font-bold transition cursor-pointer duration-200 z-10 ${isActive ? 'text-tranquil-velvet font-bold' : 'text-dark-grey hover:text-black'}`}
+                  className={`relative px-6 py-3.5 text-xs md:text-sm font-bold transition cursor-pointer duration-250 rounded-xl z-10 focus:outline-none ${isActive ? 'text-white' : 'text-dark-grey hover:text-black dark:text-white/60 dark:hover:text-white'}`}
                 >
-                  <span>{tab.label}</span>
+                  <span className="relative z-20">{tab.label}</span>
                   {isActive && (
                     <motion.div
-                      layoutId="activeTabUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-tranquil-velvet"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      layoutId="activeTabPill"
+                      className="absolute inset-0 bg-tranquil-velvet rounded-xl z-10 shadow-md"
+                      transition={{ type: "spring", stiffness: 320, damping: 25 }}
                     />
                   )}
                 </button>
@@ -403,24 +414,34 @@ export default function Home() {
         </div>
 
         {/* Tab Details with AnimatePresence Page Transition */}
-        <div className="bg-white border border-medium-grey rounded-2xl p-8 md:p-10 shadow-sm relative min-h-[380px] overflow-hidden">
+        <div className="bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-2xl p-8 md:p-10 shadow-sm relative min-h-[380px] overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeCurriculumTab}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.08,
+                    delayChildren: 0.05
+                  }
+                },
+                exit: { opacity: 0, transition: { duration: 0.15 } }
+              }}
             >
               {activeCurriculumTab === 'frontend' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
                   <div className="space-y-6">
-                    <span className="text-xs bg-tranquil-velvet/10 text-tranquil-velvet border border-tranquil-velvet/20 px-2.5 py-1 rounded-full font-bold uppercase select-none">Frontend Path</span>
-                    <h3 className="text-2xl font-bold text-black font-semibold">Modern Frontend Architectures</h3>
-                    <p className="text-dark-grey text-sm leading-relaxed">
+                    <motion.span variants={tabItemVariant} className="text-xs bg-tranquil-velvet/10 text-tranquil-velvet border border-tranquil-velvet/20 px-2.5 py-1 rounded-full font-bold uppercase select-none inline-block">Frontend Path</motion.span>
+                    <motion.h3 variants={tabItemVariant} className="text-2xl font-bold text-black dark:text-white font-semibold">Modern Frontend Architectures</motion.h3>
+                    <motion.p variants={tabItemVariant} className="text-dark-grey text-sm leading-relaxed">
                       Equip developers with deep React frameworks expertise, scalable design system rules, Tailwind CSS optimization, and modular micro-frontend components.
-                    </p>
-                    <ul className="space-y-3 text-xs text-dark-grey font-medium">
+                    </motion.p>
+                    <motion.ul variants={tabItemVariant} className="space-y-3 text-xs text-dark-grey font-medium">
                       <li className="flex items-center gap-2.5">
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Tailwind CSS configuration models and custom themes</span>
@@ -429,8 +450,9 @@ export default function Home() {
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Advanced state management models (Zustand/Redux)</span>
                       </li>
-                    </ul>
+                    </motion.ul>
                     <motion.button
+                      variants={tabItemVariant}
                       onClick={() => handleGoToDashboard()}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -439,33 +461,39 @@ export default function Home() {
                       Explore Courses
                     </motion.button>
                   </div>
-                  <div>
-                    <div className="bg-blueish-grey border border-medium-grey p-6 rounded-2xl space-y-4">
-                      <h4 className="text-sm font-bold text-black font-semibold">Syllabus Overview</h4>
+                  <motion.div variants={tabItemVariant}>
+                    <div className="bg-blueish-grey dark:bg-[#0F1015] border border-medium-grey dark:border-[#282A3A] p-6 rounded-2xl space-y-4">
+                      <h4 className="text-sm font-bold text-black dark:text-white font-semibold">Syllabus Overview</h4>
                       <div className="space-y-3">
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">1. JSX Core & React State Engine</span>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">1. JSX Core & React State Engine</span>
                           <span className="text-tranquil-velvet font-bold">12 Lessons</span>
-                        </div>
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">2. Tailwind CSS Styling & Variables</span>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">2. Tailwind CSS Styling & Variables</span>
                           <span className="text-tranquil-velvet font-bold">8 Lessons</span>
-                        </div>
+                        </motion.div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               )}
 
               {activeCurriculumTab === 'devops' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
                   <div className="space-y-6">
-                    <span className="text-xs bg-emerald/10 text-emerald border border-emerald/20 px-2.5 py-1 rounded-full font-bold uppercase select-none">DevOps & Cloud</span>
-                    <h3 className="text-2xl font-bold text-black font-semibold">Cloud Native & Infrastructure at Scale</h3>
-                    <p className="text-dark-grey text-sm leading-relaxed">
+                    <motion.span variants={tabItemVariant} className="text-xs bg-emerald/10 text-emerald border border-emerald/20 px-2.5 py-1 rounded-full font-bold uppercase select-none inline-block">DevOps & Cloud</motion.span>
+                    <motion.h3 variants={tabItemVariant} className="text-2xl font-bold text-black dark:text-white font-semibold">Cloud Native & Infrastructure at Scale</motion.h3>
+                    <motion.p variants={tabItemVariant} className="text-dark-grey text-sm leading-relaxed">
                       Deploy highly resilient systems using Kubernetes clusters, Docker image registries, CI/CD automated orchestration pipelines, and advanced microservice distributions.
-                    </p>
-                    <ul className="space-y-3 text-xs text-dark-grey font-medium">
+                    </motion.p>
+                    <motion.ul variants={tabItemVariant} className="space-y-3 text-xs text-dark-grey font-medium">
                       <li className="flex items-center gap-2.5">
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Kubernetes Pod orchestration and ingress controllers</span>
@@ -474,8 +502,9 @@ export default function Home() {
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Dockerizing Node.js microservices and building caches</span>
                       </li>
-                    </ul>
+                    </motion.ul>
                     <motion.button
+                      variants={tabItemVariant}
                       onClick={() => handleGoToDashboard()}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -484,33 +513,39 @@ export default function Home() {
                       Explore Courses
                     </motion.button>
                   </div>
-                  <div>
-                    <div className="bg-blueish-grey border border-medium-grey p-6 rounded-2xl space-y-4">
-                      <h4 className="text-sm font-bold text-black font-semibold">Syllabus Overview</h4>
+                  <motion.div variants={tabItemVariant}>
+                    <div className="bg-blueish-grey dark:bg-[#0F1015] border border-medium-grey dark:border-[#282A3A] p-6 rounded-2xl space-y-4">
+                      <h4 className="text-sm font-bold text-black dark:text-white font-semibold">Syllabus Overview</h4>
                       <div className="space-y-3">
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">1. Dockerizing Microservices</span>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">1. Dockerizing Microservices</span>
                           <span className="text-tranquil-velvet font-bold">10 Lessons</span>
-                        </div>
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">2. Kubernetes Configuration Maps & Secrets</span>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">2. Kubernetes Configuration Maps & Secrets</span>
                           <span className="text-tranquil-velvet font-bold">15 Lessons</span>
-                        </div>
+                        </motion.div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               )}
 
               {activeCurriculumTab === 'architecture' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
                   <div className="space-y-6">
-                    <span className="text-xs bg-bright-velvet/10 text-bright-velvet border border-bright-velvet/20 px-2.5 py-1 rounded-full font-bold uppercase select-none">Architecture Path</span>
-                    <h3 className="text-2xl font-bold text-black font-semibold">Systems Architecture & Patterns</h3>
-                    <p className="text-dark-grey text-sm leading-relaxed">
+                    <motion.span variants={tabItemVariant} className="text-xs bg-bright-velvet/10 text-bright-velvet border border-bright-velvet/20 px-2.5 py-1 rounded-full font-bold uppercase select-none inline-block">Architecture Path</motion.span>
+                    <motion.h3 variants={tabItemVariant} className="text-2xl font-bold text-black dark:text-white font-semibold">Systems Architecture & Patterns</motion.h3>
+                    <motion.p variants={tabItemVariant} className="text-dark-grey text-sm leading-relaxed">
                       Study the theory and practice of enterprise-grade architectures: Clean code practices, distributed event streaming (Kafka), domain-driven design, and database replication patterns.
-                    </p>
-                    <ul className="space-y-3 text-xs text-dark-grey font-medium">
+                    </motion.p>
+                    <motion.ul variants={tabItemVariant} className="space-y-3 text-xs text-dark-grey font-medium">
                       <li className="flex items-center gap-2.5">
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Domain-Driven Design (DDD) fundamentals</span>
@@ -519,8 +554,9 @@ export default function Home() {
                         <Check className="h-4 w-4 text-emerald" />
                         <span>Event Streaming patterns with Apache Kafka</span>
                       </li>
-                    </ul>
+                    </motion.ul>
                     <motion.button
+                      variants={tabItemVariant}
                       onClick={() => handleGoToDashboard()}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -529,21 +565,27 @@ export default function Home() {
                       Explore Courses
                     </motion.button>
                   </div>
-                  <div>
-                    <div className="bg-blueish-grey border border-medium-grey p-6 rounded-2xl space-y-4">
-                      <h4 className="text-sm font-bold text-black font-semibold">Syllabus Overview</h4>
+                  <motion.div variants={tabItemVariant}>
+                    <div className="bg-blueish-grey dark:bg-[#0F1015] border border-medium-grey dark:border-[#282A3A] p-6 rounded-2xl space-y-4">
+                      <h4 className="text-sm font-bold text-black dark:text-white font-semibold">Syllabus Overview</h4>
                       <div className="space-y-3">
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">1. Clean Architecture Frameworks</span>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">1. Clean Architecture Frameworks</span>
                           <span className="text-tranquil-velvet font-bold">14 Lessons</span>
-                        </div>
-                        <div className="p-3 bg-white border border-medium-grey rounded-xl flex justify-between items-center text-xs">
-                          <span className="font-semibold text-black">2. Event-Driven Systems Design</span>
+                        </motion.div>
+                        <motion.div
+                          whileHover={{ x: 6, scale: 1.01 }}
+                          className="p-3 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl flex justify-between items-center text-xs shadow-xs hover:border-tranquil-velvet/40 transition duration-150 cursor-pointer"
+                        >
+                          <span className="font-semibold text-black dark:text-white">2. Event-Driven Systems Design</span>
                           <span className="text-tranquil-velvet font-bold">18 Lessons</span>
-                        </div>
+                        </motion.div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               )}
             </motion.div>
@@ -614,6 +656,9 @@ export default function Home() {
           >
             {featuredCourses.map(course => {
               const glowConfig = getBorderGlowConfig(course.category);
+              const isHovered = hoveredCourseId === course.id;
+              const isAnyHovered = hoveredCourseId !== null;
+
               return (
                 <motion.div
                   key={course.id}
@@ -622,6 +667,13 @@ export default function Home() {
                   custom={course.id}
                   className="flex flex-col justify-between cursor-default h-full"
                   style={{ originY: 0.5 }}
+                  onMouseEnter={() => setHoveredCourseId(course.id)}
+                  onMouseLeave={() => setHoveredCourseId(null)}
+                  animate={{
+                    opacity: !isAnyHovered || isHovered ? 1 : 0.6,
+                    scale: isHovered ? 1.025 : 1,
+                  }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
                 >
                   <BorderGlow
                     edgeSensitivity={15}
@@ -637,7 +689,7 @@ export default function Home() {
                   >
                     <div className="flex flex-col justify-between h-full min-h-[460px]">
                       <div>
-                        <div className="h-48 relative overflow-hidden bg-white border-b border-medium-grey">
+                        <div className="h-48 relative overflow-hidden bg-white dark:bg-[#16171F] border-b border-medium-grey dark:border-[#282A3A]">
                           {/* Hover zoom effect */}
                           <motion.img
                             src={course.image}
@@ -648,7 +700,7 @@ export default function Home() {
                             }}
                           />
                           <div className="absolute top-3 left-3 flex gap-1">
-                            <span className="text-[9px] bg-white/90 text-tranquil-velvet border border-tranquil-velvet/20 px-2 py-0.5 rounded font-bold uppercase shadow-sm">
+                            <span className="text-[9px] bg-white/90 dark:bg-[#0F1015]/90 text-tranquil-velvet dark:text-[#d38bca] border border-tranquil-velvet/20 px-2 py-0.5 rounded font-bold uppercase shadow-sm">
                               {course.category}
                             </span>
                           </div>
@@ -660,7 +712,7 @@ export default function Home() {
                             <span>{course.rating}</span>
                             <span className="text-dark-grey font-medium">({course.reviews} reviews)</span>
                           </div>
-                          <h3 className="text-base font-bold text-black hover:text-tranquil-velvet transition line-clamp-1">
+                          <h3 className="text-base font-bold text-black dark:text-white hover:text-tranquil-velvet transition line-clamp-1">
                             {course.title}
                           </h3>
                           <p className="text-dark-grey text-xs leading-relaxed line-clamp-3">
@@ -669,7 +721,7 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <div className="p-6 pt-0 border-t border-medium-grey/40 flex justify-between items-center mt-4">
+                      <div className="p-6 pt-0 border-t border-medium-grey/40 dark:border-[#282A3A]/40 flex justify-between items-center mt-4">
                         <span className="text-xs text-dark-grey font-medium flex items-center gap-1">
                           <Clock className="h-3.5 w-3.5 text-dark-grey/65" />
                           <span>{course.duration}</span>

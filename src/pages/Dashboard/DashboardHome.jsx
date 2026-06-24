@@ -561,7 +561,7 @@ export default function DashboardHome({ tutors = [] }) {
                 <h3 className="text-sm font-extrabold text-black dark:text-white">Live Activity Feed</h3>
               </div>
 
-              <div className="flex-1 space-y-4 overflow-y-auto pr-1">
+              <div className="flex-1 space-y-4 overflow-y-auto sleek-scrollbar pr-2">
                 {recentActivity.map(act => (
                   <div key={act.id} className="flex gap-3 text-xs leading-relaxed text-dark-grey">
                     <div className="w-1.5 h-1.5 rounded-full bg-cta-orange mt-1.5 shrink-0"></div>
