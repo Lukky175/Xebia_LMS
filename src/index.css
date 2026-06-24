@@ -98,39 +98,39 @@
   /* Keep Logo card white for Xebia Purple logo readability */
 }
 
-/* Global sleek scrollbar styles for all scrollable containers */
-* {
+/* Custom sleek scrollbar utility */
+.sleek-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(108, 29, 95, 0.3) transparent;
 }
 
-.dark * {
-  scrollbar-color: rgba(211, 139, 202, 0.3) transparent;
-}
-
 /* Chrome, Safari, and Opera */
-::-webkit-scrollbar {
+.sleek-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-::-webkit-scrollbar-track {
+.sleek-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
+.sleek-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(108, 29, 95, 0.3);
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.sleek-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(108, 29, 95, 0.6);
 }
 
-.dark ::-webkit-scrollbar-thumb {
+.dark .sleek-scrollbar {
+  scrollbar-color: rgba(211, 139, 202, 0.3) transparent;
+}
+
+.dark .sleek-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(211, 139, 202, 0.3);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
+.dark .sleek-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(211, 139, 202, 0.6);
 }
