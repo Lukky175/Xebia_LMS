@@ -146,7 +146,7 @@ export default function Home() {
         style={{ backgroundImage: `url(${bg1Img})` }}
       >
         {/* Semi-transparent color overlay for premium look & legibility */}
-        <div className="absolute inset-0 bg-white/20 dark:bg-[#0F1015]/90 pointer-events-none z-0"></div>
+        <div className="absolute inset-0 bg-white/60 dark:bg-[#0F1015]/80 pointer-events-none z-0"></div>
 
         {/* Hero Section */}
         <section className="relative py-16 lg:py-24 px-8 md:px-16 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
