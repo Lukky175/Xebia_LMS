@@ -9,7 +9,7 @@ import Typewriter from '../components/Typewriter.jsx';
 import Logo from '../components/Logo.jsx';
 import { useTheme } from '../context/ThemeContext.jsx';
 import heroImg from '../assets/Hero2.png';
-import bg1Img from '../assets/BG1.png';
+import bg1Img from '../assets/BG1.avif';
 
 const faqData = [
   {
@@ -110,10 +110,10 @@ const faqContainerVariants = {
 
 const faqItemVariants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { type: "spring", stiffness: 100, damping: 15 } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 15 }
   }
 };
 
@@ -130,10 +130,10 @@ const contactContainerVariants = {
 
 const contactItemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { type: "spring", stiffness: 100, damping: 15 } 
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 15 }
   }
 };
 
@@ -162,7 +162,7 @@ export default function Home() {
   const handleAuthSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -217,7 +217,7 @@ export default function Home() {
             }
           }, 800); // Wait for scroll animation to finish
         }
-        
+
         // Remove highlight after animation completes
         const clearTimer = setTimeout(() => {
           setActiveHighlight(null);
@@ -264,8 +264,8 @@ export default function Home() {
   // Filtered FAQs
   const filteredFaqs = faqData.filter(faq => {
     const matchesCategory = activeFaqCategory === 'all' || faq.category === activeFaqCategory;
-    const matchesSearch = faq.question.toLowerCase().includes(faqSearchQuery.toLowerCase()) || 
-                          faq.answer.toLowerCase().includes(faqSearchQuery.toLowerCase());
+    const matchesSearch = faq.question.toLowerCase().includes(faqSearchQuery.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(faqSearchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -280,7 +280,7 @@ export default function Home() {
         style={{ backgroundImage: `url(${bg1Img})` }}
       >
         {/* Semi-transparent color overlay for premium look & legibility */}
-        <div className="absolute inset-0 bg-white/60 dark:bg-[#0F1015]/80 pointer-events-none z-0"></div>
+        <div className="absolute inset-0 bg-white/35 dark:bg-[#0F1015]/85 backdrop-blur-[2px] pointer-events-none z-0"></div>
 
         {/* Hero Section */}
         <section className="relative py-16 lg:py-24 px-8 md:px-16 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
@@ -329,14 +329,12 @@ export default function Home() {
               <br></br>
               with <span className="bg-gradient-to-r from-tranquil-velvet to-bright-velvet dark:from-[#802370] dark:to-[#9E1B94] bg-clip-text text-transparent">Xebia</span>
             </motion.h1>
-
             <motion.p
               variants={fadeUpItem}
-              className="text-text-secondary dark:text-white/95 text-base md:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed"
+              className="text-text-primary dark:text-white font-semibold text-base md:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed"
             >
               Empower your engineers with tailored learning paths, interactive sandbox simulations, and certified corporate curriculum designed by leading software authorities.
             </motion.p>
-
             <motion.div
               variants={fadeUpItem}
               className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4"
@@ -609,7 +607,7 @@ export default function Home() {
         {/* Animated highlight pulse */}
         <AnimatePresence>
           {activeHighlight === 'faq' && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0.4, 0.4, 0] }}
               exit={{ opacity: 0 }}
@@ -619,13 +617,13 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <motion.div 
+        <motion.div
           className="max-w-4xl mx-auto px-8 w-full space-y-12 z-10 relative"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={faqContainerVariants}
-          animate={activeHighlight === 'faq' ? { 
+          animate={activeHighlight === 'faq' ? {
             scale: [1, 1.015, 1],
           } : {}}
           transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -643,14 +641,14 @@ export default function Home() {
           </motion.div>
 
           {/* Search FAQ Bar */}
-          <motion.div 
+          <motion.div
             className="bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] p-4 rounded-2xl shadow-sm flex items-center gap-3 transition-colors duration-250"
             variants={faqItemVariants}
           >
             <Search className="h-5 w-5 text-dark-grey dark:text-white/40" />
-            <input 
-              type="text" 
-              placeholder="Search FAQs (e.g. certificates, sandbox, progress)..." 
+            <input
+              type="text"
+              placeholder="Search FAQs (e.g. certificates, sandbox, progress)..."
               value={faqSearchQuery}
               onChange={(e) => setFaqSearchQuery(e.target.value)}
               className="bg-transparent text-sm text-black dark:text-white placeholder-dark-grey/50 dark:placeholder-white/30 focus:outline-none w-full font-medium"
@@ -659,7 +657,7 @@ export default function Home() {
 
           {/* Categories and List Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            
+
             {/* Category selector */}
             <motion.div className="space-y-1 md:col-span-1" variants={faqItemVariants}>
               {[
@@ -670,7 +668,7 @@ export default function Home() {
               ].map(cat => {
                 const isActive = activeFaqCategory === cat.id;
                 return (
-                  <button 
+                  <button
                     key={cat.id}
                     onClick={() => { setActiveFaqCategory(cat.id); setExpandedFaqId(null); }}
                     className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition duration-200 cursor-pointer relative focus:outline-none ${isActive ? 'text-white font-extrabold' : 'text-dark-grey dark:text-white/60 hover:bg-blueish-grey/50 dark:hover:bg-white/5 border border-transparent'}`}
@@ -694,19 +692,19 @@ export default function Home() {
                 {filteredFaqs.map(faq => {
                   const isExpanded = expandedFaqId === faq.id;
                   return (
-                    <motion.div 
+                    <motion.div
                       layout
-                      key={faq.id} 
+                      key={faq.id}
                       className="bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-xl overflow-hidden shadow-sm transition duration-200 hover:border-medium-grey/85 dark:hover:border-[#282A3A]/85"
                     >
-                      <button 
+                      <button
                         onClick={() => setExpandedFaqId(isExpanded ? null : faq.id)}
                         className="w-full px-6 py-4.5 text-left flex justify-between items-center font-bold text-sm text-black dark:text-white hover:text-tranquil-velvet dark:hover:text-[#d38bca] transition cursor-pointer focus:outline-none"
                       >
                         <span>{faq.question}</span>
                         <ChevronDown className={`h-4 w-4 text-dark-grey dark:text-white/40 transition-transform duration-200 ${isExpanded ? 'transform rotate-180' : ''}`} />
                       </button>
-                      
+
                       <AnimatePresence initial={false}>
                         {isExpanded && (
                           <motion.div
@@ -728,7 +726,7 @@ export default function Home() {
               </AnimatePresence>
 
               {filteredFaqs.length === 0 && (
-                <motion.div 
+                <motion.div
                   layout
                   className="py-12 text-center bg-white dark:bg-[#16171F] rounded-xl border border-medium-grey dark:border-[#282A3A] shadow-sm transition-colors duration-250"
                 >
@@ -749,7 +747,7 @@ export default function Home() {
         {/* Animated highlight pulse */}
         <AnimatePresence>
           {activeHighlight === 'contact' && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0.4, 0.4, 0] }}
               exit={{ opacity: 0 }}
@@ -759,13 +757,13 @@ export default function Home() {
           )}
         </AnimatePresence>
 
-        <motion.div 
+        <motion.div
           className="max-w-6xl mx-auto px-8 w-full space-y-12 z-10 relative"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
           variants={contactContainerVariants}
-          animate={activeHighlight === 'contact' ? { 
+          animate={activeHighlight === 'contact' ? {
             scale: [1, 1.015, 1],
           } : {}}
           transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -782,7 +780,7 @@ export default function Home() {
             {/* Message form on left */}
             <motion.div className="lg:col-span-7 bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-2xl p-8 shadow-sm space-y-6" variants={contactItemVariants}>
               <h3 className="text-lg font-bold text-black dark:text-white border-b border-blueish-grey dark:border-[#282A3A] pb-4">Send Us A Message</h3>
-              
+
               {formSubmitted ? (
                 <div className="bg-emerald/10 border border-emerald/20 text-emerald p-6 rounded-xl space-y-2">
                   <h4 className="text-sm font-bold flex items-center gap-2">
@@ -798,8 +796,8 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-dark-grey dark:text-white/60">Your Name</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={contactForm.name}
                         onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
@@ -809,8 +807,8 @@ export default function Home() {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-dark-grey dark:text-white/60">Email Address</label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         required
                         value={contactForm.email}
                         onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
@@ -822,7 +820,7 @@ export default function Home() {
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-dark-grey dark:text-white/60">Request Subject</label>
-                    <select 
+                    <select
                       value={contactForm.subject}
                       onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
                       className="w-full px-4.5 py-2.5 text-xs text-black dark:text-white bg-blueish-grey dark:bg-[#1C1D26] border border-medium-grey dark:border-[#282A3A] rounded-lg focus:outline-none focus:border-tranquil-velvet transition font-bold"
@@ -836,7 +834,7 @@ export default function Home() {
 
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-dark-grey dark:text-white/60">Message</label>
-                    <textarea 
+                    <textarea
                       rows="5"
                       required
                       value={contactForm.message}
@@ -846,7 +844,7 @@ export default function Home() {
                     ></textarea>
                   </div>
 
-                  <button 
+                  <button
                     type="submit"
                     className="w-full py-3 bg-cta-orange hover:bg-[#E05600] text-white text-xs font-bold rounded-xl transition duration-150 flex items-center justify-center gap-2 shadow-md shadow-cta-orange/20 cursor-pointer border border-transparent"
                   >
