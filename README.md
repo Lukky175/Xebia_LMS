@@ -139,5 +139,6 @@ The layout relies on a clean, modern **Zinc & Velvet** styling system.
 
 ## Recent Updates
 
-- **Scheduling Page Redesigned**: The scheduling UI has been rebuilt to match the new planner design and now lives at `src/pages/Scheduling/SchedulingPage.jsx`. It uses existing components such as `ProfileActionButton` and `BorderGlow`, shows a live month/year label (uses the current month by default), and includes working controls for Quick Schedule, Month/Week/Day views, navigation, and item actions (View/Edit/Delete). No other project files were modified for this change.
+- **Scheduling Page Redesigned**: The scheduling UI has been rebuilt to match the new planner design and now lives at `src/pages/Scheduling/SchedulingPage.jsx`. It uses existing components such as `ProfileActionButton` and `BorderGlow`, shows a live month/year label (uses the current month by default), and includes working controls for Quick Schedule, Month/Week/Day views, navigation, and item actions (View/Edit/Delete).
+- **Assessment Creation Flow Added**: The `Create Assessment` button now opens a working modal form in `src/pages/Assessment/AssessmentPage.jsx`. New assessments can be added to the list using the form fields for name, type, target group, and status.
 

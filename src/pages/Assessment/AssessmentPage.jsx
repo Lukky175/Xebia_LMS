@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react';
 import { Plus, Filter, Download, ArrowRight, Clock, ClipboardList, Activity, CheckCircle2, Flag, RefreshCcw, Trash2 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from 'recharts';
 import { useTheme } from '@/context/ThemeContext.jsx';
-import { ProfileActionButton } from '@/components/profile/ProfileUi.jsx';
+import { ProfileActionButton, ProfileActionModal } from '@/components/profile/ProfileUi.jsx';
 
 const overviewCards = [
   {
@@ -91,6 +91,11 @@ export default function AssessmentPage() {
   const [statusFilter, setStatusFilter] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [assessments, setAssessments] = useState(allAssessments);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [newAssessmentName, setNewAssessmentName] = useState('');
+  const [newAssessmentType, setNewAssessmentType] = useState('Quiz');
+  const [newAssessmentTarget, setNewAssessmentTarget] = useState('All Employees');
+  const [newAssessmentStatus, setNewAssessmentStatus] = useState('DRAFT');
 
   const trafficData = useMemo(
     () => (chartRange === 'Last 7 Days' ? traffic7Days : traffic30Days),
@@ -112,7 +117,34 @@ export default function AssessmentPage() {
   );
 
   const handleCreateAssessment = () => {
-    window.alert('Create Assessment action triggered.');
+    setCreateModalOpen(true);
+  };
+
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+    setNewAssessmentName('');
+    setNewAssessmentType('Quiz');
+    setNewAssessmentTarget('All Employees');
+    setNewAssessmentStatus('DRAFT');
+  };
+
+  const handleCreateModalSubmit = () => {
+    if (!newAssessmentName.trim()) {
+      window.alert('Please enter an assessment name.');
+      return;
+    }
+
+    setAssessments((prev) => [
+      {
+        name: newAssessmentName.trim(),
+        type: newAssessmentType,
+        target: newAssessmentTarget,
+        status: newAssessmentStatus,
+      },
+      ...prev,
+    ]);
+
+    handleCreateModalClose();
   };
 
   const handleFilterToggle = () => {
@@ -328,6 +360,77 @@ export default function AssessmentPage() {
           </div>
         </div>
       </div>
+
+      {createModalOpen && (
+        <ProfileActionModal open={createModalOpen} onClose={handleCreateModalClose} title="Create Assessment">
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold text-dark-grey">
+              Assessment Name
+              <input
+                type="text"
+                value={newAssessmentName}
+                onChange={(e) => setNewAssessmentName(e.target.value)}
+                className="mt-2 w-full rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-sm text-black outline-none focus:border-tranquil-velvet"
+                placeholder="Enter assessment title"
+              />
+            </label>
+
+            <label className="block text-sm font-semibold text-dark-grey">
+              Assessment Type
+              <select
+                value={newAssessmentType}
+                onChange={(e) => setNewAssessmentType(e.target.value)}
+                className="mt-2 w-full rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-sm text-black outline-none focus:border-tranquil-velvet"
+              >
+                <option value="Quiz">Quiz</option>
+                <option value="Certification">Certification</option>
+                <option value="Compliance">Compliance</option>
+              </select>
+            </label>
+
+            <label className="block text-sm font-semibold text-dark-grey">
+              Target Group
+              <input
+                type="text"
+                value={newAssessmentTarget}
+                onChange={(e) => setNewAssessmentTarget(e.target.value)}
+                className="mt-2 w-full rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-sm text-black outline-none focus:border-tranquil-velvet"
+                placeholder="Enter target group"
+              />
+            </label>
+
+            <label className="block text-sm font-semibold text-dark-grey">
+              Status
+              <select
+                value={newAssessmentStatus}
+                onChange={(e) => setNewAssessmentStatus(e.target.value)}
+                className="mt-2 w-full rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-sm text-black outline-none focus:border-tranquil-velvet"
+              >
+                <option value="DRAFT">Draft</option>
+                <option value="ACTIVE">Active</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </label>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={handleCreateModalClose}
+                className="rounded-2xl border border-medium-grey/40 bg-white px-5 py-3 text-sm font-bold text-dark-grey transition hover:bg-medium-grey/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateModalSubmit}
+                className="rounded-2xl bg-tranquil-velvet px-5 py-3 text-sm font-bold text-white transition hover:bg-bright-velvet"
+              >
+                Create Assessment
+              </button>
+            </div>
+          </div>
+        </ProfileActionModal>
+      )}
 
       <div className="grid gap-4 xl:grid-cols-[1.7fr_1fr]">
         <div className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-5 shadow-sm">
