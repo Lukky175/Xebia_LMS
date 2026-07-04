@@ -1,11 +1,14 @@
 /**
- * Learners Page Component
- * Displays enrolled learners across organizations with search, filters, and pagination.
+ * Author: Abhishek Dixit
+ * Institution: Lovely Professional University
+ * Develop the learners management page for the platform, 
+ * including overview cards, learners tables, traffic charts, and activity feeds.
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Mail, Building2, AlertCircle } from 'lucide-react';
+import { Plus, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Mail, Building2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
+import { ProfileActionModal } from '@/components/profile/ProfileUi.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 
 const initialLearners = [
@@ -103,19 +106,124 @@ export default function LearnersPage() {
   const { theme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [learners] = useState(initialLearners);
+  const [learners, setLearners] = useState(initialLearners);
+  const [showLearnerModal, setShowLearnerModal] = useState(false);
+  const [modalMode, setModalMode] = useState('view');
+  const [selectedLearner, setSelectedLearner] = useState(null);
+  const [learnerForm, setLearnerForm] = useState({
+    name: '',
+    email: '',
+    organisation: '',
+    type: 'University',
+    domain: 'DevOps & Cloud',
+    sem: 1,
+    status: 'Active',
+    avatar: '',
+  });
+  const [showFiltersModal, setShowFiltersModal] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [filterType, setFilterType] = useState('All');
   const pageSize = 10;
+
+  const handleSearch = () => {
+    setPage(1);
+  };
+
+  const openLearnerModal = (mode, learner = null) => {
+    setModalMode(mode);
+    setSelectedLearner(learner);
+
+    if (learner) {
+      setLearnerForm({
+        name: learner.name,
+        email: learner.email,
+        organisation: learner.organisation,
+        type: learner.type,
+        domain: learner.domain,
+        sem: learner.sem,
+        status: learner.status,
+        avatar: learner.avatar,
+      });
+    } else {
+      setLearnerForm({
+        name: '',
+        email: '',
+        organisation: '',
+        type: 'University',
+        domain: 'DevOps & Cloud',
+        sem: 1,
+        status: 'Active',
+        avatar: '',
+      });
+    }
+
+    setShowLearnerModal(true);
+  };
+
+  const closeLearnerModal = () => {
+    setShowLearnerModal(false);
+    setSelectedLearner(null);
+  };
+
+  const handleLearnerFieldChange = (field, value) => {
+    setLearnerForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleLearnerSave = (event) => {
+    event.preventDefault();
+    const updatedLearner = {
+      id: selectedLearner?.id || Math.max(0, ...learners.map((item) => item.id)) + 1,
+      name: learnerForm.name,
+      email: learnerForm.email,
+      organisation: learnerForm.organisation,
+      type: learnerForm.type,
+      domain: learnerForm.domain,
+      sem: Number(learnerForm.sem),
+      status: learnerForm.status,
+      avatar: learnerForm.avatar || learnerForm.name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase(),
+    };
+
+    if (modalMode === 'edit') {
+      setLearners((current) => current.map((item) => (item.id === updatedLearner.id ? updatedLearner : item)));
+    } else {
+      setLearners((current) => [updatedLearner, ...current]);
+    }
+
+    closeLearnerModal();
+  };
+
+  const handleDeleteLearner = (learnerId) => {
+    if (window.confirm('Delete this learner? This cannot be undone.')) {
+      setLearners((current) => current.filter((learner) => learner.id !== learnerId));
+    }
+  };
+
+  const handleOpenFilters = () => {
+    setShowFiltersModal(true);
+  };
+
+  const applyFilters = () => {
+    setPage(1);
+    setShowFiltersModal(false);
+  };
+
+  const clearFilters = () => {
+    setFilterStatus('All');
+    setFilterType('All');
+  };
 
   const filteredLearners = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     return learners.filter((learner) => {
+      if (filterStatus !== 'All' && learner.status !== filterStatus) return false;
+      if (filterType !== 'All' && learner.type !== filterType) return false;
       if (!query) return true;
       return [learner.name, learner.email, learner.organisation, learner.domain]
         .join(' ')
         .toLowerCase()
         .includes(query);
     });
-  }, [learners, searchQuery]);
+  }, [learners, searchQuery, filterStatus, filterType]);
 
   const totalPages = Math.max(1, Math.ceil(filteredLearners.length / pageSize));
   const pageRows = filteredLearners.slice((page - 1) * pageSize, page * pageSize);
@@ -171,6 +279,7 @@ export default function LearnersPage() {
 
             <button
               type="button"
+              onClick={() => openLearnerModal('create')}
               className="inline-flex items-center gap-2 rounded-xl bg-cta-orange px-4 py-2.5 text-xs font-extrabold text-white shadow-[0_10px_24px_rgba(255,98,0,0.25)] transition hover:brightness-95 self-start sm:self-auto"
             >
               <Plus className="h-4 w-4" />
@@ -193,6 +302,7 @@ export default function LearnersPage() {
               </div>
               <button
                 type="button"
+                onClick={handleSearch}
                 className="inline-flex items-center gap-2 rounded-xl bg-tranquil-velvet px-4 py-2.5 text-xs font-bold text-white transition hover:bg-bright-velvet"
               >
                 <Search className="h-4 w-4" />
@@ -202,6 +312,7 @@ export default function LearnersPage() {
 
             <button
               type="button"
+              onClick={handleOpenFilters}
               className="inline-flex items-center gap-2 rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] px-4 py-2.5 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -278,24 +389,27 @@ export default function LearnersPage() {
                           <div className="flex items-center justify-center gap-1">
                             <button
                               type="button"
+                              onClick={() => openLearnerModal('view', learner)}
                               className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
                               title="View"
                             >
-                              👁️
+                              <Eye className="h-3.5 w-3.5" />
                             </button>
                             <button
                               type="button"
+                              onClick={() => openLearnerModal('edit', learner)}
                               className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
                               title="Edit"
                             >
-                              ✎
+                              <Pencil className="h-3.5 w-3.5" />
                             </button>
                             <button
                               type="button"
+                              onClick={() => handleDeleteLearner(learner.id)}
                               className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-cta-orange/20 bg-white dark:bg-[#16171F] text-cta-orange hover:bg-cta-orange/10 transition text-xs"
                               title="Delete"
                             >
-                              🗑️
+                              <Trash2 className="h-3.5 w-3.5" />
                             </button>
                           </div>
                         </td>
@@ -366,6 +480,219 @@ export default function LearnersPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+      <ProfileActionModal
+        open={showLearnerModal}
+        onClose={closeLearnerModal}
+        title={modalMode === 'create' ? 'New learner' : modalMode === 'edit' ? 'Edit learner' : 'Learner details'}
+        description={
+          modalMode === 'view'
+            ? 'Review learner information details.'
+            : 'Fill in learner details to add or update the record.'
+        }
+        footer={
+          modalMode === 'view' ? (
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={() => openLearnerModal('edit', selectedLearner)}
+                className="inline-flex items-center gap-2 rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
+              >
+                <Pencil className="h-4 w-4" /> Edit
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={closeLearnerModal}
+                className="rounded-xl border border-medium-grey/40 bg-white px-4 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="learnerForm"
+                className="rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
+              >
+                Save
+              </button>
+            </div>
+          )
+        }
+      >
+        {modalMode === 'view' ? (
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Name</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.name}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Email</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.email}</p>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Organisation</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.organisation}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Type</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.type}</p>
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Domain</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.domain}</p>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Sem</p>
+                <p className="mt-1 text-sm text-black">{selectedLearner?.sem}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Status</p>
+              <p className="mt-1 text-sm text-black">{selectedLearner?.status}</p>
+            </div>
+          </div>
+        ) : (
+          <form id="learnerForm" onSubmit={handleLearnerSave} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Name</span>
+                <input
+                  value={learnerForm.name}
+                  onChange={(e) => handleLearnerFieldChange('name', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Email</span>
+                <input
+                  value={learnerForm.email}
+                  onChange={(e) => handleLearnerFieldChange('email', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Organisation</span>
+                <input
+                  value={learnerForm.organisation}
+                  onChange={(e) => handleLearnerFieldChange('organisation', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Type</span>
+                <select
+                  value={learnerForm.type}
+                  onChange={(e) => handleLearnerFieldChange('type', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                >
+                  <option>University</option>
+                  <option>Institute</option>
+                </select>
+              </label>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Domain</span>
+                <input
+                  value={learnerForm.domain}
+                  onChange={(e) => handleLearnerFieldChange('domain', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Semester</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={learnerForm.sem}
+                  onChange={(e) => handleLearnerFieldChange('sem', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Status</span>
+                <select
+                  value={learnerForm.status}
+                  onChange={(e) => handleLearnerFieldChange('status', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                >
+                  <option>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </label>
+              <label className="space-y-2 text-sm text-dark-grey">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Avatar</span>
+                <input
+                  value={learnerForm.avatar}
+                  onChange={(e) => handleLearnerFieldChange('avatar', e.target.value)}
+                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                />
+              </label>
+            </div>
+          </form>
+        )}
+      </ProfileActionModal>
+
+      <ProfileActionModal
+        open={showFiltersModal}
+        onClose={() => setShowFiltersModal(false)}
+        title="Learner filters"
+        description="Filter learners by status or learner type."
+        footer={
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="rounded-xl border border-medium-grey/40 bg-white px-4 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
+            >
+              Clear
+            </button>
+            <button
+              type="button"
+              onClick={applyFilters}
+              className="rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
+            >
+              Apply
+            </button>
+          </div>
+        }
+      >
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="space-y-2 text-sm text-dark-grey">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Status</span>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+            >
+              <option>All</option>
+              <option>Active</option>
+              <option>Inactive</option>
+            </select>
+          </label>
+          <label className="space-y-2 text-sm text-dark-grey">
+            <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Learner type</span>
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+            >
+              <option>All</option>
+              <option>University</option>
+              <option>Institute</option>
+            </select>
+          </label>
+        </div>
+      </ProfileActionModal>    </DashboardLayout>
   );
 }

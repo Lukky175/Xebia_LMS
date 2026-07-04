@@ -1,7 +1,7 @@
 /**
- * Developed by Abhishek Dixit.
- * Computer Science Engineering Student at Lovely Professional University.
- * developed the batches page of the application. 
+ * Author: Abhishek Dixit
+ * Institution: Lovely Professional University
+ * Developed the batches page of the application. 
  * This file contains the main batches page component, which
  * renders the batches dashboard, including batch requests, batch list, and batch creation modal.
  */
@@ -143,9 +143,10 @@ export default function BatchesPage() {
   };
 
   const statusTone = (status) => {
-    if (status === 'Approved') return 'emerald';
-    if (status === 'Rejected') return 'orange';
-    return 'velvet';
+    if (status === 'Approved') return 'success';
+    if (status === 'Pending Approval') return 'warning';
+    if (status === 'Rejected') return 'accent';
+    return 'secondary';
   };
 
   return (

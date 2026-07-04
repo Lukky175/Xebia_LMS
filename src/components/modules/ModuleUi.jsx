@@ -1,3 +1,10 @@
+/**
+ * Author: Abhishek Dixit
+ * Institution: Lovely Professional University
+ * Develop the UI components for the module management system, 
+ * including cards, badges, buttons, pagination, and modals.
+ */
+
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Pencil, Power, Trash2, Layers3, X, Save } from 'lucide-react';
