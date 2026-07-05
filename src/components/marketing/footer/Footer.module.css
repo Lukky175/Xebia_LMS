@@ -1,0 +1,110 @@
+/* ==========================================================
+   FOOTER LAYOUT
+   ========================================================== */
+
+.footer {
+    background: #111;
+
+    padding-top: 60px;
+
+    color: white;
+}
+
+.footerContainer {
+
+    max-width: 1400px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        2fr
+        1fr
+        1fr
+        1fr;
+
+    gap: 50px;
+
+    padding:
+        0 2%
+        50px;
+}
+
+/* ==========================================================
+   TYPOGRAPHY & LINKS
+   ========================================================== */
+.footerContainer h4 {
+
+    margin-bottom: 20px;
+
+    color: white;
+}
+
+.footerContainer a,
+.footerContainer p {
+
+    display: block;
+
+    margin-bottom: 12px;
+
+    color:
+        rgba(255,255,255,.75);
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.footerContainer a:hover {
+
+    color:
+        var(--primary-color);
+}
+
+.footerBrand p {
+
+    margin-top: 20px;
+
+    max-width: 320px;
+
+    line-height: 1.8;
+}
+
+/* ==========================================================
+   COPYRIGHT SECTION
+   ========================================================== */
+.copyright {
+
+    border-top:
+        1px solid rgba(255,255,255,.1);
+
+    text-align: center;
+
+    padding: 25px;
+
+    color:
+        rgba(255,255,255,.6);
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 900px) {
+
+    .footerContainer {
+
+        grid-template-columns:
+            1fr;
+
+        text-align: center;
+    }
+
+    .footerBrand p {
+
+        margin:
+            20px auto 0;
+    }
+}

@@ -109,21 +109,51 @@ If you want to customize specific layout elements or feature pages, use this qui
 
 ---
 
+## Authentication & Role-Based Access Control
+
+The application implements a full **Mock Authentication & Role-Based Access Control (RBAC)** flow on the frontend. The active session is maintained via `localStorage`.
+
+### 1. Mock Credentials
+You can log in to the platform console using any of these pre-configured user credentials:
+
+| Role | Email | Password | What You See |
+| :--- | :--- | :--- | :--- |
+| **Superadmin** | `superadmin@xebia.com` | `superadmin123` | Full dashboard view + extra **Superadmin System Diagnostics** control panel. |
+| **Admin** | `admin@xebia.com` | `admin123` | Full platform dashboard (Active users, MRR, completions, servers workload). |
+| **Trainer** | `trainer@xebia.com` | `trainer123` | **Trainer Console** (Teaching hours bar graphs, assigned batches count, average trainer ratings, my courses widget). |
+| **Student** | `student@xebia.com` | `student123` | **Student Portal** (Weekly study activity area graphs, ongoing courses progress bars, learning streak counters). |
+
+### 2. User Sign Up
+Users can register custom accounts at `/signup`:
+* You can fill in your name, email, password, and **select your role** from a dropdown.
+* Submitting the registration saves the user details inside `localStorage` (`lms_registered_users`). You can immediately log in at `/login` using the newly created account.
+
+### 3. Route Guarding
+Client-side routes are protected inside [App.jsx](src/App.jsx):
+* **Guest Routes** (`/login`, `/signup`): Authenticated users are automatically redirected to `/dashboard`.
+* **Protected Routes** (`/dashboard/*`): Unauthenticated guests are automatically redirected to `/login`.
+* **Sidebar Logs** ("Exit" button): Clears session state and returns the user to the public homepage (`/home`).
+
+---
+
 ## Architectural Layout & Data Flow (Where most things are)
 
 To help you navigate the codebase quickly, here is how the core architecture is wired up:
 
 ### 1. The Component / Page Layout Hierarchy
-* **Entry Point (`main.jsx`):** Mounts the App.
-* **App Wrapper (`App.jsx`):** Sets up the `ThemeProvider` and the main `BrowserRouter`. It handles initial app-wide fetches (like courses) and redirects root `/` to `/dashboard`.
-* **Sub-routes (`Dashboard.jsx`):** Renders the nested router inside the dashboard. It wraps everything inside the `DashboardLayout` component, rendering the appropriate page view based on the URL path.
-* **Layout Container (`DashboardLayout.jsx`):** Grid structural frame. It places the `<Sidebar />` on the left (collapsible) and the `<Navbar />` + `<main>` viewport content on the right.
+* **Entry Point (`main.jsx`):** Wraps the application inside `<AuthProvider>` and mounts the App.
+* **App Wrapper (`App.jsx`):** Sets up the `ThemeProvider` and the main `BrowserRouter`. Defines public layouts, auth layout groupings, and protected dashboard routing structures.
+* **Layout Containers:**
+  * **Dashboard Layout (`DashboardLayout.jsx`):** Renders the dashboard shell (collapsible sidebar + navigation header + viewport).
+  * **Marketing Layout (`MarketingLayout.jsx`):** Wraps public-facing pages (`/home`, `/faq`, `/contact`) inside a `.marketing-theme` styled container.
+  * **Auth Layout (`AuthLayout.jsx`):** Wraps login and register pages (`/login`, `/signup`) inside `.marketing-theme`.
 
 ### 2. State & Data Persistence Flow
+* **Authentication Provider (`AuthContext.jsx`):** Exposes `currentUser`, `isAuthenticated`, `login`, and `logout` helpers app-wide.
 * **Data Layer (`mockData.js`):** Exports the raw mock data arrays (e.g. `initialUsers`, `initialOrganisations`).
-* **API Wrapper Layer (`api.js`):** Simulates database calls. It utilizes a `getStorageItem` helper to write data to the browser's `localStorage` on first load, and loads from `localStorage` on subsequent fetches.
-* **Custom Hooks Layer (`src/hooks/`):** React custom hooks (e.g., `useOrganisations.js` at `src/hooks/useOrganisations.js`) wrap the asynchronous calls to `api.js`, managing loading flags and state updates inside the UI.
-* **UI Views (`pages/`):** Page components import hooks (or receive props) and consume the state values to render lists, stats, and search filtering.
+* **API Wrapper Layer (`api.js`):** Simulates database calls. It writes and reads data to `localStorage` on fetches.
+* **Custom Hooks Layer (`src/hooks/`):** React custom hooks (e.g., `useOrganisations.js` at `src/hooks/useOrganisations.js`) wrap the asynchronous calls to `api.js`.
+* **UI Views (`pages/`):** Component views consume hook states or context scopes to render statistics, tables, and dashboards.
 
 ---
 
@@ -146,12 +176,11 @@ All mock datasets are centralized in [src/data/mockData.js](src/data/mockData.js
 > Then refresh the page.
 
 ### How to Integrate a Live Backend (Spring Boot, Node.js, etc.)
-The frontend is already configured for asynchronous service calls. All mock API endpoints reside inside [src/services/api.js](src/services/api.js).
+The frontend is already configured for asynchronous service calls. All mock API endpoints reside inside [src/services/api.js](src/services/api.js) and [src/context/AuthContext.jsx](src/context/AuthContext.jsx).
 
 To connect to a live REST API:
-1. Open [src/services/api.js](src/services/api.js).
-2. Replace the local storage mock promises with `fetch` or `axios` calls pointing to your backend endpoint (e.g. `http://localhost:8080/api/organisations`).
-3. You **do not** need to change any logic inside page files like `OrganisationsPage.jsx` or `UsersPage.jsx` since they already asynchronously await promises and show progress spinners during fetching!
+1. Open [src/services/api.js](src/services/api.js) and replace the local storage operations with real `fetch` or `axios` calls pointing to your backend endpoint (e.g. `http://localhost:8080/api/organisations`).
+2. Open [src/context/AuthContext.jsx](src/context/AuthContext.jsx) and swap out the mock login verification with an authentication POST request to verify credentials and store the returned token (e.g. in HttpOnly cookies).
 
 ---
 
@@ -160,13 +189,20 @@ To connect to a live REST API:
 The layout relies on a clean, modern **Zinc & Velvet** styling system.
 
 * **Primary Font**: `Inter` (Sans-serif). Configured globally in [src/index.css](src/index.css).
-* **Color Custom Variables**: Mapped inside `:root` (Light Mode) and `.dark` (Dark Mode) classes in [src/index.css](src/index.css). 
+* **Color Custom Variables**: Mapped inside `:root` (Light Mode) and `.dark` (Dark Mode) classes in [src/index.css](src/index.css).
+* **Marketing Style Scoping**: The cloned marketing components use CSS module classes styled with custom variables scoped to the `.marketing-theme` wrapper in [src/index.css](src/index.css), preventing style bleeding into the console interface.
+* **Theme Synchronization**: Theme switching toggles both the `.dark` class (Tailwind 4 compatibility) and the `data-theme="dark"` attribute on `document.documentElement` to synchronize color tokens app-wide.
 * **Design Guidelines**: Refer to [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for full instructions regarding uppercase label letter spacing, heading sizes, and metric dashboard numbers scaling.
 
 ---
 
 ## Recent Updates
 
+- **Login, Sign Up & Public Marketing Pages Integrated**:
+  - Imported Home landing screen, Contact Form, and FAQ page sections.
+  - Set up a customized Sign Up registration panel enabling role assignments.
+  - Implemented Client-side Route guards restricting `/dashboard` to logged-in users only.
+  - Added role-based dashboards switching between Superadmin, Admin, Trainer, and Student consoles with customized statistics, Recharts graphs, and dynamic sidebar options.
 - **Organisations Directory Page Added**:
   - The new view lives at `src/pages/Organisations/OrganisationsPage.jsx`.
   - Built a custom hook `useOrganisations.js` at `src/hooks/useOrganisations.js` to manage data fetching and addition state.
@@ -175,5 +211,6 @@ The layout relies on a clean, modern **Zinc & Velvet** styling system.
   - Increased the collapsed sidebar width from 80px (`w-20`) to 96px (`w-24`) for a cleaner look.
   - Updated `Logo` component to automatically switch to the Xebia favicon mark (`/XebiaFavicon.png`) when collapsed, keeping the alignment clean and centered.
   - Logo wrapper and inner logo components now correctly adapt to the dark mode sidebar background (`#11050F`), removing the solid white background boxes.
+
 
 

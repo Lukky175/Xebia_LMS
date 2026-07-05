@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Logo from '@/components/ui/Logo.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 const navigationGroups = [
   {
@@ -60,7 +61,41 @@ const navigationGroups = [
 
 export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false, onClose }) {
   const { theme, toggleTheme } = useTheme();
+  const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Filter navigationGroups based on user role
+  const filteredGroups = navigationGroups.map(group => {
+    if (!currentUser || currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+      return group;
+    }
+
+    if (currentUser.role === 'trainer') {
+      const allowedPaths = [
+        '/dashboard',
+        '/dashboard/courses',
+        '/dashboard/trainer',
+        '/dashboard/scheduling',
+        '/dashboard/administration',
+        '/dashboard/profile'
+      ];
+      const items = group.items.filter(item => allowedPaths.includes(item.path));
+      return items.length > 0 ? { ...group, items } : null;
+    }
+
+    if (currentUser.role === 'student') {
+      const allowedPaths = [
+        '/dashboard',
+        '/dashboard/courses',
+        '/dashboard/profile',
+        '/dashboard/assessment'
+      ];
+      const items = group.items.filter(item => allowedPaths.includes(item.path));
+      return items.length > 0 ? { ...group, items } : null;
+    }
+
+    return group;
+  }).filter(Boolean);
 
   return (
     <aside className={`h-screen bg-white dark:bg-[#11050F] text-black dark:text-white flex flex-col justify-between transition-all duration-300 relative border-r border-medium-grey dark:border-white/5 shadow-lg dark:shadow-2xl ${isCollapsed ? 'w-24' : 'w-64'} ${isMobile ? 'border-r-0 shadow-none' : ''}`}>
@@ -89,7 +124,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
 
         {/* Navigation Items */}
         <nav className="space-y-4">
-          {navigationGroups.map((group, groupIdx) => (
+          {filteredGroups.map((group, groupIdx) => (
             <div key={groupIdx} className="space-y-1">
               {group.section && !isCollapsed && (
                 <div className="text-[9px] font-extrabold text-text-secondary uppercase tracking-widest px-3.5 pt-2 pb-1 select-none opacity-80">
@@ -140,13 +175,13 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
       <div className="p-4 border-t border-medium-grey dark:border-white/5 bg-[#F7F8FC]/50 dark:bg-black/10 flex flex-col gap-2 shrink-0">
         {/* Profile Card */}
         <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-tranquil-velvet to-bright-velvet border-2 border-cta-orange/40 flex items-center justify-center text-white font-extrabold shadow-md shrink-0">
-            AJ
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-tranquil-velvet to-bright-velvet border-2 border-cta-orange/40 flex items-center justify-center text-white font-extrabold shadow-md shrink-0 uppercase select-none">
+            {currentUser ? currentUser.name.split(' ').map(n => n[0]).join('') : 'U'}
           </div>
           {!isCollapsed && (
             <div className="leading-tight">
-              <h4 className="text-xs font-bold text-black dark:text-white">Apurv Jha</h4>
-              <p className="text-[10px] text-dark-grey dark:text-white/55 font-medium">Platform Admin</p>
+              <h4 className="text-xs font-bold text-black dark:text-white">{currentUser ? currentUser.name : 'Guest User'}</h4>
+              <p className="text-[10px] text-dark-grey dark:text-white/55 font-medium">{currentUser ? currentUser.title : 'Visitor'}</p>
             </div>
           )}
         </div>
@@ -163,7 +198,10 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
           </button>
 
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => {
+              logout();
+              navigate('/home');
+            }}
             className={`p-2.5 bg-[#F7F8FC] dark:bg-white/5 hover:bg-medium-grey/40 dark:hover:bg-white/10 text-dark-grey dark:text-white/80 hover:text-red-500 dark:hover:text-red-400 rounded-xl border border-medium-grey/30 dark:border-white/5 transition flex items-center justify-center cursor-pointer ${isCollapsed ? 'w-10 h-10' : 'flex-1 gap-1.5 text-xs font-semibold'}`}
             title="Exit Portal"
           >
