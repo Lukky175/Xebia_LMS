@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { Search, Bell, MessageSquare, Sparkles, LogOut, Settings, HelpCircle, ChevronRight, Menu } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 const pathTitleMap = {
   '/dashboard': { title: 'Platform Dashboard', category: 'Platform' },
@@ -25,10 +26,23 @@ const pathTitleMap = {
 
 export default function Navbar({ onSearchChange, searchValue, onToggleMobileSidebar }) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
   const currentPath = location.pathname;
   const pageMeta = pathTitleMap[currentPath] || { title: 'Dashboard', category: 'Analytics' };
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+
+  const initials = currentUser
+    ? currentUser.name
+        .split(' ')
+        .filter(Boolean)
+        .map(n => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'U';
+
 
   return (
     <header className="h-16 border-b border-medium-grey px-4 sm:px-6 md:px-8 flex items-center justify-between bg-white/80 dark:bg-bg-card/85 backdrop-blur-md sticky top-0 z-30 shrink-0">
@@ -128,7 +142,7 @@ export default function Navbar({ onSearchChange, searchValue, onToggleMobileSide
           onClick={() => setDropdownOpen(!dropdownOpen)}
           className="h-9 w-9 rounded-xl bg-gradient-to-tr from-tranquil-velvet to-bright-velvet border-2 border-cta-orange/40 flex items-center justify-center text-white font-extrabold shadow-md cursor-pointer hover:scale-105 transition"
         >
-          AJ
+          {initials}
         </button>
 
         {/* Profile Dropdown */}
@@ -137,8 +151,8 @@ export default function Navbar({ onSearchChange, searchValue, onToggleMobileSide
             <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)}></div>
             <div className="absolute right-0 top-12 w-52 bg-white dark:bg-bg-card border border-medium-grey dark:border-border-card rounded-2xl shadow-xl p-2.5 z-50 animate-in fade-in duration-200">
               <div className="px-3.5 py-2 border-b border-medium-grey/50 dark:border-border-card/50 pb-2.5 mb-2 leading-tight">
-                <p className="text-xs font-bold text-black dark:text-white">Apurv Jha</p>
-                <p className="text-[9px] text-dark-grey uppercase font-bold tracking-wider mt-0.5">Platform Admin</p>
+                <p className="text-xs font-bold text-black dark:text-white">{currentUser ? currentUser.name : 'Guest User'}</p>
+                <p className="text-[9px] text-dark-grey uppercase font-bold tracking-wider mt-0.5">{currentUser ? currentUser.title : 'Visitor'}</p>
               </div>
 
               <Link 
@@ -161,14 +175,17 @@ export default function Navbar({ onSearchChange, searchValue, onToggleMobileSide
 
               <div className="h-px bg-medium-grey/50 dark:bg-border-card/50 my-1.5"></div>
 
-              <Link 
-                to="/"
-                onClick={() => setDropdownOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-500 hover:bg-red-500/10 rounded-lg transition"
+              <button 
+                onClick={() => {
+                  logout();
+                  setDropdownOpen(false);
+                  navigate('/home');
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-red-500 hover:bg-red-500/10 rounded-lg transition text-left cursor-pointer"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Exit Portal</span>
-              </Link>
+              </button>
             </div>
           </>
         )}

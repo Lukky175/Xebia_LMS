@@ -64,6 +64,16 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
   const { currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
+  const initials = currentUser
+    ? currentUser.name
+        .split(' ')
+        .filter(Boolean)
+        .map(n => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'U';
+
   // Filter navigationGroups based on user role
   const filteredGroups = navigationGroups.map(group => {
     if (!currentUser || currentUser.role === 'admin' || currentUser.role === 'superadmin') {
@@ -176,7 +186,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
         {/* Profile Card */}
         <div className={`flex items-center gap-3 ${isCollapsed ? 'justify-center' : 'justify-start'}`}>
           <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-tranquil-velvet to-bright-velvet border-2 border-cta-orange/40 flex items-center justify-center text-white font-extrabold shadow-md shrink-0 uppercase select-none">
-            {currentUser ? currentUser.name.split(' ').map(n => n[0]).join('') : 'U'}
+            {initials}
           </div>
           {!isCollapsed && (
             <div className="leading-tight">
