@@ -1,0 +1,249 @@
+/*
+==========================================================
+Assessment Table Body Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the visual styling for the Assessment
+table.
+
+Contents
+
+• Table layout
+• Status badges
+• Action buttons
+• Typography
+• Responsive behaviour
+• Column alignment
+
+==========================================================
+*/
+
+/* Future Enhancement (Suggested by Lakshit Tyagi) 
+
+    Rows to support
+    • Sorting
+    • Inline editing
+    • Bulk selection
+    • Row expansion
+    • Server-side pagination (Priority)
+*/
+
+/* ==========================================
+   TABLE CONTAINER
+========================================== */
+
+.tableContainer{
+    width:100%;
+    overflow-x:auto;
+}
+
+/* ==========================================
+   TABLE
+========================================== */
+
+.table{
+    width:100%;
+    min-width:900px;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.table thead{
+    border-bottom:1px solid var(--border);
+}
+
+.table th{
+    padding:1rem;
+    text-align:left;
+    font-size:.82rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08rem;
+    color:var(--text-secondary);
+    white-space:nowrap;
+
+}
+
+/* ==========================================
+   BODY
+========================================== */
+
+.table td{
+    padding:1rem;
+    border-bottom:1px solid var(--border);
+    color:var(--text-primary);
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.25s ease;
+}
+
+/* ==========================================
+   TITLE
+========================================== */
+
+.titleCell{
+    display:flex;
+    flex-direction:column;
+    gap:.2rem;
+}
+
+.title{
+    font-size:.96rem;
+    font-weight:700;
+}
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:95px;
+    padding:.5rem 1rem;
+    border-radius:999px;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.05rem;
+}
+
+.active{
+    background:#DCFCE7;
+    color:#15803D;
+}
+
+.draft{
+    background:#FEF3C7;
+    color:#B45309;
+}
+
+.completed{
+    background:#E9D5FF;
+    color:#7E22CE;
+}
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+.actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:.6rem;
+}
+
+.editButton,
+.deleteButton{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.editButton{
+    border:1px solid var(--border);
+    background:white;
+    color:var(--text-primary);
+}
+
+.editButton:hover{
+    background:#F4F4F8;
+}
+
+.deleteButton{
+    border:1px solid #FFD4D4;
+    background:white;
+    color:#DC2626;
+}
+
+.deleteButton:hover{
+    background:#FFF2F2;
+}
+
+.subtitle{
+    margin-top:.2rem;
+    font-size:.78rem;
+    color:var(--text-secondary);
+}
+.separator{
+    color:#9CA3AF;
+}
+
+.analyticsButton{
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:white;
+    color:#6C1D5F;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.analyticsButton:hover{
+    background:#F6F0FA;
+}
+
+.table tbody tr:hover{
+    background:#FAF7FC;
+}
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(max-width:900px){
+    .table{
+        min-width:850px;
+    }
+}
+
+/* ==============================
+   COLUMN ALIGNMENT
+============================== */
+
+.assessmentColumn{
+    width:38%;
+    text-align:left;
+}
+
+.typeColumn{
+    text-align:left;
+}
+
+.statusColumn{
+    text-align:center;
+}
+
+.actionsColumn{
+    text-align:center;
+}
+.attemptColumn{
+    font-weight:600;
+    text-align: center;
+    font-variant-numeric:tabular-nums;
+}
+.averageColumn{
+    font-weight:700;
+    text-align: center;
+    font-variant-numeric:tabular-nums;
+}

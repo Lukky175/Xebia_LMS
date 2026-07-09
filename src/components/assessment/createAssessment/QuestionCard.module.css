@@ -1,0 +1,371 @@
+/*
+==========================================================
+Question Card Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+Project      : Xebia Learning Management System (LMS)
+
+Purpose
+
+Defines the styling for the QuestionCard
+component used in the Assessment Creation
+Wizard.
+
+Contents
+
+• Card Layout
+• Header
+• Form Controls
+• Question Type
+• Mandatory Selector
+• Image Upload
+• Answer Options
+• Marks
+• Correct Answer
+• Buttons
+• Hover States
+
+==========================================================
+*/
+
+
+/* ==========================================
+   Question Card
+
+   Main container for editing a single
+   assessment question.
+
+   Every question is displayed inside its
+   own independent card.
+========================================== */
+.card{
+    background:var(--surface);
+    border:1px solid rgb(108, 29, 95, 0.75);
+    border-radius:9px;
+    padding:2rem;
+    display:flex;
+    flex-direction:column;
+    gap:1.1rem;
+    transition:
+        transform .25s,
+        border-color .25s,
+        box-shadow .25s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(108,29,95,.35);
+    box-shadow:
+        0 16px 40px rgba(16,24,40,.08);
+}
+
+/* ==========================================
+   Card Header
+
+   Displays
+
+   • Question number
+   • Question type
+   • Mandatory selector
+   • Delete button
+========================================== */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h3{
+    font-size:1.2rem;
+}
+
+.deleteButton{
+    width:42px;
+    height:42px;
+    border:none;
+    border-radius:12px;
+    background:#FFF1F1;
+    color:#D32F2F;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    transition:.25s;
+}
+
+.deleteButton:hover{
+    transform:scale(1.05);
+}
+
+/* ==========================================
+   Form Controls
+
+   Shared layout and styling used by all
+   input fields inside the question editor.
+========================================== */
+.formGroup{
+    display:flex;
+    flex-direction:column;
+    gap: 0.6rem;
+}
+
+.formGroup label{
+    font-weight:600;
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select{
+    border:1px solid rgb(108, 29, 95, 0.75);
+    border-radius:9px;
+    padding:.9rem 1rem;
+    background:var(--surface);
+    outline:none;
+    transition:.25s;
+}
+
+/* Highlight the active input for improved
+   accessibility and user focus. */
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus{
+    border-color:#6C1D5F;
+}
+
+/* ==========================================
+   Image Upload
+
+   Styled upload area for question and
+   explanation images.
+========================================== */
+.imageButton{
+    width:100%;
+    min-height:45px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:.6rem;
+    border:2px dashed rgba(108,29,95,.28);
+    border-radius:8px;
+    background:#FCFAFD;
+    color:#6C1D5F;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.imageButton:hover{
+    background:#F7F1FA;
+    border-color:#6C1D5F;
+    transform:translateY(-2px);
+}
+
+/* ==========================================
+   Answer Options
+
+   Container holding all answer options
+   for selectable question types.
+========================================== */
+.optionsSection{
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+}
+
+/* Header containing the section title and
+   Add Option button. */
+.optionHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* Primary action button used to create a
+   new answer option. */
+.addOption{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    border:none;
+    background:#6C1D5F;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* ==========================================
+   Marks Configuration
+
+   Two-column layout used to configure
+
+   • Positive Marks
+   • Negative Marks
+========================================== */
+.markGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1rem;
+}
+
+.subtitle{
+    margin-top:.4rem;
+    color:var(--text-secondary);
+    font-size:.9rem;
+}
+
+.headerActions{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+}
+
+/* ==========================================
+   Question Type Selector
+
+   Allows users to switch between supported
+   question formats.
+========================================== */
+.questionType{
+    min-width:220px;
+    height:46px;
+    padding:0 1rem;
+    border-radius:12px;
+    border:1px solid rgba(108,29,95,.18);
+    background:white;
+    transition:.25s;
+}
+
+.questionType:hover{
+    border-color:#6C1D5F;
+}
+
+.questionType:focus{
+    border-color:#6C1D5F;
+    box-shadow:
+        0 0 0 4px rgba(108,29,95,.08);
+}
+
+/* Controls whether the learner is required
+   to answer this question. */
+.mandatorySelect{
+    min-width:170px;
+    height:46px;
+    padding:0 1rem;
+    border-radius:9px;
+    border:1px solid rgba(108,29,95,.18);
+    background:white;
+    transition:.25s;
+}
+
+.mandatorySelect:hover{
+    border-color:#6C1D5F;
+}
+
+.mandatorySelect:focus{
+    border-color:#6C1D5F;
+    box-shadow:
+        0 0 0 4px rgba(108,29,95,.08);
+}
+
+.addButton{
+    display:flex;
+    align-items:center;
+    gap:.45rem;
+    height:40px;
+    padding:0 1rem;
+    border-radius:10px;
+    font-size:.9rem;
+    font-weight:600;
+}
+
+/* Visual styling for read-only inputs.
+
+   Used for automatically generated values. */
+.formGroup input[readonly]{
+    background:#F8F9FC;
+    color:#6C1D5F;
+    font-weight:600;
+    cursor:default;
+}
+
+/* ==========================================
+   Correct Answer Selection
+
+   Styles used for selecting one or more
+   correct answers depending on the current
+   question type.
+========================================== */
+.correctOptions{
+    display:flex;
+    flex-direction:column;
+    gap:.75rem;
+}
+
+/* Individual selectable correct answer. */
+.correctOption{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.9rem 1rem;
+    border:1px solid rgba(108,29,95,.18);
+    border-radius:12px;
+    cursor:pointer;
+    transition:.25s;
+    background:white;
+}
+
+/* Highlight selectable answers while the
+   user hovers over them. */
+.correctOption:hover{
+    border-color:#6C1D5F;
+    background:#FAF7FF;
+}
+
+.correctOption input{
+    width:18px;
+    height:18px;
+    accent-color:#6C1D5F;
+}
+
+.correctOption span{
+    font-size:.92rem;
+}
+
+@media (max-width:768px){
+
+    .markGrid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+@media (max-width:900px){
+
+    .header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:1rem;
+
+    }
+
+}
+@media(max-width:650px){
+
+    .headerActions{
+
+        width:100%;
+
+        flex-direction:column;
+
+        align-items:stretch;
+
+    }
+
+}

@@ -1,0 +1,211 @@
+/*
+==========================================================
+Basic Information Step Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the responsive two-column layout used
+by the first step of the Assessment Creation
+Wizard.
+
+Contents
+
+• Two-column layout
+• Form controls
+• Input styling
+• Focus states
+• Responsive behaviour
+
+==========================================================
+*/
+
+/* ==========================================
+   Two-Column Layout
+
+   Organizes the wizard into
+
+   Left
+
+   Assessment Information
+
+   Right
+
+   Assessment Configuration
+
+========================================== */
+.container{
+
+    display:grid;
+
+    grid-template-columns:1.3fr .9fr;
+
+    gap:2.5rem;
+
+}
+
+/* Primary assessment metadata. */
+.leftSection{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1.5rem;
+
+}
+
+/* Additional assessment configuration. */
+.rightSection{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:2rem;
+
+}
+
+/* Responsive grid for assessment configuration fields. */
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:1.25rem;
+
+}
+
+/* Shared layout for labels and form controls. */
+.formGroup{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.55rem;
+
+}
+
+.formGroup label{
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+    color:var(--text-primary);
+
+}
+textarea{
+
+    min-height:150px;
+
+    line-height:1.6;
+
+}
+
+.formGroup input,
+
+.formGroup textarea,
+
+.formGroup select{
+
+    width:100%;
+
+    padding:.9rem 1rem;
+
+    border-radius:14px;
+
+    border:1px solid rgb(108, 29, 95, 0.75);
+
+    background:var(--surface);
+
+    font-size:.95rem;
+
+    transition:.25s;
+
+    outline:none;
+
+}
+
+.formGroup textarea{
+
+    resize:none;
+
+}
+
+/* Highlight the active input to improve keyboard accessibility and user focus. */
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus{
+
+    border-color:#6C1D5F;
+
+    background:#fff;
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+        0 0 0 4px rgba(108,29,95,.08),
+
+        0 8px 18px rgba(108,29,95,.12);
+
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select{
+
+    transition:
+
+        border-color .25s,
+
+        box-shadow .25s,
+
+        transform .18s,
+
+        background .25s;
+
+}
+.formGroup label{
+
+    transition:
+
+        color .25s,
+
+        transform .25s;
+
+}
+.formGroup:focus-within label{
+
+    color:#6C1D5F;
+
+    transform:translateX(2px);
+
+}
+
+/* Stack the layout vertically on smaller screens for improved usability. */
+@media(max-width:1000px){
+
+    .container{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+}

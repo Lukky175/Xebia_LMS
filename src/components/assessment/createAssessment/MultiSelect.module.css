@@ -1,0 +1,200 @@
+/*
+==========================================================
+Multi Select Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the appearance of the reusable
+MultiSelect component.
+
+Contents
+
+• Input
+• Chips
+• Dropdown
+• Search
+• Options
+• Animations
+
+==========================================================
+*/
+
+/* ==========================================
+   Multi Select Layout
+
+   Container for the label, chips,
+   trigger and dropdown.
+========================================== */
+.container{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:.7rem;
+}
+
+.container label{
+    font-weight:600;
+    font-size:.9rem;
+}
+
+/* Main dropdown trigger. */
+.select{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:1rem;
+    background:var(--surface);
+    border:1px solid rgb(108, 29, 95, 0.75);
+    border-radius:14px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.select:hover{
+    border-color:#6C1D5F;
+}
+
+/* Search input displayed at the top of the dropdown. */
+.searchBox{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.85rem 1rem;
+    border-bottom:1px solid #ECECEC;
+    background:#FAFAFC;
+}
+
+.searchBox svg{
+    flex-shrink:0;
+    font-size:1rem;
+    color:#8B94A7;
+}
+
+.searchBox input{
+    flex:1;
+    border:none;
+    background:transparent;
+    outline:none;
+    font-size:.92rem;
+    color:#333;
+}
+
+.searchBox input::placeholder{
+    color:#A0A4AE;
+}
+
+.selectedContainer{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.45rem;
+    margin-top:-.2rem;
+    margin-bottom:.35rem;
+}
+
+/* Scrollable list of available options. */
+.dropdown{
+    max-height:320px;
+    position:absolute;
+    top:82px;
+    width:100%;
+    background:white;
+    border-radius:9px;
+    box-shadow:
+        0 16px 40px rgba(0,0,0,.14);
+    z-index:20;
+    overflow-y:auto;
+    overflow-x:hidden;
+    animation:dropdown .18s ease;
+}
+
+/* Individual selectable option. */
+.option{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:.85rem 1rem;
+    border:none;
+    background:white;
+    font-size:.92rem;
+    text-align:left;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.option:hover{
+    background:#FAF7FF;
+    color:#6C1D5F;
+}
+
+/* Selected values displayed as removable chips. */
+.chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.7rem;
+}
+
+.chip{
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    padding:.35rem .75rem;
+    border-radius:999px;
+    background:#F5ECF4;
+    color:#6C1D5F;
+    border:1px solid #E8D8E6;
+    font-size:.82rem;
+    font-weight:600;
+}
+
+.chip button{
+    border:none;
+    width:18px;
+    height:18px;
+    border-radius: 9px;
+    background:none;
+    display:flex;
+    cursor:pointer;
+    color:inherit;
+    justify-content:center;
+    align-items:center;
+}
+
+.chip button:hover{
+    background:rgba(108,29,95,.12);
+}
+
+/* Dropdown opening animation. */
+@keyframes pop{
+    from{
+        transform:scale(.7);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+@keyframes dropdown{
+    from{
+        opacity:0;
+        transform:translateY(-8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.select svg{
+    transition:.25s;
+}
+
+.rotate{
+    transform:rotate(180deg);
+}

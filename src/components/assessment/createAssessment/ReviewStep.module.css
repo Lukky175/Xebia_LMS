@@ -1,0 +1,359 @@
+/*
+==========================================================
+Review Step Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+Project      : Xebia Learning Management System (LMS)
+
+Purpose
+
+Defines the layout and visual styling for
+the final review step of the Assessment
+Creation Wizard.
+
+Contents
+
+• Page Header
+• Review Cards
+• Information Grid
+• Field Display
+• Thumbnail Preview
+• Question Summary
+• Animations
+• Responsive Layout
+
+==========================================================
+*/
+
+/* ==========================================
+   Page Layout
+
+   Stacks all review sections vertically
+   with consistent spacing.
+========================================== */
+.container{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:1.75rem;
+
+}
+
+/* ==========================================
+   Page Header
+
+   Introduces the review step and explains
+   its purpose to the user.
+========================================== */
+.pageHeader h2{
+
+    font-size:2rem;
+
+    color:#242424;
+
+}
+
+.pageHeader p{
+
+    margin-top:.4rem;
+
+    color:#7A7A86;
+
+}
+
+/* ==========================================
+   Review Cards
+
+   Each logical section of the review page
+   is displayed inside an independent card.
+
+   Examples
+
+   • Assessment Details
+   • Assignment
+   • Configuration
+   • Question Summary
+========================================== */
+.card{
+
+    background:white;
+
+    border:1px solid rgba(108,29,95,.12);
+
+    border-radius:12px;
+
+    padding:1.75rem;
+
+    box-shadow:
+
+        0 8px 24px rgba(16,24,40,.05);
+
+    animation:fadeCard .35s ease;
+
+    transition:
+
+    transform .25s,
+
+    border-color .25s,
+
+    box-shadow .25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#6C1D5F;
+
+}
+
+.card h3{
+
+    margin-bottom:1.4rem;
+
+    color:#6C1D5F;
+
+    font-size:1.15rem;
+
+}
+
+/* ==========================================
+   Information Grid
+
+   Two-column layout used for displaying
+   assessment metadata.
+========================================== */
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:1.4rem;
+
+}
+
+/* Allows larger fields (such as
+   descriptions) to span both columns. */
+.fullWidth{
+
+    grid-column:1 / -1;
+
+}
+
+/* ==========================================
+   Review Fields
+
+   Displays a label together with its
+   corresponding read-only value.
+========================================== */
+.field{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.4rem;
+
+}
+
+.field label{
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.06em;
+
+    color:#8E8E98;
+
+}
+
+.field span{
+
+    font-size:.96rem;
+
+    font-weight:600;
+
+    color:#232323;
+
+    line-height:1.6;
+
+}
+
+/* ==========================================
+   Thumbnail Preview
+
+   Displays the uploaded assessment
+   thumbnail during the review step.
+========================================== */
+.thumbnail{
+
+    width:min(240px,100%);
+
+    margin-top:1.5rem;
+
+    border-radius:12px;
+
+    border:1px solid rgba(108,29,95,.12);
+
+    object-fit:cover;
+
+    display: block;
+
+}
+
+/* ==========================================
+   Question Summary
+
+   Displays statistics for every supported
+   question type.
+========================================== */
+.summaryGrid{
+
+    display:grid;
+
+    grid-template-columns:
+
+        repeat(
+
+            auto-fit,
+
+            minmax(180px,1fr)
+
+        );
+
+    gap:1rem;
+
+}
+
+.summaryGrid div{
+
+    background:#FAF8FC;
+
+    border:1px solid rgba(108,29,95,.08);
+
+    border-radius:12px;
+
+    padding:1.25rem;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:.35rem;
+
+    transition:.25s;
+
+}
+
+.summaryGrid div:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#6C1D5F;
+
+    box-shadow:
+
+        0 10px 22px rgba(108,29,95,.08);
+
+}
+
+.summaryGrid span{
+
+    color:#7B7B88;
+
+    font-size:.82rem;
+
+}
+
+.summaryGrid strong{
+
+    font-size:1.5rem;
+
+    color:#6C1D5F;
+
+}
+
+/* ==========================================
+   Animations
+
+   Fade-in animation used when review cards
+   are rendered.
+========================================== */
+@keyframes fadeCard{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(15px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+/* ==========================================
+   Responsive Layout
+
+   Reduce columns as screen size decreases
+   to improve readability on tablets and
+   mobile devices.
+========================================== */
+@media(max-width:900px){
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .summaryGrid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:650px){
+
+    .summaryGrid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .thumbnail{
+
+        width:100%;
+
+    }
+
+}
+
+/*
+This page is intentionally designed with a
+read-only appearance.
+
+No editable controls should appear here.
+
+Its purpose is to allow users to verify the
+assessment before it is submitted to the
+backend.
+*/

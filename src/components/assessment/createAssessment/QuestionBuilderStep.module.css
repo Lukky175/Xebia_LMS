@@ -1,0 +1,73 @@
+/*
+==========================================================
+Question Builder Step Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout for the Question Builder
+step of the Assessment Creation Wizard.
+
+Contents
+
+• Header
+• Builder Layout
+• Navigation Area
+• Question Editor
+
+==========================================================
+*/
+
+
+/* ==========================================
+   Step Layout
+
+   Arranges the section header and
+   question builder vertically.
+========================================== */
+.container{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:2rem;
+
+}
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:.5rem;
+
+}
+
+/* Two-column layout containing the
+   question navigator and question editor. */
+.builder{
+
+    display:flex;
+
+    gap:1.5rem;
+
+    align-items:flex-start;
+
+}
+
+/* Flexible area used to display the
+   currently selected QuestionCard. */
+.content{
+
+    flex:1;
+
+    min-width:0;
+
+}
