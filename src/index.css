@@ -200,3 +200,47 @@ input, select, textarea {
 .dark .sleek-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(211, 139, 202, 0.6);
 }
+
+/* ==========================================================
+   MARKETING & AUTH PAGES CUSTOM SYSTEM TOKENS (SCOPED)
+   ========================================================== */
+.marketing-theme {
+  --primary-color: #6c1d5f;
+  --primary-second-color: #5b1e53;
+  --primary-tertiary-color: #793b74;
+  --gradient1-xebia: #5b1e53;
+  --gradient2-xebia: #6c1d5f;
+  --text-primary: #000000;
+  --text-secondary: #444444;
+  --text-specials: rgb(255, 255, 255);
+  --background: rgb(255, 255, 255);
+  --background-ui: rgba(108, 29, 95, 0.04);
+  --background-gradient1: rgba(255, 255, 255, 0.45);
+  --background-gradient2: rgba(255, 255, 255, 0.55);
+  --transition-fast: 0.25s ease;
+  --transition-medium: 0.4s ease;
+  --transition-slow: 0.6s ease;
+}
+
+.marketing-theme[data-theme="dark"],
+.dark .marketing-theme,
+[data-theme="dark"] .marketing-theme {
+  --primary-color: #6c1d5f;
+  --primary-second-color: #793b74;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-special: #000000;
+  --background: #000000;
+  --background-ui: rgb(27, 11, 26);
+  --background-gradient1: rgba(0, 0, 0, 0.45);
+  --background-gradient2: rgba(0, 0, 0, 0.55);
+  --gradient1-xebia: #3b1838;
+  --gradient2-xebia: #291027;
+}
+
+.marketing-theme {
+  font-family: 'Inter', Arial, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--background);
+}
+

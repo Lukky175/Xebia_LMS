@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
-import { BookOpen, CheckCircle, FileText, Archive, Plus, Trash2, Edit2, Star, Users, X, Loader2 } from 'lucide-react';
+import { BookOpen, CheckCircle, FileText, Archive, Plus, Trash2, Edit2, Star, Users, ShieldAlert, X, Loader2} from 'lucide-react';
 import CountUp from '@/components/ui/CountUp.jsx';
 import BorderGlow from '@/components/ui/BorderGlow.jsx';
+import AddCourseModal from '@/components/ui/AddCourseModal.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 import { api } from '@/services/api.js';
 
@@ -25,8 +25,21 @@ const EMPTY_FORM = {
 };
 
 export default function CoursesPage({ courses, handleSimulateProgress, searchQuery, loading }) {
+import { useAuth } from '@/context/AuthContext.jsx';
+
+export default function CoursesPage({ 
+  courses, 
+  handleSimulateProgress, 
+  handleAddCourse, 
+  handleApproveCourse, 
+  handleDeleteCourse, 
+  searchQuery, 
+  loading 
+}) {
   const { theme } = useTheme();
+  const { currentUser } = useAuth();
   const [localCourses, setLocalCourses] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // ── Modal state ──────────────────────────────────────────────────────────────
   const [showAddModal, setShowAddModal] = useState(false);
@@ -46,18 +59,60 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
     );
   }
 
-
   const activeSearch = searchQuery || '';
 
-  const filteredCourses = localCourses.filter(course => 
-    course.title.toLowerCase().includes(activeSearch.toLowerCase()) ||
-    course.instructor.toLowerCase().includes(activeSearch.toLowerCase()) ||
-    course.category.toLowerCase().includes(activeSearch.toLowerCase())
-  );
+  // Filter courses based on user role, organization visibility, and search terms
+  const getFilteredCourses = () => {
+    const searched = localCourses.filter(course => 
+      course.title.toLowerCase().includes(activeSearch.toLowerCase()) ||
+      course.instructor.toLowerCase().includes(activeSearch.toLowerCase()) ||
+      course.category.toLowerCase().includes(activeSearch.toLowerCase())
+    );
 
-  const handleDeleteCourse = (id) => {
-    setLocalCourses(prev => prev.filter(c => c.id !== id));
+    // Filter by Organization Scope
+    const scoped = searched.filter(course => {
+      // Admins and Superadmins bypass checks
+      if (currentUser?.role === 'admin' || currentUser?.role === 'superadmin') {
+        return true;
+      }
+      // Trainers see their own courses
+      if (currentUser?.role === 'trainer' && course.instructor === currentUser.name) {
+        return true;
+      }
+      // Public courses are visible to everyone
+      if (course.visibility === 'public' || !course.visibility) {
+        return true;
+      }
+      // Restricted check matching user's organisation
+      if (course.visibility === 'restricted') {
+        return course.allowedOrganisations?.includes(currentUser?.organisation);
+      }
+      return false;
+    });
+
+    if (currentUser?.role === 'admin' || currentUser?.role === 'superadmin') {
+      // Admins see published courses in the catalog list (pending list is rendered separately)
+      return scoped.filter(c => c.status === 'published');
+    }
+
+    if (currentUser?.role === 'trainer') {
+      // Trainers see all published courses plus their own pending proposals
+      return scoped.filter(c => c.status === 'published' || (c.status === 'pending' && c.instructor === currentUser.name));
+    }
+
+    // Students only see published courses
+    return scoped.filter(c => c.status === 'published');
   };
+
+  const filteredCourses = getFilteredCourses();
+
+  // Extract pending courses for admin review
+  const pendingCourses = localCourses.filter(c => 
+    c.status === 'pending' &&
+    (c.title.toLowerCase().includes(activeSearch.toLowerCase()) ||
+     c.instructor.toLowerCase().includes(activeSearch.toLowerCase()) ||
+     c.category.toLowerCase().includes(activeSearch.toLowerCase()))
+  );
 
   const handleSimulateClick = (id) => {
     handleSimulateProgress(id);
@@ -138,6 +193,18 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
   const inputCls =
     'w-full px-4 py-2.5 bg-white dark:bg-[#0D0E16] border border-medium-grey dark:border-[#282A3A] rounded-xl text-sm text-black dark:text-white placeholder-dark-grey focus:outline-none focus:ring-2 focus:ring-tranquil-velvet/40 focus:border-tranquil-velvet transition';
   const labelCls = 'block text-[11px] font-bold uppercase tracking-wider text-dark-grey mb-1.5';
+  const handleAddNewCourse = (courseData) => {
+    // If trainer logs in, status is pending. If admin, it is published.
+    const status = (currentUser?.role === 'trainer') ? 'pending' : 'published';
+    handleAddCourse({
+      ...courseData,
+      status
+    });
+  };
+
+  // Compute stat counts
+  const publishedCount = localCourses.filter(c => c.status === 'published').length;
+  const pendingCount = localCourses.filter(c => c.status === 'pending').length;
 
   return (
     <div className="space-y-6">
@@ -147,6 +214,9 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
           { title: 'Total Courses', count: localCourses.length, icon: BookOpen, color: '304 76 30' },
           { title: 'Published', count: localCourses.length, icon: CheckCircle, color: '176 99 34' },
           { title: 'Drafts', count: 5, icon: FileText, color: '304 76 30' },
+          { title: 'Total Courses', count: publishedCount, icon: BookOpen, color: '304 76 30' },
+          { title: 'Published', count: publishedCount, icon: CheckCircle, color: '176 99 34' },
+          { title: 'Pending Approval', count: pendingCount, icon: FileText, color: '30 90 200' },
           { title: 'Archived', count: 0, icon: Archive, color: '176 99 34' }
         ].map((stat, idx) => {
           const Icon = stat.icon;
@@ -176,6 +246,71 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
         })}
       </div>
 
+      {/* Admin Realtime Approvals Section */}
+      {(currentUser?.role === 'admin' || currentUser?.role === 'superadmin') && pendingCourses.length > 0 && (
+        <div className="space-y-4">
+          <div className="bg-gradient-to-r from-cta-orange/15 to-amber-500/15 border border-cta-orange/30 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h3 className="text-xs font-bold text-cta-orange uppercase tracking-wider flex items-center gap-1.5">
+                Pending Course Proposals ({pendingCourses.length}) <span className="h-2.5 w-2.5 rounded-full bg-cta-orange animate-pulse"></span>
+              </h3>
+              <p className="text-[10px] text-text-secondary">Trainers have proposed new courses. Review and approve them in real time to publish.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pendingCourses.map(course => (
+              <BorderGlow
+                key={course.id}
+                edgeSensitivity={15}
+                glowColor="30 90 200"
+                backgroundColor={theme === 'dark' ? '#16171F' : '#FFFFFF'}
+                borderRadius={16}
+                glowRadius={40}
+                glowIntensity={1.5}
+              >
+                <div className="bg-white dark:bg-[#16171F] border border-medium-grey dark:border-[#282A3A] rounded-2xl overflow-hidden flex flex-col justify-between h-full p-5 space-y-3">
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[9px] bg-tranquil-velvet/10 text-tranquil-velvet border border-tranquil-velvet/20 px-2 py-0.5 rounded font-bold uppercase">
+                        {course.category}
+                      </span>
+                      <div className="flex gap-1.5">
+                        {course.visibility === 'restricted' && (
+                          <span className="text-[9px] bg-blue-500/10 text-blue-500 font-bold uppercase px-2 py-0.5 rounded">
+                            {course.allowedOrganisations?.[0]}
+                          </span>
+                        )}
+                        <span className="text-[9px] bg-cta-orange/10 text-cta-orange font-bold uppercase px-2 py-0.5 rounded">
+                          Pending
+                        </span>
+                      </div>
+                    </div>
+                    <h4 className="text-sm font-extrabold text-black dark:text-white line-clamp-1">{course.title}</h4>
+                    <p className="text-[10px] text-dark-grey">Proposed by: <b className="text-black dark:text-white">{course.instructor}</b></p>
+                    <p className="text-[10px] text-dark-grey">Level: <b>{course.level}</b> | Lessons: <b>{course.lessons}</b></p>
+                  </div>
+                  <div className="flex gap-2 pt-2 border-t border-medium-grey/40 dark:border-[#282A3A]/40">
+                    <button
+                      onClick={() => handleApproveCourse(course.id)}
+                      className="flex-1 py-1.5 bg-emerald hover:bg-emerald/90 text-white text-[10px] font-bold rounded-lg transition cursor-pointer text-center"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCourse(course.id)}
+                      className="flex-1 py-1.5 bg-red-500 hover:bg-red-600 text-white text-[10px] font-bold rounded-lg transition cursor-pointer text-center"
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              </BorderGlow>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Course Grid Controls */}
       <div className="flex justify-between items-center bg-white dark:bg-[#16171F] p-4 border border-medium-grey dark:border-[#282A3A] rounded-2xl shadow-sm">
         <span className="text-xs font-bold text-black dark:text-white uppercase tracking-wider">
@@ -188,6 +323,15 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
           <Plus className="h-4 w-4" />
           <span>Add New Course</span>
         </button>
+        {currentUser?.role !== 'student' && (
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2 bg-cta-orange hover:bg-[#E05600] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-cta-orange/15 border border-transparent"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Add New Course</span>
+          </button>
+        )}
       </div>
 
       {/* Grid */}
@@ -207,10 +351,20 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
               <div>
                 <div className="h-44 relative overflow-hidden bg-white dark:bg-bg-page border-b border-medium-grey dark:border-border-card">
                   <img src={course.image} className="h-full w-full object-cover" alt="" />
-                  <div className="absolute top-3 left-3">
+                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[85%]">
                     <span className="text-[9px] bg-white/90 dark:bg-bg-card/90 text-tranquil-velvet dark:text-amber-400 border border-tranquil-velvet/20 px-2 py-0.5 rounded font-bold uppercase shadow-sm">
                       {course.category}
                     </span>
+                    {course.visibility === 'restricted' && (
+                      <span className="text-[9px] bg-blue-500 text-white px-2 py-0.5 rounded font-bold uppercase shadow-sm">
+                        {course.allowedOrganisations?.[0]} Scope
+                      </span>
+                    )}
+                    {course.status === 'pending' && (
+                      <span className="text-[9px] bg-cta-orange text-white px-2 py-0.5 rounded font-bold uppercase shadow-sm">
+                        Pending
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -246,26 +400,35 @@ export default function CoursesPage({ courses, handleSimulateProgress, searchQue
               </div>
 
               <div className="p-5 pt-0 border-t border-medium-grey/40 dark:border-[#282A3A]/40 flex justify-between items-center mt-3">
-                <button 
-                  onClick={() => handleSimulateClick(course.id)}
-                  className="px-3 py-1.5 bg-blueish-grey hover:bg-medium-grey/30 dark:bg-bg-page dark:hover:bg-[#1E1F29] border border-medium-grey dark:border-border-card text-black dark:text-white text-[10px] font-bold rounded-lg transition cursor-pointer"
-                >
-                  Simulate Lesson
-                </button>
-                <div className="flex items-center gap-2">
+                {course.status === 'pending' ? (
+                  <span className="text-[9px] bg-cta-orange/15 text-cta-orange border border-cta-orange/20 px-2 py-1 rounded font-bold uppercase leading-none">
+                    Pending Approval
+                  </span>
+                ) : (
                   <button 
-                    onClick={() => alert(`Editing course: ${course.title}`)}
-                    className="p-2 hover:bg-tranquil-velvet/10 hover:text-tranquil-velvet rounded-xl transition text-dark-grey cursor-pointer"
+                    onClick={() => handleSimulateClick(course.id)}
+                    className="px-3 py-1.5 bg-blueish-grey hover:bg-medium-grey/30 dark:bg-bg-page dark:hover:bg-[#1E1F29] border border-medium-grey dark:border-border-card text-black dark:text-white text-[10px] font-bold rounded-lg transition cursor-pointer"
                   >
-                    <Edit2 className="h-4 w-4" />
+                    Simulate Lesson
                   </button>
-                  <button 
-                    onClick={() => handleDeleteCourse(course.id)}
-                    className="p-2 hover:bg-red-500/10 hover:text-red-500 rounded-xl transition text-dark-grey cursor-pointer"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
+                )}
+                
+                {(currentUser?.role === 'admin' || currentUser?.role === 'superadmin' || (currentUser?.role === 'trainer' && course.instructor === currentUser.name)) && (
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => alert(`Editing course: ${course.title}`)}
+                      className="p-2 hover:bg-tranquil-velvet/10 hover:text-tranquil-velvet rounded-xl transition text-dark-grey cursor-pointer"
+                    >
+                      <Edit2 className="h-4 w-4" />
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteCourse(course.id)}
+                      className="p-2 hover:bg-red-500/10 hover:text-red-500 rounded-xl transition text-dark-grey cursor-pointer"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </BorderGlow>

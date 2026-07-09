@@ -1,0 +1,176 @@
+/*
+==========================================================
+Assessment Toolbar Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout and styling for the
+Assessment toolbar.
+
+Contents
+
+• Toolbar layout
+• Search input
+• Action buttons
+• View switch
+• Responsive layout
+
+==========================================================
+*/
+
+/* ==========================================
+   Toolbar Layout
+
+   Aligns search controls with toolbar
+   actions.
+========================================== */
+
+.toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:2rem;
+    margin-bottom:2rem;
+}
+
+.leftSection{
+    display:flex;
+    align-items:center;
+    height:50px;
+}
+
+/* ==========================================
+   SEARCH
+========================================== */
+/* Search input container and styling. */
+
+.searchContainer{
+    flex:1;
+}
+
+.search{
+    width:100%;
+    height:52px;
+    padding:0 1.2rem;
+    border:2px solid #D9DCE5;
+    border-radius:10px;
+
+}
+
+.search:focus{
+    outline:none;
+    border-color:#6C1D5F;
+    box-shadow: 0 0 0 3px rgba(108,29,95,.08);
+
+}
+
+/* ==========================================
+   RIGHT SECTION
+========================================== */
+/* Groups action buttons and layout switch
+   controls. */
+
+
+   /* ==========================================
+    Toolbar Action Buttons
+
+    Shared styling for Filter and Export
+    actions.
+    ========================================== */
+.rightSection{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    flex-shrink:0;
+
+}
+
+/* ==========================================
+   View Mode Toggle
+
+   Allows switching between table and grid
+   layouts.
+========================================== */
+.viewSwitch{
+    display:flex;
+    align-items:center;
+    border:1px solid rgb(108, 29, 95, 0.75);
+    border-radius:8px;
+    overflow:hidden;
+
+}
+
+.viewSwitch button{
+    width:48px;
+    height:46px;
+    border:none;
+    background:white;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:.25s;
+}
+
+.viewSwitch button:hover{
+    background:#F5F6FA;
+}
+
+.iconButton{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+    padding:.75rem 1rem;
+    border:2px solid #D9DCE5;
+    border-radius:8px;
+    background:white;
+    cursor:pointer;
+    transition:.25s;
+    font-size:.9rem;
+    font-weight:600;
+}
+
+.iconButton:hover{
+    background:#F8F8FC;
+    border-color:#6C1D5F;
+    color:#6C1D5F;
+}
+
+.activeView{
+    background:#6C1D5F !important;
+    color:white;
+}
+
+/* ==========================================
+   Responsive Layout
+
+   Reorganizes toolbar controls on tablets
+   and mobile devices.
+========================================== */
+
+@media(max-width:992px){
+
+    .toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .rightSection{
+        width:100%;
+        flex-direction:row;
+        justify-content:space-between;
+        align-items:center;
+    }
+}
+
+@media(max-width:650px){
+    .rightSection{
+        flex-wrap:wrap;
+        gap:1rem;
+    }
+}

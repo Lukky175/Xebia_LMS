@@ -10,7 +10,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Building2, CircleCheckBig, Eye, GraduationCap, PencilLine, Plus, Trash2, Users, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
-import { ProfileActionButton, ProfileActionModal, ProfileBadge, ProfileCardFrame } from '@/components/profile/ProfileUi.jsx';
+import { ProfileActionButton, ProfileBadge, ProfileCardFrame } from '@/components/profile/ProfileUi.jsx';
+import { BatchFormModal } from '@/components/forms/FormsUi.jsx';
 
 const initialBatches = [
   {
@@ -322,88 +323,16 @@ export default function BatchesPage() {
         </div>
       </div>
 
-      <ProfileActionModal
+      <BatchFormModal
         open={showCreateModal}
-        title="Create Batch"
-        description="Add a new cohort and choose whether it starts as pending approval."
         onClose={() => setShowCreateModal(false)}
-      >
-        <form onSubmit={handleCreateBatch} className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Batch name</label>
-              <input
-                value={draftBatch.name}
-                onChange={(event) => setDraftBatch((current) => ({ ...current, name: event.target.value }))}
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-black dark:text-white focus:outline-none"
-                placeholder="New cohort name"
-                required
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Organisation</label>
-              <input
-                value={draftBatch.organisation}
-                onChange={(event) => setDraftBatch((current) => ({ ...current, organisation: event.target.value }))}
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-black dark:text-white focus:outline-none"
-                placeholder="Organisation name"
-                required
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Learners</label>
-              <input
-                type="number"
-                min="0"
-                value={draftBatch.learners}
-                onChange={(event) => setDraftBatch((current) => ({ ...current, learners: event.target.value }))}
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-black dark:text-white focus:outline-none"
-              />
-            </div>
-            <div className="space-y-1 sm:col-span-2">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Duration</label>
-              <select
-                value={draftBatch.duration}
-                onChange={(event) => setDraftBatch((current) => ({ ...current, duration: event.target.value }))}
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-black dark:text-white focus:outline-none"
-              >
-                <option>3 Months (12 Weeks)</option>
-                <option>6 Months</option>
-                <option>9 Months</option>
-                <option>1 Year</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Initial status</label>
-              <select
-                value={draftBatch.status}
-                onChange={(event) => setDraftBatch((current) => ({ ...current, status: event.target.value }))}
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-black dark:text-white focus:outline-none"
-              >
-                <option>Pending Approval</option>
-                <option>Approved</option>
-                <option>Rejected</option>
-              </select>
-            </div>
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-[0.18em] text-dark-grey">Created by</label>
-              <input
-                value="race7290@gmail.com"
-                disabled
-                className="w-full rounded-xl border border-medium-grey/40 dark:border-border-card bg-[#F7F8FC] dark:bg-[#0F1015] px-3.5 py-2.5 text-xs font-semibold text-dark-grey focus:outline-none"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-end gap-2 pt-2">
-            <ProfileActionButton tone="secondary" onClick={() => setShowCreateModal(false)}>Cancel</ProfileActionButton>
-            <ProfileActionButton type="submit">Save Batch</ProfileActionButton>
-          </div>
-        </form>
-      </ProfileActionModal>
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCreateBatch(e);
+        }}
+        value={draftBatch}
+        onChange={(field, val) => setDraftBatch((current) => ({ ...current, [field]: val }))}
+      />
     </DashboardLayout>
   );
 }

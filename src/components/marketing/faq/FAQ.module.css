@@ -1,0 +1,339 @@
+/* ==========================================================
+   HERO SECTION
+   ========================================================== */
+
+.heroSection {
+    position: relative;
+    overflow: hidden;
+
+    height: 40vh;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.65),
+            rgba(0, 0, 0, 0.65)
+        ),
+        url("/Login.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Decorative gradient that creates a smooth
+   transition between the hero banner and
+   the page background. */
+.heroSection::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -1px;
+
+    width: 100%;
+    height: 15px;
+
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255, 255, 255, 0.15) 30%,
+        var(--background) 100%
+    );
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+.heroOverlay {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+}
+
+.heroOverlay h1 {
+    font-size: 3.8rem;
+
+    color: white;
+
+    margin-bottom: 15px;
+}
+
+.heroOverlay p {
+    color: rgba(255, 255, 255, 0.85);
+
+    font-size: 1.1rem;
+}
+
+/* ==========================================================
+   FAQ CONTENT LAYOUT
+   ========================================================== */
+
+.faqSection {
+    padding: 100px 8%;
+
+    background: var(--background);
+}
+
+.faqGrid {
+    max-width: 1400px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1.2fr;
+
+    gap: 100px;
+
+    align-items: start;
+}
+
+.sectionTag {
+    color: var(--primary-color);
+
+    font-size: .9rem;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.leftContent h2 {
+    margin-top: 15px;
+
+    font-size: 3.5rem;
+
+    line-height: 1.15;
+
+    color: var(--text-primary);
+}
+
+.leftContent span {
+    color: var(--primary-second-color);
+}
+
+.leftContent p {
+    margin-top: 25px;
+
+    max-width: 450px;
+
+    color: var(--text-secondary);
+
+    line-height: 1.8;
+}
+
+/* ==========================================================
+   ACCORDION COMPONENTS
+   ========================================================== */
+
+.rightContent {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.faqItem {
+
+    border-radius: 18px;
+
+    background: var(--background);
+
+    border: 2px solid
+        var(--primary-color);
+
+    overflow: hidden;
+
+    box-shadow:
+        0 0 8px
+        rgba(0,0,0,.06);
+
+    transition: .3s;
+}
+
+.faqItem:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 20px
+        rgba(0,0,0,.08);
+}
+
+.question {
+
+    width: 100%;
+
+    background: transparent;
+
+    border: none;
+
+    padding: 28px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    color: var(--text-primary);
+
+    font-size: 1.1rem;
+
+    font-weight: 600;
+
+    text-align: left;
+}
+
+.icon {
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary-second-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+
+    flex-shrink: 0;
+}
+
+/* Accordion animation is achieved by
+   transitioning max-height between
+   collapsed and expanded states. */
+
+.answerWrapper {
+
+    max-height: 0;
+
+    overflow: hidden;
+
+    transition:
+        max-height .35s ease;
+}
+
+.open {
+
+    max-height: 200px;
+}
+
+.answer {
+
+    padding:
+        0 28px
+        28px;
+
+    color:
+        var(--text-secondary);
+
+    line-height: 1.8;
+}
+
+/************************************************************
+   CALL TO ACTION
+*************************************************************/
+
+.helpSection {
+
+    padding:
+        85px 20px;
+
+    text-align: center;
+
+    background: var(--background-ui);
+}
+
+.helpSection h2 {
+
+    font-size: 2.5rem;
+
+    color:
+        var(--text-primary);
+}
+
+.helpSection p {
+
+    margin:
+        20px auto 40px;
+
+    max-width: 500px;
+
+    color:
+        var(--text-secondary);
+}
+
+.helpButton {
+
+    display: inline-block;
+
+    padding:
+        16px 40px;
+
+    border-radius: 999px;
+
+    background:
+        var(--primary-color);
+
+    color:
+        var(--text-specials);
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: .3s;
+}
+
+.helpButton:hover {
+
+    background:
+        var(--primary-second-color);
+
+    transform:
+        translateY(-2px);
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN
+   ========================================================== */
+   
+@media (max-width: 900px) {
+
+    .faqGrid {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 60px;
+    }
+
+    .leftContent h2 {
+
+        font-size: 2.8rem;
+    }
+
+    .heroOverlay h1 {
+
+        font-size: 2.8rem;
+    }
+}

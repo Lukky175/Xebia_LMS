@@ -1,0 +1,318 @@
+/* =====================================================
+   GLOBAL NAVIGATION LAYOUT
+   ===================================================== */
+
+/*
+    Navbar Design Principles
+    ------------------------
+    - Fixed positioning keeps navigation
+      accessible throughout the user journey.
+
+    - Backdrop blur improves readability
+      over dynamic page content.
+
+    - High z-index ensures the navigation
+      remains above all page sections.
+*/
+
+.navbar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 45px;
+
+    z-index: 9999;
+
+    background: var(--background);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    border-bottom:
+        0.5px solid
+        var(--primary-color);
+
+    box-shadow:
+        0 0.5px 3px
+        var(--primary-second-color);
+
+    animation:
+        slideDown 0.7s ease forwards;
+
+    display: flex;
+    align-items: center; 
+}
+
+/*
+    Three-column grid layout:
+
+    [ Logo ] [ Navigation Links ] [ Actions ]
+
+    Fixed-width side columns maintain
+    visual balance across large screens.
+*/
+.container {
+
+    max-width: 1400px;
+
+    width: 100%;
+    height: 100%;
+
+    margin: auto;
+
+    padding: 0 20px;
+
+    display: grid;
+
+    grid-template-columns: 180px 1fr 220px;
+
+    align-items: center;
+    transform: translateY(0px);
+}
+
+/* ---------- Logo ---------- */
+/* =====================================================
+   BRANDING
+   ===================================================== */
+
+.logoContainer {
+
+    display: flex;
+    align-items: center;
+
+    height: 100%;
+}
+
+.logo {
+
+    width: 115px;
+    height: 40px;
+
+    object-fit: contain;
+
+    transition: transform 0.25s ease;
+}
+
+.logo:hover {
+
+    transform: scale(1.03);
+}
+
+/* ---------- Center Links ---------- */
+/* =====================================================
+   PRIMARY NAVIGATION LINKS
+   ===================================================== */
+
+.links {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 40px;
+    
+}
+
+.links a {
+
+    text-decoration: none;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+.links a:hover {
+
+    color: var(--primary-color);
+
+    transform: translateY(-1px);
+}
+
+/* ==========================================
+   Animated Underline
+   ========================================== */
+   /*
+    Uses a pseudo-element to create
+    a smooth hover animation without
+    affecting document layout.
+*/
+
+.links a {
+    position: relative;
+}
+
+.links a::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -5px;
+
+    width: 0;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary-color),
+            var(--primary-second-color)
+        );
+
+    border-radius: 10px;
+
+    transition:
+        width 0.3s ease;
+}
+
+.links a:hover::after {
+
+    width: 100%;
+}
+
+/* ---------- Right Side ---------- */
+/* =====================================================
+   USER ACTIONS
+   ===================================================== */
+
+.actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+    height: 100%;
+    gap: 16px;
+}
+
+.themeButton {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: none;
+
+    font-size: 1.4rem;
+
+    color: var(--text-primary);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease;
+}
+/*
+    The rotation animation provides
+    immediate visual feedback when
+    switching themes.
+*/
+.themeButton:hover {
+    transform: rotate(15deg);
+}
+
+.divider {
+    color: var(--text-secondary);
+
+    opacity: 0.4;
+
+    font-size: 20px;
+
+    margin: 0 4px;
+}
+
+/* ---------- CTA Button ---------- */
+/* =====================================================
+   PRIMARY CALL-TO-ACTION
+   ===================================================== */
+
+.ctaButton {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 35px;
+
+    padding: 0 19px;
+
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    background: var(--primary-color);
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.ctaButton:hover {
+
+    opacity: 0.95;
+
+    transform: translateY(-1px);
+}
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes slideDown {
+
+    from {
+        transform: translateY(-100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/************************************************************
+   RESPONSIVE DESIGN
+*************************************************************/
+/*
+    Navigation links are hidden on
+    smaller screens.
+
+    Future enhancement:
+    Replace with a hamburger menu
+    and mobile navigation drawer.
+*/
+
+@media (max-width: 768px) {
+
+    .container {
+
+        grid-template-columns: 1fr auto;
+
+        gap: 20px;
+    }
+
+    .links {
+
+        display: none;
+    }
+}

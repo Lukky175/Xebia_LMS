@@ -1,0 +1,160 @@
+/*
+==========================================================
+Assessment Pagination Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout and appearance of the reusable
+pagination component.
+
+Contents
+
+• Pagination container
+• Record information
+• Navigation controls
+• Page buttons
+• Responsive layout
+
+==========================================================
+*/
+
+/* ==========================================
+   Pagination Layout
+
+   Aligns record information with navigation
+   controls.
+========================================== */
+
+.pagination{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:2rem;
+
+    gap:1rem;
+
+}
+
+/* Displays the current visible record range. */
+
+.info{
+
+    color:var(--text-secondary);
+
+    font-size:.92rem;
+
+}
+
+/* Container for page navigation buttons. */
+.controls{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.5rem;
+
+}
+
+/* ==========================================
+   Pagination Buttons
+
+   Shared styling for page numbers and
+   navigation arrows.
+========================================== */
+.pageButton,
+
+.arrowButton{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    background:white;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.pageButton:hover,
+
+.arrowButton:hover{
+
+    background:#F7F7FA;
+
+}
+
+/* Highlights the currently selected page. */
+.activePage{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#6C1D5F;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+/* Prevent interaction when navigation is no
+   longer possible. */
+.arrowButton:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed;
+
+}
+
+/* ==========================================
+   Responsive Layout
+
+   Stack pagination controls vertically on
+   smaller screens.
+========================================== */
+@media(max-width:768px){
+
+    .pagination{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+}

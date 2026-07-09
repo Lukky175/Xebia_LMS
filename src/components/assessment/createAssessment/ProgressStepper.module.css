@@ -1,0 +1,197 @@
+/*
+==========================================================
+Progress Stepper Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout and animations for the
+Assessment Creation Wizard progress indicator.
+
+Contents
+
+• Progress track
+• Progress indicator
+• Step circles
+• Step labels
+• Active & completed states
+• Responsive layout
+
+==========================================================
+*/
+
+/* ==========================================
+   Stepper Layout
+
+   Arranges wizard steps horizontally and
+   positions the progress track behind them.
+========================================== */
+.container{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    padding:1rem 4rem 0.5rem;
+    background:#fff;
+    border-bottom:1px solid #ececec;
+}
+
+/* ==========================================
+   Progress Track
+
+   Represents the complete wizard journey.
+
+   The animated progress bar overlays this
+   track to indicate completion.
+========================================== */
+.track{
+    position:absolute;
+    top:39px;
+    left:calc(12.5% + 24px);
+    right:calc(12.5% + 24px);
+    height:4px;
+    background:#ECEFF4;
+    border-radius:999px;
+    overflow:hidden;
+    z-index:0;
+}
+
+/* Filled portion of the progress track.
+
+   Width is updated dynamically based on
+   the current wizard step. */
+.progress{
+    width:0;
+    height:100%;
+    border-radius:999px;
+    background:#24A148;
+    transition:width .45s ease;
+}
+
+/* Individual wizard step consisting of
+   the icon and descriptive text. */
+.step{
+    position:relative;
+    z-index:2;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+}
+
+/* Circular indicator representing the
+   current status of a wizard step. */
+.circle{
+    position:relative;
+    z-index:5;
+    overflow:hidden;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:white;
+    border:2px solid #D8DCE6;
+    color:#7D8594;
+    isolation:isolate;
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.circle:hover{
+    transform:translateY(-2px);
+
+}
+
+/* Styling applied to the step currently
+   being completed by the user. */
+.active{
+    color:white;
+    border:2px solid #6C1D5F;
+    background:linear-gradient(
+        135deg,
+        #6C1D5F,
+        #8A2D79
+    );
+
+    box-shadow:
+        0 0 0 6px
+        rgba(125,42,232,.10),
+        0 12px 24px
+        rgba(125,42,232,.22);
+
+    transform:scale(1.08);
+}
+
+/* Styling applied to steps that have
+   already been completed. */
+.completed{
+    background:#24A148;
+    border:2px solid #24A148;
+    color:white;
+    transform:scale(1.03);
+}
+
+/* Step title and supporting description. */
+.text{
+    margin-top: 0.9rem;
+    text-align:center;
+}
+
+.title{
+    font-size:.90rem;
+    font-weight:600;
+    color:#9095A1;
+    transition:.3s;
+}
+
+.active .title{
+    color:#6C1D5F;
+}
+
+.completed .title{
+    color:#24A148;
+}
+
+.text p{
+    margin-top:.25rem;
+    font-size:.76rem;
+    color:#A0A4AE;
+}
+
+/* Enable horizontal scrolling when the
+   available width cannot accommodate all
+   wizard steps. */
+@media(max-width:900px){
+    .container{
+        overflow-x:auto;
+        gap:2rem;
+        padding:1.5rem 2rem;
+    }
+
+    .step{
+        min-width:150px;
+    }
+}
+
+/* Decorative highlight displayed around
+   the active wizard step. */
+.circle::before{
+    content:"";
+    position:absolute;
+    inset:-6px;
+    border-radius:50%;
+    opacity:0;
+    transition:opacity .25s ease;
+}
+
+.active::before{
+    opacity:1;
+    background:rgba(108,29,95,.12);
+}

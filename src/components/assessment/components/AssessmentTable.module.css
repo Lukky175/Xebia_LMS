@@ -1,0 +1,83 @@
+/*
+==========================================================
+Assessment Table Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout for the assessment listing
+container.
+
+Contents
+
+• Card container
+• Section title
+• Header layout
+
+==========================================================
+*/
+
+/* ==========================================
+   Assessment Container
+
+   Main card wrapping the toolbar,
+   assessment listing and pagination.
+========================================== */
+.card{
+
+    margin-top:2rem;
+
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:1.75rem;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.05);
+
+}
+
+/* Header layout used for aligning titles
+   and future actions. */
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:1.25rem;
+
+}
+
+.header h2{
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+    color:var(--text-primary);
+
+}
+
+/* Section title displayed above the
+   assessment toolbar. */
+.title{
+
+    margin-bottom:1.5rem;
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    color:var(--text-primary);
+
+    line-height:1.2;
+
+}
