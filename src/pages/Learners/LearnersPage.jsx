@@ -6,9 +6,11 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Mail, Building2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Plus, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Mail, Building2, AlertCircle, Eye, Pencil, Trash2, LayoutGrid, List } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
 import { ProfileActionModal } from '@/components/profile/ProfileUi.jsx';
+import { LearnerFormModal } from '@/components/forms/FormsUi.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 
 const initialLearners = [
@@ -123,6 +125,14 @@ export default function LearnersPage() {
   const [showFiltersModal, setShowFiltersModal] = useState(false);
   const [filterStatus, setFilterStatus] = useState('All');
   const [filterType, setFilterType] = useState('All');
+  const [viewMode, setViewMode] = useState(() => {
+    if (typeof window === 'undefined') return 'table';
+    try {
+      return window.localStorage.getItem('learners_view') === 'cards' ? 'cards' : 'table';
+    } catch {
+      return 'table';
+    }
+  });
   const pageSize = 10;
 
   const handleSearch = () => {
@@ -212,6 +222,19 @@ export default function LearnersPage() {
     setFilterType('All');
   };
 
+  const handleSetViewMode = (mode) => {
+    setViewMode(mode);
+    try {
+      window.localStorage.setItem('learners_view', mode);
+    } catch {
+      // ignore localStorage failures
+    }
+  };
+
+  const activeLearners = useMemo(() => learners.filter((learner) => learner.status === 'Active').length, [learners]);
+  const inactiveLearners = learners.length - activeLearners;
+  const organisationCount = useMemo(() => new Set(learners.map((learner) => learner.organisation)).size, [learners]);
+
   const filteredLearners = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
     return learners.filter((learner) => {
@@ -262,7 +285,7 @@ export default function LearnersPage() {
   return (
     <DashboardLayout onSearchChange={(event) => setSearchQuery(event.target.value)} searchValue={searchQuery}>
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 rounded-3xl border border-white/60 dark:border-border-card bg-white/80 dark:bg-[#16171F]/90 backdrop-blur-sm p-6 shadow-sm">
+        <div className="flex flex-col gap-4 rounded-xl border border-white/60 dark:border-border-card bg-white/80 dark:bg-[#16171F]/90 backdrop-blur-sm p-6 shadow-sm">
           {/* Header Section */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div className="space-y-1">
@@ -288,6 +311,39 @@ export default function LearnersPage() {
           </div>
 
           {/* Search and Filter Section */}
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-medium-grey/30 bg-white p-4 shadow-sm dark:border-border-card dark:bg-[#16171F]">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-dark-grey">Total Learners</p>
+                <p className="mt-2 text-2xl font-extrabold text-black dark:text-white">{learners.length}</p>
+              </div>
+              <div className="rounded-xl border border-medium-grey/30 bg-white p-4 shadow-sm dark:border-border-card dark:bg-[#16171F]">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-dark-grey">Active</p>
+                <p className="mt-2 text-2xl font-extrabold text-black dark:text-white">{activeLearners}</p>
+              </div>
+              <div className="rounded-xl border border-medium-grey/30 bg-white p-4 shadow-sm dark:border-border-card dark:bg-[#16171F]">
+                <p className="text-[10px] uppercase tracking-[0.22em] text-dark-grey">Organisations</p>
+                <p className="mt-2 text-2xl font-extrabold text-black dark:text-white">{organisationCount}</p>
+              </div>
+            </div>
+            <div className="inline-flex items-center justify-end gap-2 rounded-l border border-medium-grey/40 bg-white dark:bg-[#16171F] p-1 shadow-sm">
+              <button
+                type="button"
+                onClick={() => handleSetViewMode('table')}
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${viewMode === 'table' ? 'bg-tranquil-velvet text-white shadow-sm' : 'text-dark-grey hover:bg-medium-grey/10'}`}
+              >
+                <List className="h-4 w-4" /> Table
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSetViewMode('cards')}
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${viewMode === 'cards' ? 'bg-tranquil-velvet text-white shadow-sm' : 'text-dark-grey hover:bg-medium-grey/10'}`}
+              >
+                <LayoutGrid className="h-4 w-4" /> Cards
+              </button>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-1 gap-2">
               <div className="flex-1 relative">
@@ -321,103 +377,182 @@ export default function LearnersPage() {
           </div>
 
           {/* Table Section */}
-          <div className="rounded-2xl border border-medium-grey/30 dark:border-border-card bg-[#FBFBFE] dark:bg-[#0F1015] p-4 md:p-6">
+          <div className="rounded-xl border border-medium-grey/30 dark:border-border-card bg-[#FBFBFE] dark:bg-[#0F1015] p-4 md:p-6">
             {filteredLearners.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <AlertCircle className="h-12 w-12 text-medium-grey/50 mb-3" />
                 <p className="text-dark-grey">No learners found matching your search.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto sleek-scrollbar">
-                <table className="w-full min-w-[1000px] text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-medium-grey/50 dark:border-border-card bg-[#F7F8FC]/80 dark:bg-[#18181B] text-dark-grey uppercase tracking-[0.18em]">
-                      <th className="p-4 font-bold">Learner</th>
-                      <th className="p-4 font-bold">Organisation</th>
-                      <th className="p-4 font-bold">Type</th>
-                      <th className="p-4 font-bold">Domain</th>
-                      <th className="p-4 font-bold">Sem</th>
-                      <th className="p-4 font-bold">Status</th>
-                      <th className="p-4 font-bold text-center">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {pageRows.map((learner) => (
-                      <tr
+              viewMode === 'table' ? (
+                <div className="overflow-x-auto sleek-scrollbar">
+                  <table className="w-full min-w-[1000px] text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-medium-grey/50 dark:border-border-card bg-[#F7F8FC]/80 dark:bg-[#18181B] text-dark-grey uppercase tracking-[0.18em]">
+                        <th className="p-4 font-bold">Learner</th>
+                        <th className="p-4 font-bold">Organisation</th>
+                        <th className="p-4 font-bold">Type</th>
+                        <th className="p-4 font-bold">Domain</th>
+                        <th className="p-4 font-bold">Sem</th>
+                        <th className="p-4 font-bold">Status</th>
+                        <th className="p-4 font-bold text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pageRows.map((learner) => (
+                        <motion.tr
+                          key={learner.id}
+                          initial={{ opacity: 0, y: 12 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.25 }}
+                          className="border-b border-medium-grey/30 dark:border-border-card/30 hover:bg-tranquil-velvet/5 dark:hover:bg-white/5 transition-colors"
+                        >
+                          <td className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className={`flex h-10 w-10 items-center justify-center rounded-lg font-bold ${getAvatarColor(learner.avatar)}`}>
+                                {learner.avatar}
+                              </div>
+                              <div>
+                                <p className="font-bold text-black dark:text-white">{learner.name}</p>
+                                <p className="text-[10px] text-dark-grey">{learner.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-start gap-2">
+                              <Building2 className="h-3.5 w-3.5 text-tranquil-velvet mt-0.5 flex-shrink-0" />
+                              <span className="text-dark-grey text-xs">{learner.organisation}</span>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-dark-grey">{learner.type}</span>
+                          </td>
+                          <td className="p-4">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-tranquil-velvet/10 px-3 py-1.5 text-[10px] font-bold text-tranquil-velvet dark:bg-tranquil-velvet/20">
+                              {learner.domain}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="font-semibold text-black dark:text-white">{learner.sem}</span>
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-xl leading-none ${learner.status === 'Active' ? 'text-emerald-500' : 'text-gray-400'}`}>
+                                {getStatusIcon(learner.status)}
+                              </span>
+                              <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold ${getStatusColor(learner.status)}`}>
+                                {learner.status}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => openLearnerModal('view', learner)}
+                                className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
+                                title="View"
+                              >
+                                <Eye className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => openLearnerModal('edit', learner)}
+                                className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
+                                title="Edit"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteLearner(learner.id)}
+                                className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-cta-orange/20 bg-white dark:bg-[#16171F] text-cta-orange hover:bg-cta-orange/10 transition text-xs"
+                                title="Delete"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <motion.div layout className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  <AnimatePresence>
+                    {pageRows.map((learner, index) => (
+                      <motion.div
                         key={learner.id}
-                        className="border-b border-medium-grey/30 dark:border-border-card/30 hover:bg-tranquil-velvet/5 dark:hover:bg-white/5 transition-colors"
+                        layout
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 16 }}
+                        transition={{ duration: 0.35, delay: index * 0.04 }}
+                        className="rounded-lg border border-medium-grey/30 bg-white p-5 shadow-sm dark:border-border-card dark:bg-[#16171F] transition hover:-translate-y-1 hover:shadow-lg"
                       >
-                        <td className="p-4">
+                        <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-3">
-                            <div className={`flex h-10 w-10 items-center justify-center rounded-lg font-bold ${getAvatarColor(learner.avatar)}`}>
+                            <div className={`flex h-11 w-11 items-center justify-center rounded-xl font-bold ${getAvatarColor(learner.avatar)}`}>
                               {learner.avatar}
                             </div>
                             <div>
                               <p className="font-bold text-black dark:text-white">{learner.name}</p>
-                              <p className="text-[10px] text-dark-grey">{learner.email}</p>
+                              <p className="text-xs text-dark-grey">{learner.email}</p>
                             </div>
                           </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-start gap-2">
-                            <Building2 className="h-3.5 w-3.5 text-tranquil-velvet mt-0.5 flex-shrink-0" />
-                            <span className="text-dark-grey text-xs">{learner.organisation}</span>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <span className="text-dark-grey">{learner.type}</span>
-                        </td>
-                        <td className="p-4">
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-tranquil-velvet/10 px-3 py-1.5 text-[10px] font-bold text-tranquil-velvet dark:bg-tranquil-velvet/20">
-                            {learner.domain}
+                          <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold ${getStatusColor(learner.status)}`}>
+                            {learner.status}
                           </span>
-                        </td>
-                        <td className="p-4">
-                          <span className="font-semibold text-black dark:text-white">{learner.sem}</span>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            <span className={`text-xl leading-none ${learner.status === 'Active' ? 'text-emerald-500' : 'text-gray-400'}`}>
-                              {getStatusIcon(learner.status)}
-                            </span>
-                            <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold ${getStatusColor(learner.status)}`}>
-                              {learner.status}
-                            </span>
+                        </div>
+
+                        <div className="mt-4 grid gap-3 text-sm text-dark-grey sm:grid-cols-2">
+                          <div className="rounded-lg bg-[#F7F8FC] p-3">
+                            <p className="text-[10px] uppercase tracking-[0.18em]">Organisation</p>
+                            <p className="mt-2 font-semibold text-black dark:text-white">{learner.organisation}</p>
                           </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => openLearnerModal('view', learner)}
-                              className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
-                              title="View"
-                            >
-                              <Eye className="h-3.5 w-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => openLearnerModal('edit', learner)}
-                              className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-medium-grey/40 dark:border-border-card bg-white dark:bg-[#16171F] text-dark-grey hover:text-tranquil-velvet hover:bg-tranquil-velvet/5 transition text-xs"
-                              title="Edit"
-                            >
-                              <Pencil className="h-3.5 w-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteLearner(learner.id)}
-                              className="h-8 w-8 inline-flex items-center justify-center rounded-lg border border-cta-orange/20 bg-white dark:bg-[#16171F] text-cta-orange hover:bg-cta-orange/10 transition text-xs"
-                              title="Delete"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
+                          <div className="rounded-lg bg-[#F7F8FC] p-3">
+                            <p className="text-[10px] uppercase tracking-[0.18em]">Domain</p>
+                            <p className="mt-2 font-semibold text-black dark:text-white">{learner.domain}</p>
                           </div>
-                        </td>
-                      </tr>
+                          <div className="rounded-lg bg-[#F7F8FC] p-3">
+                            <p className="text-[10px] uppercase tracking-[0.18em]">Type</p>
+                            <p className="mt-2 font-semibold text-black dark:text-white">{learner.type}</p>
+                          </div>
+                          <div className="rounded-lg bg-[#F7F8FC] p-3">
+                            <p className="text-[10px] uppercase tracking-[0.18em]">Semester</p>
+                            <p className="mt-2 font-semibold text-black dark:text-white">{learner.sem}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => openLearnerModal('view', learner)}
+                            className="inline-flex items-center gap-2 rounded-xl border border-medium-grey/40 bg-white px-3 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
+                          >
+                            <Eye className="h-3.5 w-3.5" /> View
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => openLearnerModal('edit', learner)}
+                            className="inline-flex items-center gap-2 rounded-l border border-medium-grey/40 bg-white px-3 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
+                          >
+                            <Pencil className="h-3.5 w-3.5" /> Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteLearner(learner.id)}
+                            className="inline-flex items-center gap-2 rounded-l border border-cta-orange/20 bg-white px-3 py-2 text-xs font-bold text-cta-orange transition hover:bg-cta-orange/10"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" /> Delete
+                          </button>
+                        </div>
+                      </motion.div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+                  </AnimatePresence>
+                </motion.div>
+              )
             )}
 
             {/* Pagination */}
@@ -480,168 +615,14 @@ export default function LearnersPage() {
           </div>
         </div>
       </div>
-      <ProfileActionModal
+      <LearnerFormModal
         open={showLearnerModal}
         onClose={closeLearnerModal}
-        title={modalMode === 'create' ? 'New learner' : modalMode === 'edit' ? 'Edit learner' : 'Learner details'}
-        description={
-          modalMode === 'view'
-            ? 'Review learner information details.'
-            : 'Fill in learner details to add or update the record.'
-        }
-        footer={
-          modalMode === 'view' ? (
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={() => openLearnerModal('edit', selectedLearner)}
-                className="inline-flex items-center gap-2 rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
-              >
-                <Pencil className="h-4 w-4" /> Edit
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={closeLearnerModal}
-                className="rounded-xl border border-medium-grey/40 bg-white px-4 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="learnerForm"
-                className="rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
-              >
-                Save
-              </button>
-            </div>
-          )
-        }
-      >
-        {modalMode === 'view' ? (
-          <div className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Name</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.name}</p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Email</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.email}</p>
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Organisation</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.organisation}</p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Type</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.type}</p>
-              </div>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Domain</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.domain}</p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Sem</p>
-                <p className="mt-1 text-sm text-black">{selectedLearner?.sem}</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.18em] text-dark-grey font-bold">Status</p>
-              <p className="mt-1 text-sm text-black">{selectedLearner?.status}</p>
-            </div>
-          </div>
-        ) : (
-          <form id="learnerForm" onSubmit={handleLearnerSave} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Name</span>
-                <input
-                  value={learnerForm.name}
-                  onChange={(e) => handleLearnerFieldChange('name', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Email</span>
-                <input
-                  value={learnerForm.email}
-                  onChange={(e) => handleLearnerFieldChange('email', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Organisation</span>
-                <input
-                  value={learnerForm.organisation}
-                  onChange={(e) => handleLearnerFieldChange('organisation', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Type</span>
-                <select
-                  value={learnerForm.type}
-                  onChange={(e) => handleLearnerFieldChange('type', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                >
-                  <option>University</option>
-                  <option>Institute</option>
-                </select>
-              </label>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Domain</span>
-                <input
-                  value={learnerForm.domain}
-                  onChange={(e) => handleLearnerFieldChange('domain', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Semester</span>
-                <input
-                  type="number"
-                  min="1"
-                  value={learnerForm.sem}
-                  onChange={(e) => handleLearnerFieldChange('sem', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Status</span>
-                <select
-                  value={learnerForm.status}
-                  onChange={(e) => handleLearnerFieldChange('status', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                >
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-              </label>
-              <label className="space-y-2 text-sm text-dark-grey">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Avatar</span>
-                <input
-                  value={learnerForm.avatar}
-                  onChange={(e) => handleLearnerFieldChange('avatar', e.target.value)}
-                  className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-                />
-              </label>
-            </div>
-          </form>
-        )}
-      </ProfileActionModal>
+        onSubmit={handleLearnerSave}
+        value={learnerForm}
+        onChange={handleLearnerFieldChange}
+        mode={modalMode}
+      />
 
       <ProfileActionModal
         open={showFiltersModal}

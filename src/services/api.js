@@ -123,23 +123,17 @@ export const api = {
   // Users API
   async getUsers() {
     await delay();
-    return getStorageItem('lms_users', initialUsers);
+    return initialUsers;
   },
 
   async deleteUser(userId) {
     await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => u.id !== userId);
-    setStorageItem('lms_users', updated);
-    return updated;
+    return initialUsers.filter(u => u.id !== userId);
   },
 
   async deleteUsersBulk(userIds) {
     await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => !userIds.includes(u.id));
-    setStorageItem('lms_users', updated);
-    return updated;
+    return initialUsers.filter(u => !userIds.includes(u.id));
   },
 
 

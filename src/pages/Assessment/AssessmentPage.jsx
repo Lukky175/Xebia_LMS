@@ -1,10 +1,4 @@
 /*
-==========================================================
-Assessment Page
-
-Author       : Lakshit Tyagi
-Email        : lakshit175@gmail.com
-Organization : Xebia
 
 Purpose
 

@@ -11,7 +11,7 @@ import { X } from 'lucide-react';
 
 export function ProfileCardFrame({ children, className = '' }) {
   return (
-    <div className={`rounded-3xl border border-[#E7E9F0] bg-white dark:bg-[#16171F] shadow-sm ${className}`}>
+    <div className={`rounded-2xl border border-[#E7E9F0] bg-white dark:bg-[#16171F] shadow-sm ${className}`}>
       {children}
     </div>
   );
@@ -100,7 +100,7 @@ export function ProfileActionModal({ open, onClose, title, description, children
             initial={{ y: 20, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 20, opacity: 0, scale: 0.98 }}
-            className="w-full max-w-2xl rounded-[28px] bg-white dark:bg-[#16171F] border border-medium-grey shadow-2xl overflow-hidden"
+            className="w-full max-w-2xl rounded-2xl bg-white dark:bg-[#16171F] border border-medium-grey shadow-2xl overflow-hidden"
           >
             <div className="flex items-center justify-between border-b border-medium-grey/30 px-6 py-4">
               <div>

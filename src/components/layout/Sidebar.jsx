@@ -8,6 +8,7 @@ import {
 import Logo from '@/components/ui/Logo.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
+import { usePermissions } from '@/context/PermissionsContext.jsx';
 
 const navigationGroups = [
   {
@@ -62,6 +63,7 @@ const navigationGroups = [
 export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false, onClose }) {
   const { theme, toggleTheme } = useTheme();
   const { currentUser, logout } = useAuth();
+  const { hasPermission } = usePermissions();
   const navigate = useNavigate();
 
   const initials = currentUser
@@ -74,37 +76,11 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
         .toUpperCase()
     : 'U';
 
-  // Filter navigationGroups based on user role
+  // Filter navigationGroups based on user role permissions dynamically
   const filteredGroups = navigationGroups.map(group => {
-    if (!currentUser || currentUser.role === 'admin' || currentUser.role === 'superadmin') {
-      return group;
-    }
-
-    if (currentUser.role === 'trainer') {
-      const allowedPaths = [
-        '/dashboard',
-        '/dashboard/courses',
-        '/dashboard/trainer',
-        '/dashboard/scheduling',
-        '/dashboard/administration',
-        '/dashboard/profile'
-      ];
-      const items = group.items.filter(item => allowedPaths.includes(item.path));
-      return items.length > 0 ? { ...group, items } : null;
-    }
-
-    if (currentUser.role === 'student') {
-      const allowedPaths = [
-        '/dashboard',
-        '/dashboard/courses',
-        '/dashboard/profile',
-        '/dashboard/assessment'
-      ];
-      const items = group.items.filter(item => allowedPaths.includes(item.path));
-      return items.length > 0 ? { ...group, items } : null;
-    }
-
-    return group;
+    if (!currentUser) return null;
+    const items = group.items.filter(item => hasPermission(currentUser.role, item.path));
+    return items.length > 0 ? { ...group, items } : null;
   }).filter(Boolean);
 
   return (
