@@ -14,12 +14,14 @@ import AssessmentPage from '@/pages/Assessment/AssessmentPage.jsx';
 import SchedulingPage from '@/pages/Scheduling/SchedulingPage.jsx';
 import ProfilePage from '@/pages/Profile/ProfilePage.jsx';
 import TutorsPage from '@/pages/Tutors/TutorsPage.jsx';
+import RolesPage from '@/pages/Roles/RolesPage.jsx';
 import PermissionsPage from '@/pages/Permissions/PermissionsPage.jsx';
 import RolesGrantsPage from '@/pages/RolesGrants/RolesGrantsPage.jsx';
 import { usePermissions } from '@/context/PermissionsContext.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { api } from '@/services/api.js';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 function AccessDenied({ path, role }) {
   const navigate = useNavigate();
@@ -113,6 +115,23 @@ export default function Dashboard({ courses, handleSimulateProgress, handleAddCo
   return (
     <DashboardLayout onSearchChange={handleSearchChange} searchValue={searchQuery}>
       <Routes>
+        <Route path="/" element={<DashboardHome searchQuery={searchQuery} tutors={tutors} />} />
+        <Route path="/modules" element={<ModulesPage />} />
+        <Route path="/permissions" element={<BlankPage name="Permissions" />} />
+        <Route 
+          path="/roles-grants" 
+          element={
+            <RoleProtectedRoute>
+              <RolesPage />
+            </RoleProtectedRoute>
+          } 
+        />
+        <Route path="/users" element={<UsersPage searchQuery={searchQuery} />} />
+        <Route path="/organisations" element={<OrganisationsPage searchQuery={searchQuery} />} />
+        <Route path="/domains" element={<BlankPage name="Domains" />} />
+        <Route path="/parents" element={<BlankPage name="Parents" />} />
+        <Route path="/learners" element={<BlankPage name="Learners" />} />
+        <Route path="/batches" element={<BlankPage name="Batches" />} />
         <Route path="/" element={<GuardedRoute><DashboardHome searchQuery={searchQuery} tutors={tutors} /></GuardedRoute>} />
         <Route path="/modules" element={<GuardedRoute><ModulesPage /></GuardedRoute>} />
         <Route path="/permissions" element={<GuardedRoute><PermissionsPage /></GuardedRoute>} />
@@ -169,6 +188,30 @@ function BlankPage({ name }) {
       {name} Content Placeholder
     </div>
   );
+}
+
+function RoleProtectedRoute({ children }) {
+  const { currentUser } = useAuth();
+  // Allow superadmin or admin (Platform Admin)
+  const isAuthorized = currentUser?.role === 'admin' || currentUser?.role === 'superadmin';
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 mt-12 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/30 max-w-2xl mx-auto text-center space-y-4">
+        <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center text-red-500 mb-2">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-extrabold text-black dark:text-white">Access Denied</h2>
+        <p className="text-sm font-medium text-dark-grey max-w-md">
+          This page is restricted to Platform Administrators. Your current role does not have the required permissions to view or manage roles and grants.
+        </p>
+      </div>
+    );
+  }
+
+  return children;
 }
 
 
