@@ -181,3 +181,99 @@ export const initialOrganisations = [
     status: "ACTIVE"
   }
 ];
+
+
+/* @ author : Gurnoor Singh
+@email: gsingh13_be23@thapar.edu
+mobile : +91- 7814205303
+Thapar institute of engineering and technology, Patiala
+*/
+
+/*
+ * Data: Mock Data for modules, permissions ,roles,users 
+ * Purpose: Provides hardcoded mock data to simulate backend API
+ * responses for the Xebia LMS platform during frontend development.
+ * Supports development, testing, UI integration, and feature
+ * validation before backend services are available. The mock data
+ * includes entities such as roles, permissions, modules, users,
+ * organisations, and other domain-specific resources while maintaining
+ * a backend-ready structure for seamless future integration.
+ */
+
+
+export const initialModules = [
+  { id: 'dashboard', title: 'Dashboard', description: 'System overview and general metrics', route: '/dashboard', icon: 'LayoutDashboard' },
+  { id: 'users', title: 'Users', description: 'Manage platform users and roles', route: '/dashboard/users', icon: 'Users' },
+  { id: 'organisations', title: 'Organisations', description: 'Manage B2B tenants and plans', route: '/dashboard/organisations', icon: 'Building2' },
+  { id: 'domains', title: 'Domains', description: 'Manage learning domains and tracks', route: '/dashboard/domains', icon: 'Layers' },
+  { id: 'domain-category', title: 'Domain Category', description: 'Manage domain taxonomy', route: '/dashboard/domain-category', icon: 'Tag' },
+  { id: 'courses', title: 'Courses', description: 'Course authoring and catalog', route: '/dashboard/courses', icon: 'BookOpen' },
+  { id: 'batches', title: 'Batches', description: 'Cohort and batch management', route: '/dashboard/batches', icon: 'Users2' },
+  { id: 'learners', title: 'Learners', description: 'Student directory and progress', route: '/dashboard/learners', icon: 'GraduationCap' },
+  { id: 'assessment', title: 'Assessment', description: 'Quizzes and assignments grading', route: '/dashboard/assessment', icon: 'FileText' },
+  { id: 'scheduling', title: 'Scheduling', description: 'Timetable and event calendar', route: '/dashboard/scheduling', icon: 'Calendar' },
+  { id: 'trainer', title: 'Trainer', description: 'Trainer performance and availability', route: '/dashboard/trainer', icon: 'Presentation' },
+  { id: 'administration', title: 'Administration', description: 'System configuration settings', route: '/dashboard/administration', icon: 'Settings' },
+  { id: 'parents', title: 'Parents', description: 'Parent portal settings', route: '/dashboard/parents', icon: 'HeartHandshake' },
+  { id: 'reports', title: 'Reports', description: 'Generate data and audit reports', route: '/dashboard/reports', icon: 'BarChart3' },
+  { id: 'settings', title: 'Settings', description: 'General platform settings', route: '/dashboard/settings', icon: 'Cog' },
+];
+
+const allModulesPermissions = initialModules.map(m => ({
+  module: m.id,
+  permissions: { view: true, create: true, edit: true, delete: true }
+}));
+
+const organizerPermissions = initialModules
+  .filter(m => ['dashboard', 'learners', 'batches', 'courses'].includes(m.id))
+  .map(m => ({
+    module: m.id,
+    permissions: { view: true, create: false, edit: false, delete: false }
+  }));
+
+const trainerPermissions = initialModules
+  .filter(m => ['dashboard', 'courses', 'assessment'].includes(m.id))
+  .map(m => ({
+    module: m.id,
+    permissions: { view: true, create: false, edit: false, delete: false }
+  }));
+
+const learnerPermissions = initialModules
+  .filter(m => ['dashboard', 'courses', 'assessment'].includes(m.id))
+  .map(m => ({
+    module: m.id,
+    permissions: { view: true, create: false, edit: false, delete: false }
+  }));
+
+export const initialRoles = [
+  {
+    id: 'role-1',
+    name: 'Super Admin',
+    description: 'System administrator with full access to all modules and configurations',
+    type: 'System',
+    permissions: allModulesPermissions
+  },
+  {
+    id: 'role-2',
+    name: 'Admin',
+    description: 'Manages batches and tracks learner progress across assigned cohorts',
+    type: 'System',
+    permissions: organizerPermissions
+  },
+  {
+    id: 'role-3',
+    name: 'Trainer',
+    description: 'Author courses, conduct assessments, and monitor student performance',
+    type: 'System',
+    permissions: trainerPermissions
+  },
+  {
+    id: 'role-4',
+    name: 'Learner',
+    description: 'Access enrolled courses, track progress, and submit assignments',
+    type: 'Default',
+    permissions: learnerPermissions
+  }
+];
+
+

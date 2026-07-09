@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, Layers, Key, Shield, Users, Building, Globe, GraduationCap, 
+import {
+  LayoutDashboard, Layers, Key, Shield, Users, Building, Globe, GraduationCap,
   BookOpen, FileText, User, Settings, Calendar, ClipboardList, DollarSign, Briefcase,
   ChevronLeft, ChevronRight, Sun, Moon, LogOut
 } from 'lucide-react';
@@ -66,12 +66,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
 
   const initials = currentUser
     ? currentUser.name
-        .split(' ')
-        .filter(Boolean)
-        .map(n => n[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase()
+      .split(' ')
+      .filter(Boolean)
+      .map(n => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase()
     : 'U';
 
   // Filter navigationGroups based on user role
@@ -109,10 +109,10 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
 
   return (
     <aside className={`h-screen bg-white dark:bg-[#11050F] text-black dark:text-white flex flex-col justify-between transition-all duration-300 relative border-r border-medium-grey dark:border-white/5 shadow-lg dark:shadow-2xl ${isCollapsed ? 'w-24' : 'w-64'} ${isMobile ? 'border-r-0 shadow-none' : ''}`}>
-      
+
       {/* Collapse Toggle */}
       {!isMobile && (
-        <button 
+        <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3 top-6 h-6 w-6 rounded-full bg-cta-orange text-white flex items-center justify-center shadow-lg border border-white/10 hover:scale-115 transition duration-150 cursor-pointer z-50"
         >
@@ -153,19 +153,17 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
                         onClose();
                       }
                     }}
-                    className={({ isActive }) => 
-                      `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer group relative ${
-                        isCollapsed ? 'justify-center' : 'justify-start'
-                      } ${
-                        isActive 
-                          ? 'bg-tranquil-velvet/10 text-tranquil-velvet border-l-4 border-cta-orange font-bold shadow-xs dark:bg-white/10 dark:text-white dark:shadow-inner' 
-                          : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary dark:text-text-secondary dark:hover:bg-bg-hover dark:hover:text-text-primary'
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer group relative ${isCollapsed ? 'justify-center' : 'justify-start'
+                      } ${isActive
+                        ? 'bg-tranquil-velvet/10 text-tranquil-velvet border-l-4 border-cta-orange font-bold shadow-xs dark:bg-white/10 dark:text-white dark:shadow-inner'
+                        : 'text-text-secondary hover:bg-bg-hover hover:text-text-primary dark:text-text-secondary dark:hover:bg-bg-hover dark:hover:text-text-primary'
                       }`
                     }
                   >
                     <Icon className="h-4.5 w-4.5 shrink-0" />
                     {!isCollapsed && <span>{item.label}</span>}
-                    
+
                     {/* Tooltip when collapsed */}
                     {isCollapsed && (
                       <div className="absolute left-20 scale-0 group-hover:scale-100 transition duration-150 origin-left bg-black/90 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-md shadow-md z-50 whitespace-nowrap pointer-events-none">
@@ -198,7 +196,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
 
         {/* Controls */}
         <div className={`flex gap-1.5 mt-2 ${isCollapsed ? 'flex-col items-center' : 'flex-row'}`}>
-          <button 
+          <button
             onClick={toggleTheme}
             className={`p-2.5 bg-[#F7F8FC] dark:bg-white/5 hover:bg-medium-grey/40 dark:hover:bg-white/10 text-dark-grey dark:text-white/80 hover:text-black dark:hover:text-white rounded-xl border border-medium-grey/30 dark:border-white/5 transition flex items-center justify-center cursor-pointer ${isCollapsed ? 'w-10 h-10' : 'flex-1 gap-1.5 text-xs font-semibold'}`}
             title="Toggle Theme"
@@ -207,7 +205,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed, isMobile = false,
             {!isCollapsed && <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
           </button>
 
-          <button 
+          <button
             onClick={() => {
               logout();
               navigate('/home');
