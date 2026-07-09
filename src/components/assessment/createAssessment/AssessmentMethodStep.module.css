@@ -1,0 +1,155 @@
+/*
+==========================================================
+Assessment Method Step Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout and styling for the
+Assessment Creation Method step.
+
+Contents
+
+• Header
+• Method cards
+• Icons
+• Active state
+• Disabled state
+• Status badges
+• Responsive layout
+
+==========================================================
+*/
+
+
+/* ==========================================
+   Step Layout
+
+   Arranges the section header and
+   assessment creation method cards.
+========================================== */
+.container{
+    display:flex;
+    flex-direction:column;
+    gap:2rem;
+}
+
+.header h2{
+    font-size:1.6rem;
+    margin-bottom:.5rem;
+}
+
+.header p{
+    color:var(--text-secondary);
+}
+
+/* Responsive grid containing all available ssessment creation methods. */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.5rem;
+}
+
+/* Individual assessment creation method displayed as an interactive card. */
+.card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:1rem;
+    padding:2rem 2rem 1.3rem;
+    border-radius:22px;
+    background:var(--surface);
+    border:2px solid var(--border);
+    cursor:pointer;
+    transition:.35s;
+    overflow:hidden;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:#6C1D5F;
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.08);
+}
+
+.icon{
+    width:64px;
+    height:64px;
+    border-radius:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#F6F2F8;
+    color:#6C1D5F;
+}
+
+.card h3{
+    font-size:1.15rem;
+}
+
+.card p{
+    color:var(--text-secondary);
+    line-height:1.6;
+}
+
+/* Highlight the currently selected assessment creation workflow. */
+.active{
+    border-color:#6C1D5F;
+    background:#FCF8FD;
+}
+
+.selected{
+    position:absolute;
+    top:18px;
+    right:18px;
+    color:#6C1D5F;
+    font-size:1.4rem;
+}
+
+/* Display feature availability status. */
+.badge{
+    position:absolute;
+    top:18px;
+    left:18px;
+    background:#FFF4D6;
+    color:#A05C00;
+    padding:.35rem .75rem;
+    border-radius:999px;
+    font-size:.72rem;
+    font-weight:600;
+}
+
+/* Visually indicate methods that are  but not yet available. */
+.disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+@media(max-width:1000px){
+    .cards{
+        grid-template-columns:1fr;
+    }
+}
+
+/* Status message shown at the bottom of each creation method card. */
+
+.footer{
+    width:100%;
+    margin-top:auto;
+    padding-top:1rem;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    font-size:.9rem;
+    color:var(--text-secondary);
+}
+
+.selectedText{
+    color:#6C1D5F;
+    font-weight:700;
+}

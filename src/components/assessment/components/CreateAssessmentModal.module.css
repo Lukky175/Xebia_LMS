@@ -1,0 +1,423 @@
+/*
+==========================================================
+Create Assessment Modal Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+Project      : Xebia Learning Management System (LMS)
+
+Purpose
+
+Defines the layout and visual appearance of the
+Assessment Creation Wizard modal.
+
+Contents
+
+• Modal overlay
+• Modal container
+• Header
+• Scrollable content area
+• Footer navigation
+• Primary & secondary buttons
+• Animations
+
+Notes
+
+The modal is designed as a full-screen wizard.
+
+Only the content section scrolls while the
+header and footer remain fixed for improved
+navigation and usability.
+
+==========================================================
+*/
+
+/* ==========================================
+   Modal Overlay
+
+   Covers the entire viewport and centers
+   the Assessment Creation Wizard.
+
+   Also applies a blurred background to
+   focus user attention on the modal.
+========================================== */
+
+.overlay{
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 2rem;
+
+    background:
+
+        radial-gradient(
+
+            circle at top,
+
+            rgb(255, 255, 255),
+            rgba(183, 121, 171, 0.789)
+
+        );
+    backdrop-filter: blur(12px);
+
+    -webkit-backdrop-filter: blur(12px);
+
+    animation: fadeIn .25s ease;
+
+}
+
+
+/* ==========================================
+   Modal Container
+
+   Main container for the Assessment Creation
+   Wizard.
+
+   Layout
+
+   Header
+        │
+   Progress Stepper
+        │
+   Scrollable Content
+        │
+   Footer Navigation
+
+========================================== */
+.modal{
+
+    width: min(97vw, 1450px);
+    height: 95vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #fcfcfd 100%
+    );
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255,255,255,.6);
+
+    box-shadow:
+        0 40px 120px rgba(0,0,0,.18),
+        0 10px 30px rgba(108,29,95,.08);
+
+    overflow: hidden;
+
+    animation: modalUp .35s cubic-bezier(.22,1,.36,1);
+}
+
+
+/* ==========================================
+   Modal Header
+
+   Displays the wizard title, description
+   and close button.
+
+   Remains fixed at the top of the modal.
+========================================== */
+.header{
+
+    flex-shrink:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    padding-left: 2.5rem;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+.header h2{
+
+    font-size:2rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+
+}
+
+.header p{
+
+    color:#6f7281;
+
+    font-size:.96rem;
+
+}
+
+/* Close action for dismissing the wizard. */
+.closeButton{
+
+    width:48px;
+
+    height:48px;
+
+    border:none;
+
+    background:transparent;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.closeButton:hover{
+
+    transform:
+
+        scale(1.15);
+
+    background:#fafafa;
+
+}
+
+/* ==========================================
+   Wizard Content
+
+   Scrollable container that displays the
+   currently active wizard step.
+
+   Only this section scrolls.
+
+   The header and footer remain visible,
+   allowing users to navigate the wizard
+   without losing access to controls.
+========================================== */
+.body{
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 2rem 2.5rem;
+
+    background: #fafafb;
+
+}
+
+/* ==========================================
+   Wizard Footer
+
+   Contains navigation controls for moving
+   between assessment creation steps.
+
+   Includes
+
+   • Cancel
+   • Back
+   • Next
+   • Create Assessment
+========================================== */
+.footer{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:.4rem 1rem;
+
+    min-height:52px;
+
+    border-top:1px solid #ececec;
+
+    background:rgba(255,255,255,.96);
+
+    backdrop-filter:blur(18px);
+
+    flex-shrink:0;
+
+}
+
+/* Groups wizard navigation buttons. */
+.navigation{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:.75rem;
+
+}
+
+/* ==========================================
+   Primary Action Button
+
+   Used for progressing through the wizard
+   and creating the assessment.
+
+   Represents the primary call-to-action.
+========================================== */
+.primaryButton{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:35px;
+
+    min-width:85px;
+
+    padding:.3rem 1rem;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#6C1D5F;
+
+    color:white;
+
+    font-size:.94rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:
+        background .25s,
+        transform .25s,
+        box-shadow .25s;
+
+}
+
+.primaryButton:hover{
+
+    transform:
+
+        translateY(-3px);
+
+    box-shadow:0 10px 24px rgba(108,29,95,.28);
+
+}
+
+.primaryButton:active{
+
+    transform:translateY(0);
+
+}
+
+/* Secondary navigation actions such as
+   Cancel and Back. */
+.secondaryButton{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:39px;
+
+    min-width:85px;
+
+    padding:.3rem 1rem;
+
+    border:1px solid #dddddd;
+
+    background:white;
+
+    color:#222;
+
+    border-radius:10px;
+
+    font-size:.92rem;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:all .25s;
+
+}
+
+.secondaryButton:hover{
+
+    border-color:#6C1D5F;
+
+    color:#6C1D5F;
+
+    background:#faf7ff;
+
+}
+
+/* ==========================================
+   Animations
+
+   Smoothly fade in the overlay and animate
+   the modal into view for a polished user
+   experience.
+========================================== */
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+    }
+
+    to{
+
+        opacity:1;
+
+    }
+
+}
+
+@keyframes modalUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px) scale(.98);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0) scale(1);
+
+    }
+
+}
+
+@media (max-width: 768px){
+
+    .modal{
+
+        width:100vw;
+
+        height:100vh;
+
+        border-radius:0;
+
+    }
+
+}

@@ -143,7 +143,7 @@
     padding: 70px 8%;
 
     background:
-        var(--background-ui);
+        var(--background);
 }
 
 .statsSection h2 {

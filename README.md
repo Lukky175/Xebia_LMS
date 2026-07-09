@@ -88,16 +88,36 @@ If you want to customize specific layout elements or feature pages, use this qui
 
 ### Page Views
 
-| Feature Page | Navigates to | Active Component / File |
-| :--- | :--- | :--- |
-| **Dashboard Home** | `/dashboard` | [DashboardHome.jsx](src/pages/Dashboard/DashboardHome.jsx) |
-| **Organisations Directory**| `/dashboard/organisations` | [OrganisationsPage.jsx](src/pages/Organisations/OrganisationsPage.jsx) |
-| **Users Directory** | `/dashboard/users` | [UsersPage.jsx](src/pages/Users/UsersPage.jsx) |
-| **Courses Catalog** | `/dashboard/courses` | [CoursesPage.jsx](src/pages/Courses/CoursesPage.jsx) |
-| **Trainer Dashboard** | `/dashboard/trainer` | [TutorsPage.jsx](src/pages/Tutors/TutorsPage.jsx) |
-| **Finance Center** | `/dashboard/finance` | [RevenuePage.jsx](src/pages/Revenue/RevenuePage.jsx) |
-| **Administration Panel** | `/dashboard/administration` | [SettingsPage.jsx](src/pages/Settings/SettingsPage.jsx) |
-| **Other modules** | `/dashboard/*` | Displays `BlankPage` component declared in [Dashboard.jsx](src/pages/Dashboard/Dashboard.jsx) |
+| Feature Page / View | Navigates to | Active Component / File | Description |
+| :--- | :--- | :--- | :--- |
+| **Admin Dashboard** | `/dashboard` | [DashboardHome.jsx](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L87) | Default dashboard home rendered for Administrators (`admin` role). |
+| **Trainer Console** | `/dashboard` (as Trainer) | [TrainerDashboard](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L596) inside [DashboardHome.jsx](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx) | Trainer-specific bento grid dashboard (hours graph, rating tracking, course list). |
+| **Student Portal** | `/dashboard` (as Student) | [StudentDashboard](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L740) inside [DashboardHome.jsx](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx) | Learner-specific study activity graphs, courses progression, and streak metrics. |
+| **Superadmin Panel** | `/dashboard` (as Superadmin) | [SuperadminHeader](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L89) inside [DashboardHome.jsx](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx) | Admin dashboard home with an added server-monitoring diagnostics toolbar. |
+| **Organisations Directory**| `/dashboard/organisations` | [OrganisationsPage.jsx](file:///z:/Xebia_LMS-main/src/pages/Organisations/OrganisationsPage.jsx) | Table list of corporate clients/organisations, with add/delete options. |
+| **Users Directory** | `/dashboard/users` | [UsersPage.jsx](file:///z:/Xebia_LMS-main/src/pages/Users/UsersPage.jsx) | Table listing accounts/users with batch updating, role switching, and search actions. |
+| **Courses Catalog** | `/dashboard/courses` | [CoursesPage.jsx](file:///z:/Xebia_LMS-main/src/pages/Courses/CoursesPage.jsx) | Course directory. Filters courses differently depending on whether user is a trainer or admin. |
+| **Tutors/Trainers Directory** | `/dashboard/trainer` | [TutorsPage.jsx](file:///z:/Xebia_LMS-main/src/pages/Tutors/TutorsPage.jsx) | Directory list of all registered course instructors/trainers. |
+| **Finance Center** | `/dashboard/finance` | [RevenuePage.jsx](file:///z:/Xebia_LMS-main/src/pages/Revenue/RevenuePage.jsx) | Financial breakdown charts (MRR, batch costings, revenue metrics). |
+| **Administration Panel** | `/dashboard/administration` | [SettingsPage.jsx](file:///z:/Xebia_LMS-main/src/pages/Settings/SettingsPage.jsx) | Settings, profile information, configuration toggle options. |
+| **Other modules** | `/dashboard/*` | Displays `BlankPage` component declared in [Dashboard.jsx](file:///z:/Xebia_LMS-main/src/pages/Dashboard/Dashboard.jsx) | Fallback placeholder page view for currently unmapped sidebar navigation routes. |
+
+### Specific Dashboard & Role Features Reference Map
+
+If you need to edit features or behaviors tied to a specific user role, use the links below to navigate to the exact files and key lines:
+
+* **Trainer Dashboard / Console:**
+  * **Main Render Check:** [DashboardHome.jsx:L71-73](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L71-L73) — Directs logged-in trainers to the trainer view.
+  * **Visual Layout & UI:** [TrainerDashboard Component](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L596-L738) — Bento cards grid, weekly teaching hours bar chart, and course enrollments list.
+  * **Sidebar Visibility Rules:** [Sidebar.jsx:L83-88](file:///z:/Xebia_LMS-main/src/components/layout/Sidebar.jsx#L83-L88) — Configures which sidebar tabs are available for a trainer.
+  * **Course Filtering & Proposals:** [CoursesPage.jsx:L51-73](file:///z:/Xebia_LMS-main/src/pages/Courses/CoursesPage.jsx#L51-L73) and [CoursesPage.jsx:L108-109](file:///z:/Xebia_LMS-main/src/pages/Courses/CoursesPage.jsx#L108-L109) — Restricts/adjusts course view permissions and labels them as `pending` proposals for trainers.
+* **Student Dashboard / Portal:**
+  * **Main Render Check:** [DashboardHome.jsx:L75-77](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L75-L77) — Directs logged-in students to the student portal view.
+  * **Visual Layout & UI:** [StudentDashboard Component](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L740) — Active learning hours area graph, ongoing course progression bars, and progress indicators.
+* **Superadmin Role Diagnostics:**
+  * **Main Render Check & Toolbar:** [DashboardHome.jsx:L89-91](file:///z:/Xebia_LMS-main/src/pages/Dashboard/DashboardHome.jsx#L89-L91) — Injects the diagnostics header system (CPU, RAM, workload bars) for superadmins.
+* **Trainer Mock Login Account:**
+  * **Mock Credentials:** [AuthContext.jsx:L8](file:///z:/Xebia_LMS-main/src/context/AuthContext.jsx#L8) — Username `trainer@xebia.com`, Password `trainer123`.
 
 ### Styling, Animations & Glows
 

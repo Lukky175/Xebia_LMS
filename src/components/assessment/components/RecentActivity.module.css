@@ -1,0 +1,221 @@
+/*
+==========================================================
+Recent Activity Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+
+Purpose
+
+Defines the layout and appearance of the
+Recent Activity timeline.
+
+Contents
+
+• Activity card
+• Timeline entries
+• Timeline icon
+• Typography
+• Hover effects
+
+==========================================================
+*/
+
+
+/* ==========================================
+   Activity Card
+
+   Main container for the Recent Activity
+   timeline.
+========================================== */
+.card{
+
+    margin-top:2rem;
+
+    background:#fff;
+
+    border:1px solid #ECEEF3;
+
+    border-radius:8px;
+
+    padding:1.7rem;
+
+    box-shadow:
+        0 10px 30px rgba(17,24,39,.05);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    box-shadow:
+        0 18px 45px rgba(17,24,39,.08);
+
+}
+
+.card h3{
+
+    margin-bottom:0.4rem;
+
+}
+
+/* ==========================================
+   Activity Item
+
+   Individual activity displayed within the
+   timeline.
+========================================== */
+.item{
+
+    min-height: 95px;
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:1rem;
+
+    padding:0.8rem;
+
+    margin-bottom:.9rem;
+
+    background:#FBFCFE;
+
+    border:1px solid #EEF1F5;
+
+    border-radius:8px;
+
+    transition:.25s;
+
+}
+
+.item:hover{
+
+    transform:translateX(4px);
+
+    border-color:#D7DDE8;
+
+    background:white;
+
+    box-shadow:
+
+        0 10px 25px rgba(17,24,39,.05);
+
+}
+
+.item:last-child{
+
+    border-bottom:none;
+
+}
+
+/* Timeline marker representing an
+   assessment event. */
+.dot{
+
+    flex-shrink:0;
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#F5EFFF;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.item h4{
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:#1D2433;
+
+    margin-bottom:.25rem;
+
+}
+
+/* Activity title, timestamp and
+   description. */
+.item p{
+
+    font-size:.93rem;
+
+    line-height:1;
+
+    color:#667085;
+
+    margin-bottom:.55rem;
+
+}
+
+.item small{
+
+    font-size:.8rem;
+
+    color:#8A94A6;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+
+}
+
+/* ==========================================
+   Section Header
+
+   Displays the timeline title and
+   supporting description.
+========================================== */
+.header{
+
+    margin-bottom:1.7rem;
+
+}
+
+.header h3{
+
+    font-size:1.35rem;
+
+    font-weight:700;
+
+    color:#1D2433;
+
+}
+
+.header p{
+
+    margin-top:.35rem;
+
+    color:#6B7280;
+
+    font-size:.92rem;
+
+}
+
+.content{
+
+    flex:1;
+
+}
+
+.topRow{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:.45rem;
+
+}

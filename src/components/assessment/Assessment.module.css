@@ -1,0 +1,302 @@
+/*
+==========================================================
+Assessment Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+Project      : Xebia Learning Management System (LMS)
+
+File
+
+Assessment.module.css
+
+Purpose
+
+Provides component-scoped styles for the Assessment
+Dashboard.
+
+Responsibilities
+
+• Dashboard layout
+• Header section
+• Assessment metrics
+• Primary action button
+• Responsive behaviour
+• Component animations
+
+Notes
+
+This file uses CSS Modules to prevent style leakage
+into other components.
+==========================================================
+*/
+
+/* ==========================================
+   PAGE CONTAINER
+========================================== */
+
+.container {
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    width: 100%;
+    min-height: 100%;
+
+}
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 1rem;
+    margin-bottom: .4rem;
+
+    flex-wrap: wrap;
+
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.subtitle {
+
+    margin-top: .15rem;
+
+    max-width: 700px;
+
+    color: var(--text-secondary);
+
+    font-size: .95rem;
+    line-height: 1.6;
+
+}
+
+/* ==========================================
+   CREATE BUTTON
+========================================== */
+
+.createButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: .5rem;
+
+    border: none;
+    outline: none;
+
+    cursor: pointer;
+
+    padding: .60rem 0.8rem;
+
+    border-radius: 8px;
+
+    background: linear-gradient(
+        135deg,
+        #ff7a18,
+        #ff6200
+    );
+
+    color: white;
+
+    overflow: hidden;
+    font-size: 0.9rem;
+    font-weight: 550;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+    box-shadow:
+        0 5px 12px rgb(255, 98, 0, 0.25);
+}
+
+.createButton:hover{
+
+    transform:
+        translateY(-3px)
+        scale(1.02);
+
+    box-shadow:
+        0 9px 15px rgba(255,91,0,.35);
+
+}
+
+.createButton:active{
+    transform:scale(.98);
+}
+
+/* ==========================================
+   Button Shine Animation
+
+   Creates the sweeping light effect when
+   the user hovers over the Create button.
+========================================== */
+.createButton::before{
+
+    content:"";
+    position:absolute;
+    top:0;
+    left:-130%;
+    width: 70%;
+    height:100%;
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,.45),
+            transparent
+
+        );
+
+}
+
+.createButton:hover::before{
+    animation:buttonShine .9s;
+}
+
+/* Moves the pseudo-element from left to right
+   to simulate a reflective shine. */
+@keyframes buttonShine{
+    to{
+        left:170%;
+    }
+}
+
+/* ==========================================
+   METRICS SECTION
+========================================== */
+
+.metricTop{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+}
+
+.metricIcon{
+    width:54px;
+    height:54px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+    background:#F5F1FA;
+    color:#6C1D5F;
+    font-size:1.4rem;
+    flex-shrink:0;
+}
+
+.activeIcon{
+    background:#ECFDF3;
+    color:#16A34A;
+}
+
+.draftIcon{
+    background:#FEF3C7;
+    color:#D97706;
+}
+
+.completedIcon{
+    background:#EEF2FF;
+    color:#7C3AED;
+}
+.metricCard:hover .metricIcon{
+    transform:rotate(-8deg) scale(1.08);
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .5rem;
+
+}
+
+/* ==========================================
+   METRIC CARD
+========================================== */
+
+.metricCard{
+    background:white;
+    border:1px solid #ECEEF3;
+    border-radius:8px;
+    padding:1.2rem;
+    transition:.3s;
+}
+
+.metricCard:hover{
+    transform:translateY(-5px);
+    border-color:#D8DCE8;
+    box-shadow:
+    0 15px 30px rgba(18,38,63,.08);
+}
+
+.metricCard h3 {
+    color: var(--text-secondary);
+    font-size: .85rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.metricCard span {
+    display: block;
+    margin-top: .75rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* ==========================================
+   Responsive Layout
+
+   1200px
+   --------
+   Metrics collapse from four columns to two.
+
+   768px
+   -------
+   Mobile layout:
+   • Header stacks vertically
+   • Create button becomes full width
+   • Metrics become a single column
+========================================== */
+
+@media (max-width: 1200px){
+    .metrics{
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media (max-width: 768px){
+    .header{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .createButton{
+        width: 100%;
+    }
+
+    .metrics{
+        grid-template-columns:1fr;
+    }
+
+}
+

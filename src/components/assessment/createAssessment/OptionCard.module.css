@@ -1,0 +1,116 @@
+/*
+==========================================================
+Option Card Styles
+
+Author       : Lakshit Tyagi
+Email        : lakshit175@gmail.com
+Organization : Xebia
+Project      : Xebia Learning Management System (LMS)
+
+Purpose
+
+Defines the layout and appearance of a
+single answer option inside the Question
+Builder.
+
+Contents
+
+• Card Layout
+• Option Label
+• Input Field
+• Action Buttons
+• Hover States
+
+==========================================================
+*/
+
+/* ==========================================
+   Option Card
+
+   Displays a single editable answer option
+   together with its associated actions.
+========================================== */
+.card{
+    display:grid;
+    grid-template-columns:
+        45px
+        1fr
+        46px
+        46px;
+    gap:.8rem;
+    align-items:center;
+    padding:1rem;
+    border:1px solid rgb(108, 29, 95, 0.75);
+    border-radius:9px;
+    background:var(--surface);
+    transition:.25s;
+}
+
+.card:hover{
+    border-color:#6C1D5F;
+}
+
+/* Circular badge displaying the option
+   identifier (A, B, C...). */
+.label{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#F4F1F8;
+    color:#6C1D5F;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+}
+
+.correctButton{
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:1.15rem;
+    transition:.2s;
+    color:#9A9A9A;
+}
+
+.correct{
+    color:#24A148;
+    transform:scale(1.15);
+}
+
+/* Editable field containing the answer
+   option text. */
+.card input{
+    border:none;
+    outline:none;
+    background:transparent;
+    font-size:.95rem;
+}
+
+/* ==========================================
+   Action Buttons
+
+   Image Upload
+
+   Delete Option
+========================================== */
+.iconButton,
+.deleteButton{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#F7F7F7;
+    transition:.2s;
+}
+
+.iconButton:hover{
+    background:#EFE7F5;
+    color:#6C1D5F;
+}
+
+.deleteButton:hover{
+    background:#FFECEC;
+    color:#D32F2F;
+}
