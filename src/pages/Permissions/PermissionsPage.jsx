@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePermissions } from '@/context/PermissionsContext.jsx';
+import { permissionsContract } from '@/services/permissionsApi.js';
 import { 
   Key, Shield, AlertCircle, Save, RotateCcw, Check,
   LayoutDashboard, Layers, Users, Building, Globe, 
@@ -60,14 +61,17 @@ const allRoutes = [
 ];
 
 export default function PermissionsPage() {
-  const { permissions, updateRolePermissions, resetToDefaults } = usePermissions();
+  const { permissions, updateRolePermissions, resetToDefaults, isLoading } = usePermissions();
   const [selectedRole, setSelectedRole] = useState('trainer');
-  const [activePaths, setActivePaths] = useState(() => permissions[selectedRole] || []);
+  const [activePaths, setActivePaths] = useState([]);
   const [toastMsg, setToastMsg] = useState('');
+
+  React.useEffect(() => {
+    setActivePaths(permissions[selectedRole] || []);
+  }, [permissions, selectedRole]);
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);
-    setActivePaths(permissions[role] || []);
   };
 
   const handleTogglePath = (path) => {
@@ -93,53 +97,16 @@ export default function PermissionsPage() {
     setTimeout(() => setToastMsg(''), 4000);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedRole === 'superadmin') return;
-    updateRolePermissions(selectedRole, activePaths);
+    await updateRolePermissions(selectedRole, activePaths);
     showToast(`Permissions updated successfully for ${selectedRole.toUpperCase()} role.`);
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (window.confirm("Are you sure you want to reset ALL roles' permissions to default?")) {
-      resetToDefaults();
-      // Reload active paths for selected role
-      const defaults = {
-        trainer: [
-          '/dashboard',
-          '/dashboard/courses',
-          '/dashboard/trainer',
-          '/dashboard/scheduling',
-          '/dashboard/administration',
-          '/dashboard/profile'
-        ],
-        student: [
-          '/dashboard',
-          '/dashboard/courses',
-          '/dashboard/profile',
-          '/dashboard/assessment'
-        ],
-        admin: [
-          '/dashboard',
-          '/dashboard/modules',
-          '/dashboard/permissions',
-          '/dashboard/roles-grants',
-          '/dashboard/users',
-          '/dashboard/organisations',
-          '/dashboard/domains',
-          '/dashboard/parents',
-          '/dashboard/learners',
-          '/dashboard/batches',
-          '/dashboard/courses',
-          '/dashboard/audit-log',
-          '/dashboard/profile',
-          '/dashboard/administration',
-          '/dashboard/scheduling',
-          '/dashboard/assessment',
-          '/dashboard/finance',
-          '/dashboard/trainer'
-        ]
-      };
-      setActivePaths(defaults[selectedRole] || []);
+      await resetToDefaults();
+      setActivePaths(permissionsContract.defaultPermissions[selectedRole] || []);
       showToast("Reset all roles to defaults.");
     }
   };
@@ -158,6 +125,11 @@ export default function PermissionsPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
+      {isLoading && (
+        <div className="bg-neutral-50 dark:bg-white/5 border border-medium-grey dark:border-white/10 text-[11px] text-dark-grey px-4 py-3 rounded-xl">
+          Loading permissions from the shared store...
+        </div>
+      )}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-xl font-extrabold text-black dark:text-white flex items-center gap-2">

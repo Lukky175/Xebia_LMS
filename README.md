@@ -133,6 +133,41 @@ If you need to edit features or behaviors tied to a specific user role, use the 
 
 The application implements a full **Mock Authentication & Role-Based Access Control (RBAC)** flow on the frontend. The active session is maintained via `localStorage`.
 
+### RBAC File Map
+
+If you want to change role access, route visibility, or permission persistence, these are the main files to edit:
+
+| RBAC Feature | What it controls | File to edit |
+| :--- | :--- | :--- |
+| **Role permission source of truth** | Default role-to-route access for `superadmin`, `admin`, `trainer`, and `student`, plus the backend-ready permission contract and local fallback. | [src/services/permissionsApi.js](src/services/permissionsApi.js) |
+| **Permission context** | Loads permissions, exposes `hasPermission`, and updates/reset permission maps for the app. | [src/context/PermissionsContext.jsx](src/context/PermissionsContext.jsx) |
+| **Sidebar filtering** | Shows or hides sidebar tabs based on the current user's role permissions. | [src/components/layout/Sidebar.jsx](src/components/layout/Sidebar.jsx) |
+| **Route guarding** | Blocks unauthorized dashboard routes and shows access denied state. | [src/pages/Dashboard/Dashboard.jsx](src/pages/Dashboard/Dashboard.jsx) |
+| **Permissions editor UI** | Lets admins toggle which paths each role can see. | [src/pages/Permissions/PermissionsPage.jsx](src/pages/Permissions/PermissionsPage.jsx) |
+| **Roles & scope summary** | Displays a read-only overview of what each role can access. | [src/pages/RolesGrants/RolesGrantsPage.jsx](src/pages/RolesGrants/RolesGrantsPage.jsx) |
+| **Role-based dashboard switching** | Chooses the trainer/student/admin/superadmin dashboard content after login. | [src/pages/Dashboard/DashboardHome.jsx](src/pages/Dashboard/DashboardHome.jsx) |
+| **Login role assignment** | Defines the role attached to each mock user account. | [src/context/AuthContext.jsx](src/context/AuthContext.jsx) |
+
+### RBAC Flow
+
+1. `AuthContext.jsx` identifies the logged-in user's role.
+2. `PermissionsContext.jsx` loads the active permission map.
+3. `Sidebar.jsx` filters the visible tabs with `hasPermission(...)`.
+4. `Dashboard.jsx` blocks direct route access for paths the role cannot open.
+5. `PermissionsPage.jsx` lets admins update the allowed route list.
+
+### When the Spring Boot backend is ready
+
+If the backend team wants to remove the hardcoded frontend RBAC fallback, do this:
+
+1. Remove the `defaultPermissions` seed and `localStorage` fallback logic from [src/services/permissionsApi.js](src/services/permissionsApi.js).
+2. Keep only the backend `fetch` calls in `permissionsApi.js` so the app always reads from Spring Boot.
+3. Keep `PermissionsContext.jsx` as the shared app-level consumer of the API response.
+4. If the backend should control the visible sidebar items too, move `navigationGroups` from [src/components/layout/Sidebar.jsx](src/components/layout/Sidebar.jsx) into backend data or a shared config endpoint.
+5. If the backend should own the mock login roles as well, replace the hardcoded user list in [src/context/AuthContext.jsx](src/context/AuthContext.jsx) with a real authentication endpoint.
+
+For production, the important part is that the database becomes the source of truth. The frontend should only render what the backend returns.
+
 ### 1. Mock Credentials
 You can log in to the platform console using any of these pre-configured user credentials:
 

@@ -45,6 +45,7 @@ export default function ProfilePage() {
   const [showViewScopes, setShowViewScopes] = useState(false);
   const [showModulesModal, setShowModulesModal] = useState(false);
   const [activeModule, setActiveModule] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   const [formData, setFormData] = useState({
     displayName: '',
@@ -98,16 +99,35 @@ export default function ProfilePage() {
     setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSaveProfile = (event) => {
-    event.preventDefault();
-    updateCurrentUser({
-      name: formData.displayName,
-      email: formData.email,
-      role: currentUser.role === 'superadmin' ? formData.role.toLowerCase() : currentUser.role,
-      title: formData.subRole,
-      profileImage: formData.profileImage,
-    });
-    setShowEditModal(false);
+  const handleSaveProfile = async (updatedData) => {
+    setIsSaving(true);
+    try {
+      // Simulate backend delay for database updates
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      updateCurrentUser({
+        name: updatedData.displayName,
+        email: updatedData.email,
+        role: currentUser.role === 'superadmin' ? updatedData.role.toLowerCase() : currentUser.role,
+        title: updatedData.subRole,
+        profileImage: updatedData.profileImage,
+      });
+
+      // Update state tracking
+      setFormData({
+        displayName: updatedData.displayName,
+        email: updatedData.email,
+        role: updatedData.role,
+        subRole: updatedData.subRole,
+        profileImage: updatedData.profileImage,
+      });
+
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleViewPhoto = () => {
@@ -249,7 +269,7 @@ export default function ProfilePage() {
         onClose={() => setShowEditModal(false)}
         onSubmit={handleSaveProfile}
         value={formData}
-        onChange={handleChange}
+        isSaving={isSaving}
       />
 
       <ProfileActionModal
@@ -321,13 +341,9 @@ export default function ProfilePage() {
                   key={module.title}
                   type="button"
                   onClick={() => setActiveModule(module)}
-                  className="rounded-2xl border border-medium-grey/40 dark:border-white/10 bg-white dark:bg-[#0F1015] px-4 py-3 text-left text-sm font-semibold text-black dark:text-white hover:border-tranquil-velvet/50 transition cursor-pointer"
+                  className="w-full text-left cursor-pointer"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span>{module.title}</span>
-                    {module.highlight && <ProfileBadge tone="accent">{module.highlight}</ProfileBadge>}
-                  </div>
-                  <p className="text-xs text-dark-grey mt-1">{module.path}</p>
+                  <ModuleLinkRow title={module.title} path={module.path} highlight={module.highlight} />
                 </button>
               ))}
             </div>

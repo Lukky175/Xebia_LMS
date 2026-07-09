@@ -1,80 +1,36 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { permissionsApi, permissionsContract } from '@/services/permissionsApi.js';
 
 const PermissionsContext = createContext();
 
-const defaultPermissions = {
-  superadmin: [
-    '/dashboard',
-    '/dashboard/modules',
-    '/dashboard/permissions',
-    '/dashboard/roles-grants',
-    '/dashboard/users',
-    '/dashboard/organisations',
-    '/dashboard/domains',
-    '/dashboard/parents',
-    '/dashboard/learners',
-    '/dashboard/batches',
-    '/dashboard/courses',
-    '/dashboard/audit-log',
-    '/dashboard/profile',
-    '/dashboard/administration',
-    '/dashboard/scheduling',
-    '/dashboard/assessment',
-    '/dashboard/finance',
-    '/dashboard/trainer'
-  ],
-  admin: [
-    '/dashboard',
-    '/dashboard/modules',
-    '/dashboard/permissions',
-    '/dashboard/roles-grants',
-    '/dashboard/users',
-    '/dashboard/organisations',
-    '/dashboard/domains',
-    '/dashboard/parents',
-    '/dashboard/learners',
-    '/dashboard/batches',
-    '/dashboard/courses',
-    '/dashboard/audit-log',
-    '/dashboard/profile',
-    '/dashboard/administration',
-    '/dashboard/scheduling',
-    '/dashboard/assessment',
-    '/dashboard/finance',
-    '/dashboard/trainer'
-  ],
-  trainer: [
-    '/dashboard',
-    '/dashboard/courses',
-    '/dashboard/trainer',
-    '/dashboard/scheduling',
-    '/dashboard/administration',
-    '/dashboard/profile'
-  ],
-  student: [
-    '/dashboard',
-    '/dashboard/courses',
-    '/dashboard/profile',
-    '/dashboard/assessment'
-  ]
-};
-
 export function PermissionsProvider({ children }) {
-  const [permissions, setPermissions] = useState(() => {
-    const saved = localStorage.getItem('lms_role_permissions');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse permissions", e);
-      }
-    }
-    return defaultPermissions;
-  });
+  const [permissions, setPermissions] = useState(permissionsContract.defaultPermissions);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('lms_role_permissions', JSON.stringify(permissions));
-  }, [permissions]);
+    let mounted = true;
+
+    const loadPermissions = async () => {
+      try {
+        const savedPermissions = await permissionsApi.getPermissions();
+        if (mounted) {
+          setPermissions(savedPermissions);
+        }
+      } catch (error) {
+        console.error('Failed to load permissions', error);
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadPermissions();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const hasPermission = (role, path) => {
     if (!role) return false;
@@ -95,18 +51,21 @@ export function PermissionsProvider({ children }) {
 
   const updateRolePermissions = (role, newPaths) => {
     if (role === 'superadmin') return; // Cannot modify superadmin
-    setPermissions(prev => ({
-      ...prev,
-      [role]: newPaths
-    }));
+    return permissionsApi.updateRolePermissions(role, newPaths).then((nextPermissions) => {
+      setPermissions(nextPermissions);
+      return nextPermissions;
+    });
   };
 
   const resetToDefaults = () => {
-    setPermissions(defaultPermissions);
+    return permissionsApi.resetPermissions().then((nextPermissions) => {
+      setPermissions(nextPermissions);
+      return nextPermissions;
+    });
   };
 
   return (
-    <PermissionsContext.Provider value={{ permissions, hasPermission, updateRolePermissions, resetToDefaults }}>
+    <PermissionsContext.Provider value={{ permissions, hasPermission, updateRolePermissions, resetToDefaults, isLoading }}>
       {children}
     </PermissionsContext.Provider>
   );

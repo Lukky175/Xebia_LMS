@@ -21,7 +21,6 @@ import { usePermissions } from '@/context/PermissionsContext.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import { api } from '@/services/api.js';
-import { useAuth } from '@/context/AuthContext.jsx';
 
 function AccessDenied({ path, role }) {
   const navigate = useNavigate();

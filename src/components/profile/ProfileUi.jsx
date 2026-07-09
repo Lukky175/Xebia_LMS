@@ -74,14 +74,12 @@ export function ScopePill({ children }) {
 
 export function ModuleLinkRow({ title, path, highlight }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-[#E7E9F0] bg-[#F7F8FC] px-4 py-3 text-sm text-dark-grey shadow-sm transition hover:border-tranquil-velvet/30">
-      <div>
-        <p className="font-semibold text-black">{title}</p>
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="rounded-full border border-[#E7E9F0] bg-white px-3 py-1 text-[11px] font-semibold text-dark-grey">{path}</span>
+    <div className="rounded-2xl border border-[#E7E9F0] dark:border-white/5 bg-white dark:bg-[#16171F] p-5 shadow-xs transition-all duration-300 hover:border-tranquil-velvet/40 dark:hover:border-tranquil-velvet/40 hover:bg-[#F8FAFC]/55 dark:hover:bg-[#1c1e28]/70 hover:scale-[1.01] hover:shadow-md">
+      <div className="flex items-center justify-between gap-3">
+        <span className="font-bold tracking-tight text-slate-900 dark:text-white transition duration-200">{title}</span>
         {highlight && <ProfileBadge tone="accent">{highlight}</ProfileBadge>}
       </div>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 font-mono font-medium">{path}</p>
     </div>
   );
 }
@@ -94,24 +92,32 @@ export function ProfileActionModal({ open, onClose, title, description, children
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4 py-6"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
+          <motion.div
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-950/85 backdrop-blur-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+
           <motion.div
             initial={{ y: 20, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 20, opacity: 0, scale: 0.98 }}
-            className="w-full max-w-2xl rounded-2xl bg-white dark:bg-[#16171F] border border-medium-grey shadow-2xl overflow-hidden"
+            className="relative z-10 w-full max-w-2xl rounded-2xl bg-white dark:bg-[#16171F] border border-medium-grey dark:border-white/5 shadow-2xl overflow-hidden"
           >
             <div className="flex items-center justify-between border-b border-medium-grey/30 px-6 py-4">
               <div>
                 <h3 className="text-lg font-extrabold text-black dark:text-white">{title}</h3>
                 {description && <p className="text-xs text-dark-grey mt-1">{description}</p>}
               </div>
-              <button onClick={onClose} className="rounded-full p-2 text-dark-grey hover:bg-[#F7F8FC] dark:hover:bg-[#0F1015] transition">
+              <button onClick={onClose} className="rounded-full p-2 text-dark-grey hover:bg-[#F7F8FC] dark:hover:bg-[#0F1015] transition cursor-pointer">
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="p-6">{children}</div>
+            <div className="p-6 max-h-[calc(100vh-16rem)] overflow-y-auto">{children}</div>
             {footer && <div className="border-t border-medium-grey/30 px-6 py-4 bg-[#FAFBFF] dark:bg-[#11131A]">{footer}</div>}
           </motion.div>
         </motion.div>
