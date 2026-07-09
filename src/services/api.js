@@ -1,4 +1,4 @@
-import { initialCourses, initialTutors, initialUsers } from '@/data/mockData.js';
+import { initialCourses, initialTutors, initialUsers, initialDomains } from '@/data/mockData.js';
 
 // Helper to simulate network latency
 const delay = (ms = 400) => new Promise(resolve => setTimeout(resolve, ms));
@@ -26,6 +26,21 @@ export const api = {
   async getCourses() {
     await delay();
     return getStorageItem('lms_courses', initialCourses);
+  },
+
+  // ✅ NEW: Add a new course and persist to localStorage
+  async addCourse(courseData) {
+    await delay(300);
+    const courses = getStorageItem('lms_courses', initialCourses);
+    const newCourse = {
+      ...courseData,
+      id: Date.now(),
+      progress: 0,
+      completedLessons: 0,
+    };
+    const updated = [...courses, newCourse];
+    setStorageItem('lms_courses', updated);
+    return updated;
   },
 
   async updateCourseProgress(courseId) {
@@ -57,15 +72,33 @@ export const api = {
     await delay();
     const tutors = getStorageItem('lms_tutors', initialTutors);
     const newTutor = {
-      id: `T-${200 + tutors.length + 1}`,
-      rating: 4.8,
-      status: 'Online',
       ...tutorData,
-      courses: parseInt(tutorData.courses || 0, 10),
-      hours: parseInt(tutorData.hours || 0, 10)
+      id: `T-${Date.now()}`
     };
     const updated = [...tutors, newTutor];
     setStorageItem('lms_tutors', updated);
+    return updated;
+  },
+
+  // Users API
+  async getUsers() {
+    await delay();
+    return getStorageItem('lms_users', initialUsers);
+  },
+
+  async deleteUser(id) {
+    await delay();
+    const users = getStorageItem('lms_users', initialUsers);
+    const updated = users.filter(u => u.id !== id);
+    setStorageItem('lms_users', updated);
+    return updated;
+  },
+
+  async deleteUsersBulk(ids) {
+    await delay();
+    const users = getStorageItem('lms_users', initialUsers);
+    const updated = users.filter(u => !ids.includes(u.id));
+    setStorageItem('lms_users', updated);
     return updated;
   },
 
@@ -77,60 +110,34 @@ export const api = {
     return updated;
   },
 
-  // Users API
-  async getUsers() {
+  // Domains API
+  async getDomains() {
     await delay();
-    return getStorageItem('lms_users', initialUsers);
+    return getStorageItem('lms_domains', initialDomains);
   },
 
-  async deleteUser(userId) {
-    await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => u.id !== userId);
-    setStorageItem('lms_users', updated);
+  async addDomain(domainData) {
+    await delay(300);
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const newDomain = { ...domainData, id: Date.now() };
+    const updated = [...domains, newDomain];
+    setStorageItem('lms_domains', updated);
     return updated;
   },
 
-  async deleteUsersBulk(userIds) {
-    await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => !userIds.includes(u.id));
-    setStorageItem('lms_users', updated);
+  async updateDomain(id, updates) {
+    await delay(300);
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const updated = domains.map(d => d.id === id ? { ...d, ...updates } : d);
+    setStorageItem('lms_domains', updated);
     return updated;
   },
 
-
-  /* @ author : Gurnoor Singh
-@email: gsingh13_be23@thapar.edu
-mobile : +91- 7814205303
-Thapar institute of engineering and technology, Patiala
-*/
-
-  /*
-   * Service: api
-   * Purpose: Simulates a backend API service for the LMS platform.
-   * It manages local storage caching, simulated network latency, and handles
-   * CRUD operations for courses, tutors, users, and organisations.
-   */
-  // Organisations API
-  async getOrganisations() {
-    await delay();
-    return getStorageItem('lms_organisations', initialOrganisations);
-  },
-
-  async addOrganisation(orgData) {
-    await delay();
-    const orgs = getStorageItem('lms_organisations', initialOrganisations);
-    const newOrg = {
-      id: orgs.length ? Math.max(...orgs.map(o => o.id)) + 1 : 1,
-      usedSeats: 0,
-      status: 'ACTIVE',
-      ...orgData,
-      seats: parseInt(orgData.seats || 0, 10),
-      mrr: parseInt(orgData.mrr || 0, 10)
-    };
-    const updated = [newOrg, ...orgs];
-    setStorageItem('lms_organisations', updated);
+  async deleteDomain(id) {
+    await delay(300);
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const updated = domains.filter(d => d.id !== id);
+    setStorageItem('lms_domains', updated);
     return updated;
-  }
+  },
 };

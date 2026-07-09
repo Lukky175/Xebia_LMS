@@ -13,6 +13,7 @@ import AssessmentPage from '@/pages/Assessment/AssessmentPage.jsx';
 import SchedulingPage from '@/pages/Scheduling/SchedulingPage.jsx';
 import ProfilePage from '@/pages/Profile/ProfilePage.jsx';
 import TutorsPage from '@/pages/Tutors/TutorsPage.jsx';
+import DomainsPage from '@/pages/Domains/DomainsPage.jsx';
 import { api } from '@/services/api.js';
 
 
@@ -65,8 +66,8 @@ export default function Dashboard({ courses, handleSimulateProgress, coursesLoad
         <Route path="/permissions" element={<BlankPage name="Permissions" />} />
         <Route path="/roles-grants" element={<BlankPage name="Roles & Grants" />} />
         <Route path="/users" element={<UsersPage searchQuery={searchQuery} />} />
-        <Route path="/organisations" element={<OrganisationsPage searchQuery={searchQuery} />} />
-        <Route path="/domains" element={<BlankPage name="Domains" />} />
+        <Route path="/organisations" element={<BlankPage name="Organisations" />} />
+        <Route path="/domains" element={<DomainsPage />} />
         <Route path="/parents" element={<BlankPage name="Parents" />} />
         <Route path="/learners" element={<BlankPage name="Learners" />} />
         <Route path="/batches" element={<BlankPage name="Batches" />} />

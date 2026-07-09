@@ -70,6 +70,21 @@ export const initialTutors = [
   { id: 'T-206', name: 'Marcus MesCaline', dept: 'DevOps', title: 'Cloud Security Lead Instructor', courses: 2, hours: 90, rating: 4.6, status: 'Offline', email: 'm.mescaline@xebia.com' }
 ];
 
+export const initialDomains = [
+  { id: 1,  name: 'React.js',         code: 'REACT',  parentId: null, status: 'Active',   category: 'Frontend'     },
+  { id: 2,  name: 'Prometheus',        code: 'E23455', parentId: null, status: 'Active',   category: 'Monitoring'   },
+  { id: 3,  name: 'DevOps & Cloud',    code: 'DEVOPS', parentId: null, status: 'Active',   category: 'DevOps'       },
+  { id: 4,  name: 'Node.js',           code: 'NODE',   parentId: 1,    status: 'Active',   category: 'Backend'      },
+  { id: 5,  name: 'Kubernetes',        code: 'K8S',    parentId: 3,    status: 'Active',   category: 'DevOps'       },
+  { id: 6,  name: 'Machine Learning',  code: 'ML101',  parentId: null, status: 'Inactive', category: 'Data Science' },
+  { id: 7,  name: 'TypeScript',        code: 'TS',     parentId: 1,    status: 'Active',   category: 'Frontend'     },
+  { id: 8,  name: 'GraphQL',           code: 'GQL',    parentId: null, status: 'Active',   category: 'Backend'      },
+  { id: 9,  name: 'Docker',            code: 'DOCK',   parentId: 3,    status: 'Active',   category: 'DevOps'       },
+  { id: 10, name: 'Python',            code: 'PY3',    parentId: null, status: 'Active',   category: 'Data Science' },
+  { id: 11, name: 'Terraform',         code: 'TF',     parentId: 3,    status: 'Active',   category: 'DevOps'       },
+  { id: 12, name: 'Deep Learning',     code: 'DL201',  parentId: 6,    status: 'Active',   category: 'Data Science' },
+];
+
 export const initialUsers = [
   { id: 1, name: 'Marcus Long', email: 'marcus.long@techcorp.com', role: 'Senior Developer', enrollments: 4, progress: 85, lastLogin: '2 mins ago', status: 'active' },
   { id: 2, name: 'Karla Abbott', email: 'karla.abbott@cloudsystem.com', role: 'DevOps Lead', enrollments: 3, progress: 100, lastLogin: '45 mins ago', status: 'active' },
