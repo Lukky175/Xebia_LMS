@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BookOpen, CheckCircle, FileText, Archive, Plus, Trash2, Edit2, Star, Users, ShieldAlert, X, Loader2} from 'lucide-react';
 import CountUp from '@/components/ui/CountUp.jsx';
 import BorderGlow from '@/components/ui/BorderGlow.jsx';
-import AddCourseModal from '@/components/ui/AddCourseModal.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 import { api } from '@/services/api.js';
 
 
@@ -24,9 +24,6 @@ const EMPTY_FORM = {
   image: '',
 };
 
-export default function CoursesPage({ courses, handleSimulateProgress, searchQuery, loading }) {
-import { useAuth } from '@/context/AuthContext.jsx';
-
 export default function CoursesPage({ 
   courses, 
   handleSimulateProgress, 
@@ -39,7 +36,6 @@ export default function CoursesPage({
   const { theme } = useTheme();
   const { currentUser } = useAuth();
   const [localCourses, setLocalCourses] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // ── Modal state ──────────────────────────────────────────────────────────────
   const [showAddModal, setShowAddModal] = useState(false);
@@ -212,8 +208,6 @@ export default function CoursesPage({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { title: 'Total Courses', count: localCourses.length, icon: BookOpen, color: '304 76 30' },
-          { title: 'Published', count: localCourses.length, icon: CheckCircle, color: '176 99 34' },
-          { title: 'Drafts', count: 5, icon: FileText, color: '304 76 30' },
           { title: 'Total Courses', count: publishedCount, icon: BookOpen, color: '304 76 30' },
           { title: 'Published', count: publishedCount, icon: CheckCircle, color: '176 99 34' },
           { title: 'Pending Approval', count: pendingCount, icon: FileText, color: '30 90 200' },
@@ -316,16 +310,9 @@ export default function CoursesPage({
         <span className="text-xs font-bold text-black dark:text-white uppercase tracking-wider">
           Enrolled Course Catalog ({filteredCourses.length})
         </span>
-        <button 
-          onClick={handleOpenModal}
-          className="px-4 py-2 bg-cta-orange hover:bg-[#E05600] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-cta-orange/15 border border-transparent"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add New Course</span>
-        </button>
         {currentUser?.role !== 'student' && (
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleOpenModal}
             className="px-4 py-2 bg-cta-orange hover:bg-[#E05600] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-cta-orange/15 border border-transparent"
           >
             <Plus className="h-4 w-4" />
