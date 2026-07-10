@@ -1,4 +1,4 @@
-import { initialCourses, initialTutors, initialUsers, initialOrganisations, initialRoles, initialModules, initialDomains } from '@/data/mockData.js';
+import { initialCourses, initialTutors, initialUsers, initialOrganisations } from '@/data/mockData.js';
 
 // Helper to simulate network latency
 const delay = (ms = 400) => new Promise(resolve => setTimeout(resolve, ms));
@@ -21,9 +21,6 @@ const setStorageItem = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-const ROLES_STORAGE_KEY = 'lms_roles_v2';
-const MODULES_STORAGE_KEY = 'lms_modules';
-
 export const api = {
   // Courses API
   async getCourses() {
@@ -33,21 +30,6 @@ export const api = {
       status: 'published',
       ...c
     }));
-  },
-
-  // ✅ NEW: Add a new course and persist to localStorage
-  async addCourse(courseData) {
-    await delay(300);
-    const courses = getStorageItem('lms_courses', initialCourses);
-    const newCourse = {
-      ...courseData,
-      id: Date.now(),
-      progress: 0,
-      completedLessons: 0,
-    };
-    const updated = [...courses, newCourse];
-    setStorageItem('lms_courses', updated);
-    return updated;
   },
 
   async updateCourseProgress(courseId) {
@@ -118,36 +100,16 @@ export const api = {
     await delay();
     const tutors = getStorageItem('lms_tutors', initialTutors);
     const newTutor = {
+      id: `T-${200 + tutors.length + 1}`,
+      rating: 4.8,
+      status: 'Online',
       ...tutorData,
-      id: `T-${Date.now()}`
+      courses: parseInt(tutorData.courses || 0, 10),
+      hours: parseInt(tutorData.hours || 0, 10)
     };
     const updated = [...tutors, newTutor];
     setStorageItem('lms_tutors', updated);
     return updated;
-  },
-
-  // Users API
-  async getUsers() {
-    await delay();
-    return initialUsers;
-  },
-
-  async deleteUser(id) {
-    await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => u.id !== id);
-    setStorageItem('lms_users', updated);
-    return updated;
-    return initialUsers.filter(u => u.id !== userId);
-  },
-
-  async deleteUsersBulk(ids) {
-    await delay();
-    const users = getStorageItem('lms_users', initialUsers);
-    const updated = users.filter(u => !ids.includes(u.id));
-    setStorageItem('lms_users', updated);
-    return updated;
-    return initialUsers.filter(u => !userIds.includes(u.id));
   },
 
   async deleteTutor(tutorId) {
@@ -158,162 +120,60 @@ export const api = {
     return updated;
   },
 
-  // Domains API
-  async getDomains() {
+  // Users API
+  async getUsers() {
     await delay();
-    return getStorageItem('lms_domains', initialDomains);
+    return getStorageItem('lms_users', initialUsers);
   },
 
-  async addDomain(domainData) {
-    await delay(300);
-    const domains = getStorageItem('lms_domains', initialDomains);
-    const newDomain = { ...domainData, id: Date.now() };
-    const updated = [...domains, newDomain];
-    setStorageItem('lms_domains', updated);
+  async deleteUser(userId) {
+    await delay();
+    const users = getStorageItem('lms_users', initialUsers);
+    const updated = users.filter(u => u.id !== userId);
+    setStorageItem('lms_users', updated);
     return updated;
   },
 
-  async updateDomain(id, updates) {
-    await delay(300);
-    const domains = getStorageItem('lms_domains', initialDomains);
-    const updated = domains.map(d => d.id === id ? { ...d, ...updates } : d);
-    setStorageItem('lms_domains', updated);
+  async deleteUsersBulk(userIds) {
+    await delay();
+    const users = getStorageItem('lms_users', initialUsers);
+    const updated = users.filter(u => !userIds.includes(u.id));
+    setStorageItem('lms_users', updated);
     return updated;
   },
 
-  async deleteDomain(id) {
-    await delay(300);
-    const domains = getStorageItem('lms_domains', initialDomains);
-    const updated = domains.filter(d => d.id !== id);
-    setStorageItem('lms_domains', updated);
+
+  /* @ author : Gurnoor Singh
+@email: gsingh13_be23@thapar.edu
+mobile : +91- 7814205303
+Thapar institute of engineering and technology, Patiala
+*/
+
+  /*
+   * Service: api
+   * Purpose: Simulates a backend API service for the LMS platform.
+   * It manages local storage caching, simulated network latency, and handles
+   * CRUD operations for courses, tutors, users, and organisations.
+   */
+  // Organisations API
+  async getOrganisations() {
+    await delay();
+    return getStorageItem('lms_organisations', initialOrganisations);
+  },
+
+  async addOrganisation(orgData) {
+    await delay();
+    const orgs = getStorageItem('lms_organisations', initialOrganisations);
+    const newOrg = {
+      id: orgs.length ? Math.max(...orgs.map(o => o.id)) + 1 : 1,
+      usedSeats: 0,
+      status: 'ACTIVE',
+      ...orgData,
+      seats: parseInt(orgData.seats || 0, 10),
+      mrr: parseInt(orgData.mrr || 0, 10)
+    };
+    const updated = [newOrg, ...orgs];
+    setStorageItem('lms_organisations', updated);
     return updated;
-  },
-  // --- Roles & Permissions API ---
-  /**
-   * Fetch all available modules in the system.
-   */
-  async getModules() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const stored = localStorage.getItem(MODULES_STORAGE_KEY);
-        if (!stored) {
-          localStorage.setItem(MODULES_STORAGE_KEY, JSON.stringify(initialModules));
-          resolve(initialModules);
-        } else {
-          resolve(JSON.parse(stored));
-        }
-      }, 300); // Simulate network latency
-    });
-  },
-
-  /**
-   * Fetch all roles and their respective permissions.
-   */
-  async getRoles() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const stored = localStorage.getItem(ROLES_STORAGE_KEY);
-        if (!stored) {
-          localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(initialRoles));
-          resolve(initialRoles);
-        } else {
-          resolve(JSON.parse(stored));
-        }
-      }, 400);
-    });
-  },
-
-  /**
-   * Update the permissions for a specific role.
-   * @param {string} roleId - The ID of the role to update.
-   * @param {Array} newPermissions - The complete new array of permission objects.
-   */
-  async updateRolePermissions(roleId, newPermissions) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const roles = await this.getRoles();
-        const roleIndex = roles.findIndex((r) => r.id === roleId);
-        
-        if (roleIndex === -1) {
-          throw new Error('Role not found');
-        }
-
-        roles[roleIndex] = {
-          ...roles[roleIndex],
-          permissions: newPermissions
-        };
-
-        localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(roles));
-        resolve(roles[roleIndex]);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  },
-
-  /**
-   * Create a new role.
-   */
-  async createRole(roleData) {
-    return new Promise(async (resolve) => {
-      const roles = await this.getRoles();
-      const newRole = {
-        id: `role-${Date.now()}`,
-        name: roleData.name,
-        description: roleData.description || '',
-        type: roleData.type || 'Custom',
-        permissions: roleData.permissions || []
-      };
-      
-      roles.push(newRole);
-      localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(roles));
-      resolve(newRole);
-    });
-  },
-
-  /**
-   * Update a role's name and description.
-   */
-  async updateRole(roleId, roleData) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const roles = await this.getRoles();
-        const roleIndex = roles.findIndex((r) => r.id === roleId);
-        
-        if (roleIndex === -1) {
-          throw new Error('Role not found');
-        }
-
-        roles[roleIndex] = {
-          ...roles[roleIndex],
-          name: roleData.name || roles[roleIndex].name,
-          description: roleData.description || roles[roleIndex].description,
-          // Preserve existing permissions and type
-        };
-
-        localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(roles));
-        resolve(roles[roleIndex]);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  },
-
-  /**
-   * Delete a role by ID.
-   */
-  async deleteRole(roleId) {
-    return new Promise(async (resolve, reject) => {
-      const roles = await this.getRoles();
-      const filtered = roles.filter(r => r.id !== roleId);
-      
-      if (roles.length === filtered.length) {
-        reject(new Error('Role not found or cannot be deleted'));
-        return;
-      }
-
-      localStorage.setItem(ROLES_STORAGE_KEY, JSON.stringify(filtered));
-      resolve({ success: true, id: roleId });
-    });
   }
 };

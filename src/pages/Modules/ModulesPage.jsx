@@ -1,16 +1,7 @@
-/**
- * Author: Abhishek Dixit
- * Institution: Lovely Professional University
- * Develop the modules management page for the platform, 
- * including module cards, tables, pagination, 
- * and modals for creating and editing modules.
- */
-
 import React, { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Clock3, ShieldCheck, History, Gauge, LayoutGrid, List, Sparkles } from 'lucide-react';
+import { Plus, Clock3, ShieldCheck, History, Gauge } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext.jsx';
-import { ProfileCardFrame } from '@/components/profile/ProfileUi.jsx';
+import { ProfileActionButton, ProfileCardFrame } from '@/components/profile/ProfileUi.jsx';
 import {
   ModuleActionsCell,
   ModuleKeyBadge,
@@ -18,7 +9,6 @@ import {
   ModuleStatCard,
   ModuleFormModal,
   ModuleStatusBadge,
-  ModuleCardsGrid,
 } from '@/components/modules/ModuleUi.jsx';
 
 const initialModules = [
@@ -41,15 +31,6 @@ export default function ModulesPage() {
   const [page, setPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingModuleKey, setEditingModuleKey] = useState(null);
-  const [viewMode, setViewMode] = useState(() => {
-    if (typeof window === 'undefined') return 'table';
-    try {
-      const saved = window.localStorage.getItem('modules_view');
-      return saved === 'cards' ? 'cards' : 'table';
-    } catch {
-      return 'table';
-    }
-  });
   const [newModule, setNewModule] = useState({
     key: '',
     title: '',
@@ -90,11 +71,6 @@ export default function ModulesPage() {
       active: module.active,
     });
     setShowCreateModal(true);
-  };
-
-  const handleSetView = (mode) => {
-    setViewMode(mode);
-    try { window.localStorage.setItem('modules_view', mode); } catch (e) {}
   };
 
   const handleChange = (field, value) => {
@@ -153,108 +129,59 @@ export default function ModulesPage() {
 
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-xl border border-white/60 dark:border-border-card bg-gradient-to-br from-[#fef7f2] via-white to-[#f5f0ff] dark:from-[#16171F] dark:via-[#1a1b24] dark:to-[#181524] p-6 shadow-[0_20px_60px_rgba(132,17,124,0.12)]"
-      >
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_left,_rgba(255,98,0,0.18),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(132,17,124,0.16),_transparent_35%)]" />
-        <div className="rounded-xl border border-white/60 bg-white/80 dark:border-border-card dark:bg-[#16171F]/90 p-6 shadow-sm backdrop-blur-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-2 rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-tranquil-velvet">
-                Modules
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.8px] text-black dark:text-white">
-                Module registry
-              </h1>
-              <p className="text-sm text-dark-grey max-w-2xl">
-                Manage modules, routes and availability with the same polished workflow as learner creation.
-              </p>
+      <div className="flex flex-col gap-4 rounded-3xl border border-white/60 dark:border-border-card bg-white/80 dark:bg-[#16171F]/90 backdrop-blur-sm p-6 shadow-sm">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-1">
+            <div className="inline-flex items-center gap-2 rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-tranquil-velvet">
+              Access Control
             </div>
-
-            <button
-              type="button"
-              onClick={handleOpenCreate}
-              className="inline-flex items-center gap-2 rounded-xl bg-cta-orange px-4 py-2.5 text-xs font-extrabold text-white shadow-[0_10px_24px_rgba(255,98,0,0.25)] transition hover:brightness-95 self-start sm:self-auto"
-            >
-              <Plus className="h-4 w-4" />
-              New module
-            </button>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-[-0.8px] text-black dark:text-white">
+              Modules
+            </h1>
+            <p className="text-sm text-dark-grey max-w-2xl">
+              Configure and manage core system functional modules and access routes using the brand palette and shared dashboard components.
+            </p>
           </div>
+
+          <button
+            type="button"
+            onClick={handleOpenCreate}
+            className="inline-flex items-center gap-2 rounded-xl bg-cta-orange px-4 py-2.5 text-xs font-extrabold text-white shadow-[0_10px_24px_rgba(255,98,0,0.25)] transition hover:brightness-95 self-start sm:self-auto"
+          >
+            <Plus className="h-4 w-4" />
+            New Module
+          </button>
         </div>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
           <ProfileCardFrame theme={theme} className="lg:col-span-12 overflow-hidden p-0">
             <div className="overflow-x-auto sleek-scrollbar">
-              <div className="p-4">
-                  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="text-xs text-dark-grey">Showing {rangeStart}-{rangeEnd} of {modules.length} modules</div>
-                    <div className="inline-flex items-center gap-2 rounded-l border border-medium-grey/30 bg-white/80 p-1 shadow-sm dark:bg-[#18181B]/80">
-                      <button
-                        type="button"
-                        onClick={() => handleSetView('table')}
-                        className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${viewMode === 'table' ? 'bg-tranquil-velvet text-white shadow-sm' : 'text-dark-grey hover:bg-tranquil-velvet/5'}`}
-                      >
-                        <List className="h-4 w-4" /> Table
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleSetView('cards')}
-                        className={`inline-flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold transition ${viewMode === 'cards' ? 'bg-tranquil-velvet text-white shadow-sm' : 'text-dark-grey hover:bg-tranquil-velvet/5'}`}
-                      >
-                        <LayoutGrid className="h-4 w-4" /> Cards
-                      </button>
-                    </div>
-                  </div>
-
-                  {viewMode === 'table' ? (
-                    <div className="relative z-10 min-h-[320px] rounded-xl border border-medium-grey/40 bg-[#fcfdff] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-border-card dark:bg-[#12131a]">
-                      <table className="w-full min-w-[920px] text-left text-xs">
-                        <thead>
-                          <tr className="bg-gradient-to-r from-[#f7f3ff] to-[#fff7ef] text-dark-grey uppercase tracking-[0.2em] dark:from-[#201d2b] dark:to-[#1d161d]">
-                            <th className="rounded-l-2xl p-4 font-bold">Key</th>
-                            <th className="p-4 font-bold">Title</th>
-                            <th className="p-4 font-bold">Route</th>
-                            <th className="p-4 font-bold">Submodules</th>
-                            <th className="p-4 font-bold">Order</th>
-                            <th className="p-4 font-bold">Status</th>
-                            <th className="rounded-r-2xl p-4 text-center font-bold">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {pageRows.map((row, index) => (
-                            <motion.tr
-                              key={row.key}
-                              initial={{ opacity: 0, y: 8 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.04 }}
-                              className="border-b border-medium-grey/20 text-sm last:border-b-0 hover:bg-tranquil-velvet/5 dark:border-border-card/30 dark:hover:bg-white/5"
-                            >
-                              <td className="p-4"><ModuleKeyBadge value={row.key} /></td>
-                              <td className="p-4 font-bold text-black dark:text-white">{row.title}</td>
-                              <td className="p-4 font-semibold text-tranquil-velvet dark:text-[#D3CCEC]">{row.route}</td>
-                              <td className="p-4 text-dark-grey">{row.submodules}</td>
-                              <td className="p-4 font-semibold text-black dark:text-white">{row.order}</td>
-                              <td className="p-4"><ModuleStatusBadge active={row.active} /></td>
-                              <td className="p-4"><ModuleActionsCell onView={() => handleOpenEdit(row)} onEdit={() => handleOpenEdit(row)} onToggle={() => handleToggleModule(row)} onDelete={() => handleDeleteModule(row.key)} /></td>
-                            </motion.tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className="py-2">
-                      <ModuleCardsGrid
-                        items={pageRows}
-                        onView={(m) => handleOpenEdit(m)}
-                        onEdit={(m) => handleOpenEdit(m)}
-                        onToggle={(m) => handleToggleModule(m)}
-                        onDelete={(key) => handleDeleteModule(key)}
-                      />
-                    </div>
-                  )}
-                </div>
+              <table className="w-full min-w-[920px] text-left text-xs">
+                <thead>
+                  <tr className="border-b border-medium-grey/50 dark:border-border-card bg-[#F7F8FC]/80 dark:bg-[#18181B] text-dark-grey uppercase tracking-[0.18em]">
+                    <th className="p-4">Key</th>
+                    <th className="p-4">Title</th>
+                    <th className="p-4">Route</th>
+                    <th className="p-4">Submodules</th>
+                    <th className="p-4">Order</th>
+                    <th className="p-4">Status</th>
+                    <th className="p-4 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pageRows.map((row) => (
+                    <tr key={row.key} className="border-b border-medium-grey/30 dark:border-border-card/30 hover:bg-tranquil-velvet/5 dark:hover:bg-white/5 transition-colors">
+                      <td className="p-4"><ModuleKeyBadge value={row.key} /></td>
+                      <td className="p-4 font-bold text-black dark:text-white">{row.title}</td>
+                      <td className="p-4 font-medium text-tranquil-velvet dark:text-[#D3CCEC]">{row.route}</td>
+                      <td className="p-4 text-dark-grey">{row.submodules}</td>
+                      <td className="p-4 font-semibold text-black dark:text-white">{row.order}</td>
+                      <td className="p-4"><ModuleStatusBadge active={row.active} /></td>
+                      <td className="p-4"><ModuleActionsCell onView={() => handleOpenEdit(row)} onEdit={() => handleOpenEdit(row)} onToggle={() => handleToggleModule(row)} onDelete={() => handleDeleteModule(row.key)} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             <div className="p-4 sm:p-5">
@@ -278,7 +205,7 @@ export default function ModulesPage() {
             <ModuleStatCard title="Avg Latency" count={averageLatency} change="Fast route resolution" icon={Gauge} glowColor="132 17 124" theme={theme} suffix="ms" />
           </div>
         </div>
-      </motion.div>
+      </div>
 
       <ModuleFormModal
         open={showCreateModal}

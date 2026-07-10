@@ -244,3 +244,132 @@ input, select, textarea {
   background-color: var(--background);
 }
 
+/* ==========================================================
+   GLOBAL HOVER & ANIMATION UTILITIES
+   ========================================================== */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease both;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger delays for sequential entrance */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+/* Card lift on hover */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease,
+              border-color 0.25s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(108, 29, 95, 0.1);
+}
+
+.dark .hover-lift:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* Interactive button press & hover */
+.btn-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-interactive:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 29, 95, 0.15);
+}
+
+.btn-interactive:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Filter chip hover */
+.filter-chip {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.filter-chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+/* Table row hover slide */
+.table-row-interactive {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.table-row-interactive:hover {
+  transform: translateX(3px);
+}
+
+/* Icon container hover spin/scale */
+.icon-hover-scale {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
+}
+
+.group:hover .icon-hover-scale,
+.icon-hover-scale:hover {
+  transform: scale(1.1);
+}
+

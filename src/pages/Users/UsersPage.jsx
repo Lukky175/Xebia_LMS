@@ -110,10 +110,10 @@ export default function UsersPage({ searchQuery }) {
       {/* Header Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { title: 'Total Users', count: users.length, change: 'From mock database', icon: Users, color: '304 76 30' },
-          { title: 'Active Users', count: users.filter(u => u.status === 'active').length, change: `${users.filter(u => u.status === 'active').length} active records`, icon: UserCheck, color: '176 99 34' },
-          { title: 'Total Enrollments', count: users.reduce((acc, u) => acc + u.enrollments, 0), change: 'Across all modules', icon: UserPlus, color: '304 76 30' },
-          { title: 'Avg Progress', count: users.length ? Math.round(users.reduce((acc, u) => acc + u.progress, 0) / users.length) : 0, change: 'Syllabus completion', icon: GraduationCap, color: '176 99 34', suffix: '%' }
+          { title: 'Total Users', count: 12840, change: '+14% growth', icon: Users, color: '304 76 30' },
+          { title: 'Active Users', count: 854, change: '+8% this week', icon: UserCheck, color: '176 99 34' },
+          { title: 'New Registrations', count: 128, change: '+24% today', icon: UserPlus, color: '304 76 30' },
+          { title: 'Completion Rate', count: 92, change: 'Target 95%', icon: GraduationCap, color: '176 99 34', suffix: '%' }
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -171,9 +171,10 @@ export default function UsersPage({ searchQuery }) {
                 className="bg-transparent text-xs text-black dark:text-white focus:outline-none font-bold cursor-pointer"
               >
                 <option value="All">All Roles</option>
-                {Array.from(new Set(users.map(u => u.role))).filter(Boolean).map(role => (
-                  <option key={role} value={role}>{role}</option>
-                ))}
+                <option value="Developer">Developer</option>
+                <option value="DevOps">DevOps</option>
+                <option value="Architect">Architect</option>
+                <option value="Engineer">Engineer</option>
               </select>
             </div>
 

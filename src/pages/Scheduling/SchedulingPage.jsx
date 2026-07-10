@@ -7,10 +7,9 @@
  */
 
 import React, { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Plus, Calendar, Clock, Users, Trash2, Eye, PencilLine } from 'lucide-react';
 import BorderGlow from '@/components/ui/BorderGlow.jsx';
-import { ProfileActionButton, ProfileActionModal } from '@/components/profile/ProfileUi.jsx';
+import { ProfileActionButton } from '@/components/profile/ProfileUi.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 
 // Static demo events matching the screenshot layout (days are relative placeholders)
@@ -54,14 +53,6 @@ export default function SchedulingPage() {
     { id: 2, title: 'Engineering Quiz Prep', displayDate: '11 Jul, 2026', time: '10:00 AM - 11:30 AM', learners: 18, status: 'In Progress' },
     { id: 3, title: 'HR Onboarding', displayDate: '07 Jul, 2026', time: '09:00 AM - 10:30 AM', learners: 32, status: 'Postponed' },
   ]);
-  const [showQuickScheduleModal, setShowQuickScheduleModal] = useState(false);
-  const [quickScheduleForm, setQuickScheduleForm] = useState({
-    title: '',
-    displayDate: formatMonthLabel(currentDate),
-    time: '11:00 AM - 12:30 PM',
-    learners: 10,
-    status: 'Scheduled',
-  });
 
   const monthLabel = useMemo(() => formatMonthLabel(currentDate), [currentDate]);
   const monthMatrix = useMemo(() => createMonthMatrix(currentDate.getFullYear(), currentDate.getMonth()), [currentDate]);
@@ -81,43 +72,11 @@ export default function SchedulingPage() {
   };
 
   const handleQuickSchedule = () => {
-    setQuickScheduleForm((current) => ({
-      ...current,
-      title: '',
-      displayDate: formatMonthLabel(currentDate),
-    }));
-    setShowQuickScheduleModal(true);
-  };
-
-  const handleQuickScheduleClose = () => {
-    setShowQuickScheduleModal(false);
-  };
-
-  const handleQuickScheduleSubmit = (event) => {
-    event.preventDefault();
-    if (!quickScheduleForm.title.trim()) {
-      window.alert('Please enter a schedule title.');
-      return;
-    }
-
-    const newItem = {
-      id: Date.now(),
-      title: quickScheduleForm.title.trim(),
-      displayDate: quickScheduleForm.displayDate,
-      time: quickScheduleForm.time,
-      learners: Number(quickScheduleForm.learners) || 0,
-      status: quickScheduleForm.status,
-    };
-
+    const title = window.prompt('Quick schedule title');
+    if (!title) return;
+    const newItem = { id: Date.now(), title, displayDate: formatMonthLabel(currentDate), time: '11:00 AM - 12:30 PM', learners: 10, status: 'Scheduled' };
     setSchedules((p) => [newItem, ...p]);
-    setShowQuickScheduleModal(false);
-    setQuickScheduleForm({
-      title: '',
-      displayDate: formatMonthLabel(currentDate),
-      time: '11:00 AM - 12:30 PM',
-      learners: 10,
-      status: 'Scheduled',
-    });
+    window.alert(`Quick scheduled ${title}`);
   };
 
   const handleAction = (type, item) => {
@@ -127,7 +86,7 @@ export default function SchedulingPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: 'easeOut' }} className="space-y-6">
+    <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-tranquil-velvet">Scheduling</p>
@@ -135,16 +94,14 @@ export default function SchedulingPage() {
           <p className="max-w-2xl text-sm text-dark-grey">Plan events, track availability, and keep your dates aligned across the learning platform in {monthLabel}.</p>
         </div>
 
-        <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} className="inline-flex">
-          <ProfileActionButton tone="warning" onClick={handleQuickSchedule} className="inline-flex items-center gap-2 px-5 py-3 text-sm">
-            <Plus className="h-4 w-4" />
-            Quick Schedule
-          </ProfileActionButton>
-        </motion.div>
+        <ProfileActionButton tone="warning" onClick={handleQuickSchedule} className="inline-flex items-center gap-2 px-5 py-3 text-sm">
+          <Plus className="h-4 w-4" />
+          Quick Schedule
+        </ProfileActionButton>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[2.2fr_0.8fr]">
-        <motion.div whileHover={{ y: -2 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: 'easeOut' }} className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
+        <div className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-lg font-bold text-black dark:text-white">Scheduling Calendar</h2>
@@ -217,10 +174,10 @@ export default function SchedulingPage() {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut', delay: 0.08 }} className="space-y-4">
-          <motion.div whileHover={{ y: -2 }} className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
+        <div className="space-y-4">
+          <div className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
             <div className="flex items-center justify-between gap-3 mb-5">
               <div>
                 <h2 className="text-lg font-bold text-black dark:text-white">Upcoming Events</h2>
@@ -231,7 +188,7 @@ export default function SchedulingPage() {
 
             <div className="space-y-4">
               {schedules.slice(0, 3).map((item) => (
-                <motion.div key={item.id} whileHover={{ y: -2 }} transition={{ duration: 0.25 }} className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4 shadow-sm">
+                <div key={item.id} className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-black dark:text-white">{item.title}</p>
@@ -240,10 +197,10 @@ export default function SchedulingPage() {
                     <span className={`rounded-full px-3 py-1 text-[10px] font-bold ${item.status === 'In Progress' ? 'bg-emerald/10 text-emerald' : item.status === 'Postponed' ? 'bg-[#F6E5F5] text-[#84117C]' : 'bg-[#FFF4E5] text-cta-orange'}`}>{item.status}</span>
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3 text-xs text-dark-grey"><span>{item.time}</span><span>{item.learners} learners</span></div>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           <BorderGlow edgeSensitivity={22} glowColor="108 29 95" backgroundColor={theme === 'dark' ? '#16171F' : '#FFFFFF'} borderRadius={24} glowRadius={40} glowIntensity={1.3} className="overflow-hidden">
             <div className="rounded-3xl bg-gradient-to-br from-tranquil-velvet to-bright-velvet p-6 text-white">
@@ -258,11 +215,11 @@ export default function SchedulingPage() {
               <p className="mt-4 text-sm text-white/80">Resource usage and event capacity look healthy for the upcoming period.</p>
             </div>
           </BorderGlow>
-        </motion.div>
+        </div>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: 'easeOut' }} className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
+        <div className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4 mb-6">
             <div>
               <h2 className="text-lg font-bold text-black dark:text-white">Resource Allocation</h2>
@@ -281,108 +238,16 @@ export default function SchedulingPage() {
               <div className="h-3 w-full overflow-hidden rounded-full bg-blueish-grey/70 border border-medium-grey/40"><div className="h-full w-[45%] rounded-full bg-tranquil-velvet"/></div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         <div className="rounded-3xl border border-medium-grey/40 bg-white dark:bg-[#16171F] p-6 shadow-sm">
           <div className="flex items-center justify-between gap-4 mb-5"><div><h2 className="text-lg font-bold text-black dark:text-white">Automated Directives</h2><p className="text-sm text-dark-grey">Scheduled tasks helping keep your calendar running smoothly.</p></div></div>
           <div className="space-y-4">
-            <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.25 }} className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-semibold text-black dark:text-white">Auto-Schedule Audit</p>
-                <span className="inline-flex rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">Auto</span>
-              </div>
-              <p className="mt-2 text-sm text-dark-grey">Scheduled for every 2nd Friday. Next run in 2 days.</p>
-            </motion.div>
-            <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.25 }} className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-semibold text-black dark:text-white">Weekly Health Check</p>
-                <span className="inline-flex rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">Auto</span>
-              </div>
-              <p className="mt-2 text-sm text-dark-grey">Continuous background execution enabled.</p>
-            </motion.div>
+            <div className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4"><div className="flex items-center justify-between gap-3"><p className="font-semibold text-black dark:text-white">Auto-Schedule Audit</p><span className="inline-flex rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">Auto</span></div><p className="mt-2 text-sm text-dark-grey">Scheduled for every 2nd Friday. Next run in 2 days.</p></div>
+            <div className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-4"><div className="flex items-center justify-between gap-3"><p className="font-semibold text-black dark:text-white">Weekly Health Check</p><span className="inline-flex rounded-full bg-tranquil-velvet/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">Auto</span></div><p className="mt-2 text-sm text-dark-grey">Continuous background execution enabled.</p></div>
           </div>
         </div>
       </div>
-
-      <ProfileActionModal
-        open={showQuickScheduleModal}
-        onClose={handleQuickScheduleClose}
-        title="Quick Schedule"
-        description="Create a new event slot fast with a compact schedule form."
-        footer={
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              onClick={handleQuickScheduleClose}
-              className="rounded-xl border border-medium-grey/40 bg-white px-4 py-2 text-xs font-bold text-dark-grey transition hover:bg-medium-grey/10"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              form="quickScheduleForm"
-              className="rounded-xl bg-tranquil-velvet px-4 py-2 text-xs font-bold text-white transition hover:bg-bright-velvet"
-            >
-              Save
-            </button>
-          </div>
-        }
-      >
-        <form id="quickScheduleForm" onSubmit={handleQuickScheduleSubmit} className="space-y-4">
-          <label className="block text-sm text-dark-grey">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Title</span>
-            <input
-              value={quickScheduleForm.title}
-              onChange={(e) => setQuickScheduleForm((current) => ({ ...current, title: e.target.value }))}
-              className="mt-2 w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-              placeholder="Enter event title"
-              required
-            />
-          </label>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block text-sm text-dark-grey">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Date</span>
-              <input
-                value={quickScheduleForm.displayDate}
-                onChange={(e) => setQuickScheduleForm((current) => ({ ...current, displayDate: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-              />
-            </label>
-            <label className="block text-sm text-dark-grey">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Time</span>
-              <input
-                value={quickScheduleForm.time}
-                onChange={(e) => setQuickScheduleForm((current) => ({ ...current, time: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-              />
-            </label>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block text-sm text-dark-grey">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Learners</span>
-              <input
-                type="number"
-                min="1"
-                value={quickScheduleForm.learners}
-                onChange={(e) => setQuickScheduleForm((current) => ({ ...current, learners: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-              />
-            </label>
-            <label className="block text-sm text-dark-grey">
-              <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Status</span>
-              <select
-                value={quickScheduleForm.status}
-                onChange={(e) => setQuickScheduleForm((current) => ({ ...current, status: e.target.value }))}
-                className="mt-2 w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
-              >
-                <option>Scheduled</option>
-                <option>Upcoming</option>
-                <option>In Progress</option>
-              </select>
-            </label>
-          </div>
-        </form>
-      </ProfileActionModal>
-    </motion.div>
+    </div>
   );
 }

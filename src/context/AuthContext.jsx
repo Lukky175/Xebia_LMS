@@ -50,16 +50,10 @@ export function AuthProvider({ children }) {
     setCurrentUser(null);
   };
 
-  const updateCurrentUser = (updatedData) => {
-    const nextUser = { ...currentUser, ...updatedData };
-    localStorage.setItem('lms_current_user', JSON.stringify(nextUser));
-    setCurrentUser(nextUser);
-  };
-
   const isAuthenticated = !!currentUser;
 
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthenticated, login, logout, updateCurrentUser }}>
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

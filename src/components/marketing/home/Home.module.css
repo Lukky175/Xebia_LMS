@@ -32,6 +32,19 @@
     max-width: 900px;
 
     padding: 0 20px;
+
+    animation: heroFadeIn 1s ease both;
+}
+
+@keyframes heroFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .heroTag {
@@ -42,6 +55,8 @@
     font-weight: 700;
 
     letter-spacing: 3px;
+
+    animation: heroFadeIn 0.8s ease 0.1s both;
 }
 
 .heroOverlay h1 {
@@ -52,6 +67,8 @@
     line-height: 1.1;
 
     color: var(--text-primary);
+
+    animation: heroFadeIn 0.8s ease 0.25s both;
 }
 
 .heroOverlay h1 span {
@@ -66,6 +83,8 @@
     color: var(--text-secondary);
 
     line-height: 1.8;
+
+    animation: heroFadeIn 0.8s ease 0.4s both;
 }
 
 .heroButtons {
@@ -74,6 +93,8 @@
     justify-content: center;
 
     gap: 20px;
+
+    animation: heroFadeIn 0.8s ease 0.55s both;
 }
 
 
@@ -90,7 +111,10 @@
 
     text-decoration: none;
 
-    transition: .3s;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease,
+                background 0.3s ease,
+                color 0.3s ease;
 }
 
 .primaryButton {
@@ -105,7 +129,13 @@
 .primaryButton:hover {
 
     transform:
-        translateY(-3px);
+        translateY(-4px);
+
+    box-shadow: 0 12px 30px rgba(108, 29, 95, 0.35);
+}
+
+.primaryButton:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 .secondaryButton {
@@ -124,6 +154,14 @@
 
     color:
         white;
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 30px rgba(108, 29, 95, 0.25);
+}
+
+.secondaryButton:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 
@@ -143,7 +181,25 @@
     padding: 70px 8%;
 
     background:
-        var(--background);
+        var(--background-ui);
+}
+
+.statsSection > div {
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                color 0.3s ease;
+    animation: heroFadeIn 0.7s ease both;
+}
+
+.statsSection > div:nth-child(1) { animation-delay: 0.1s; }
+.statsSection > div:nth-child(2) { animation-delay: 0.2s; }
+.statsSection > div:nth-child(3) { animation-delay: 0.3s; }
+
+.statsSection > div:hover {
+    transform: translateY(-6px) scale(1.03);
+}
+
+.statsSection > div:hover h2 {
+    color: var(--primary-color);
 }
 
 .statsSection h2 {
@@ -152,6 +208,8 @@
 
     color:
         var(--primary-second-color);
+
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .statsSection p {
@@ -226,7 +284,8 @@
 
     border-radius: 24px;
 
-    transition: .3s;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s ease;
 }
 
 /* Subtle elevation effect to reinforce
@@ -234,11 +293,15 @@
 .featureCard:hover {
 
     transform:
-        translateY(-8px);
+        translateY(-10px);
 
     box-shadow:
-        0 15px 40px
-        rgba(0,0,0,.08);
+        0 20px 50px
+        rgba(108, 29, 95, 0.12);
+}
+
+.featureCard:hover .iconBox {
+    transform: scale(1.1) rotate(-3deg);
 }
 
 .iconBox {
@@ -258,6 +321,8 @@
     color: white;
 
     font-size: 1.5rem;
+
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .featureCard h3 {
@@ -352,6 +417,14 @@
 
     backdrop-filter:
         blur(20px);
+
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s ease;
+}
+
+.quoteCard:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .line {
@@ -388,6 +461,14 @@
 
     padding:
         80px 40px;
+
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.35s ease;
+}
+
+.ctaCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(108, 29, 95, 0.1);
 }
 
 .ctaCard span {
