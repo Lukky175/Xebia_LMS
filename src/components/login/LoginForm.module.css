@@ -44,7 +44,6 @@
     align-items: center;
 
     padding-right: 11vw;
-
     background-image: url("/Login.png");
     background-size: cover;
     background-position: center;
@@ -206,14 +205,16 @@
     background: transparent;
     border: none;
     outline: none;
-    font-size: 1.4em;
+    font-size: 1.3em;
+    font-weight: 500;
     padding: 0 35px 0 5px;
     color: var(--text-primary);
 }
 
 .icon {
     position: absolute;
-
+    cursor: pointer;
+    user-select: none;
     right: 8px;
     top: 20px;
 
@@ -224,6 +225,10 @@
     transition:
         color var(--transition-fast),
         transform var(--transition-fast);
+}
+
+.icon:hover {
+    color: var(--primary-second-color);
 }
 
 /* =====================================================
@@ -265,7 +270,7 @@
     outline: none;
     cursor: pointer;
     font-size: 1em;
-    color: var(--text-specials);  /*Login Text*/
+    color: white;  /*Login Text*/
     font-weight: 600;
     transition: 0.3s;
     box-shadow: 0 1px 6px var(--primary-second-color);

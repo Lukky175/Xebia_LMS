@@ -16,7 +16,6 @@ import HomePage from '@/pages/HomePage.jsx';
 import FAQPage from '@/pages/FAQPage.jsx';
 import ContactPage from '@/pages/ContactPage.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
-import SignUpPage from '@/pages/SignUpPage.jsx';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -87,7 +86,6 @@ function App() {
           {/* Authentication Routes (Only for Guests) */}
           <Route element={!isAuthenticated ? <AuthLayout /> : <Navigate to="/dashboard" replace />}>
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
           </Route>
 
           {/* Protected Dashboard Routes */}

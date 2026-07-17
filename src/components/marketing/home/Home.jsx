@@ -32,6 +32,15 @@ import {
     FiShield,
     FiLayers,
 } from "react-icons/fi";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { PiStudentFill } from "react-icons/pi";
+import { IoBook } from "react-icons/io5";
+import { HiMiniTrophy } from "react-icons/hi2";
+
+
+/*Count Up animation*/
+import CountUpModule from "react-countup";
+const CountUp = CountUpModule.default;
 
 /**
  * Home Component
@@ -46,7 +55,7 @@ import {
  */
 
 export default function Home() {
-
+    console.log("CountUp:", CountUp);
     return (
         <>
 
@@ -54,6 +63,19 @@ export default function Home() {
                 and directing users toward primary actions. */}
             <section className={styles.heroSection}>
 
+                <video
+                    className={styles.heroVideo}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                >
+                    <source
+                        src="/homepagevid.mp4"
+                        type="video/mp4"
+                    />
+                </video>
+                <div className={styles.heroBackgroundOverlay}></div>
                 <div className={styles.heroOverlay}>
 
                     <span className={styles.heroTag}>
@@ -99,20 +121,44 @@ export default function Home() {
                 establish trust and social proof. */}
 
             <section className={styles.statsSection}>
-
-                <div>
-                    <h2>98%</h2>
-                    <p>Completion Rate</p>
+                <div className={styles.statCard}>
+                    <IoIosCheckmarkCircle className={styles.statIcon} />
+                    <div>
+                        <h2>
+                            <CountUp end={98} duration={3.5} suffix="%" />
+                        </h2>
+                        <p>Completion Rate</p>
+                    </div>
                 </div>
 
-                <div>
-                    <h2>500+</h2>
-                    <p>Expert Courses</p>
+                <div className={styles.statCard}>
+                    <IoBook className={styles.statIcon} />
+                    <div>
+                        <h2>
+                            <CountUp end={50} duration={2.5} suffix="+" />
+                        </h2>
+                        <p>Expert Courses</p>
+                    </div>
                 </div>
 
-                <div>
-                    <h2>1.2M</h2>
-                    <p>Active Learners</p>
+                <div className={styles.statCard}>
+                    <PiStudentFill className={styles.statIcon} />
+                    <div>
+                        <h2>
+                        <CountUp end={15} duration={2.5} suffix="K+" />
+                    </h2>
+                        <p>Active Learners</p>
+                    </div>
+                </div>
+
+                <div className={styles.statCard}>
+                    <HiMiniTrophy className={styles.statIcon} />
+                    <div>
+                        <h2>
+                            <CountUp end={5} duration={2.5} suffix="K" />
+                        </h2>
+                        <p>Certified Learners</p>
+                    </div>
                 </div>
 
             </section>

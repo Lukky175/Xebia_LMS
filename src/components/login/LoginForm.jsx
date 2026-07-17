@@ -31,7 +31,10 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MdOutlineLock, MdAlternateEmail } from "react-icons/md";
+import { MdAlternateEmail } from "react-icons/md";
+import { LuEye, LuEyeOff } from "react-icons/lu";
+import { LuEyeClosed } from "react-icons/lu";
+
 import { useAuth } from "@/context/AuthContext.jsx";
 import styles from "./LoginForm.module.css";
 
@@ -51,6 +54,10 @@ export default function LoginForm() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
+    const EyeIcon = showPassword ? LuEye : LuEyeOff;
+
     const [error, setError] = useState("");
 
     const handleSubmit = (e) => {
@@ -125,12 +132,14 @@ export default function LoginForm() {
                         {/* Password field */}
                         <div className={styles.inputBox}>
 
-                            <MdOutlineLock
+                            <EyeIcon
                                 className={styles.icon}
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
                             />
 
                             <input
-                                type="password"
+                                type={showPassword ? "text" : "password"}
                                 id="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -173,13 +182,6 @@ export default function LoginForm() {
 
                         {/* Support contact for authentication issues */}
                         <div className={styles.signup}>
-
-                            <p>
-                                Don't have an account?{" "}
-                                <Link to="/signup">
-                                    Sign Up
-                                </Link>
-                            </p>
 
                             <p style={{ marginTop: '8px' }}>
                                 Trouble Signing In?{" "}

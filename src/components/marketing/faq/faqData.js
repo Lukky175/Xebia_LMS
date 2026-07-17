@@ -14,19 +14,24 @@
 
 export const faqItems = [
     {
-        question: "Can I enroll in multiple courses at once?",
+        question: "I forgot my Password",
         answer:
-            "Yes! You can enroll in as many courses as you want and learn at your own pace without any limits.",
+            "Click on Forgot Password on Login Page.",
     },
     {
-        question: "What kind of support can I get?",
+        question: "Are the IT courses at Xebia suitable for complete beginners?",
         answer:
-            "You can contact instructors, access discussion forums, and reach out to our support team through the Contact Us page.",
+            "Absolutely. Most of our programs are designed to take you from zero to job-ready. We start from the fundamentals — no prior experience is required for our beginner tracks. We also offer intermediate and advanced cohorts for professionals looking to upskill or switch domains.",
     },
     {
-        question: "Are there any prerequisites for the courses?",
+        question: "Do I get a certificate after completing the course at Xebia?",
         answer:
-            "Some advanced courses may require prior knowledge, but most beginner courses are open to everyone.",
+            "Yes. Every learner who completes a Xebia program receives an industry-recognized certificate of completion. For certain tracks (like AWS Cloud and DevOps), we also help you prepare for official vendor certifications such as AWS Certified Solutions Architect, Google Cloud Professional, and more.",
+    },
+    {
+        question: "How long does it take to complete an IT course at Xebia?",
+        answer:
+            "Course duration varies by program. Our intensive bootcamp tracks typically run 8–12 weeks with live classes 4–5 days a week. Self-paced programs can be completed in 3–6 months depending on your schedule. All recordings are available for lifetime access so you can revisit content at any time.",
     },
     {
         question: "Are the courses self-paced?",

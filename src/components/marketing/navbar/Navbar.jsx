@@ -31,6 +31,9 @@ import {
     MdOutlineDarkMode,
     MdOutlineLightMode,
 } from "react-icons/md";
+import { AiOutlineHome } from "react-icons/ai";
+import { IoCallOutline } from "react-icons/io5";
+import { LuMessageCircleMore } from "react-icons/lu";
 
 import { useTheme } from "@/context/ThemeContext.jsx";
 
@@ -75,19 +78,28 @@ export default function Navbar() {
                 {/* Middle Section */}
                 {/* Primary navigation links for public pages. */}
                 <div className={styles.links}>
-
                     <Link to="/home">
-                        Home
+                        <AiOutlineHome />
+                        <span>Home</span>
                     </Link>
+
+                    <span className={styles.divider}>
+                        |
+                    </span>
 
                     <Link to="/faq">
-                        FAQ
+                        <LuMessageCircleMore />
+                        <span>FAQ</span>
                     </Link>
 
+                    <span className={styles.divider}>
+                        |
+                    </span>
+                    
                     <Link to="/contact">
-                        Contact Us
+                        <IoCallOutline />
+                        <span>Contact Us</span>
                     </Link>
-
                 </div>
 
                 {/* Right Section */}

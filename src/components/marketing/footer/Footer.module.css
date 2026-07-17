@@ -3,6 +3,8 @@
    ========================================================== */
 
 .footer {
+    position: relative;
+    z-index: 5;
     background: #111;
 
     padding-top: 60px;

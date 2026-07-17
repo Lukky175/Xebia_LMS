@@ -42,8 +42,8 @@
 
     background: linear-gradient(
         to bottom,
-        transparent 0%,
-        rgba(255, 255, 255, 0.15) 30%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
         var(--background) 100%
     );
 
