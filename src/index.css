@@ -242,7 +242,6 @@ input, select, textarea {
   font-family: 'Inter', Arial, sans-serif;
   color: var(--text-primary);
   background-color: var(--background);
-<<<<<<< Updated upstream
 }
 
 /* ==========================================================
@@ -373,7 +372,3 @@ input, select, textarea {
 .icon-hover-scale:hover {
   transform: scale(1.1);
 }
-
-=======
-}
->>>>>>> Stashed changes
