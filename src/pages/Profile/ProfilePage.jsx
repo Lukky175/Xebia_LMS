@@ -92,12 +92,12 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <ProfileCardFrame className="p-6 bg-[#FFFFFF] border border-[#E7E9F0]">
+      <ProfileCardFrame className="p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-center gap-4">
             <div className="relative h-20 w-20 rounded-3xl bg-tranquil-velvet text-white grid place-items-center text-4xl font-black shadow-sm">
               P
-              <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm border border-[#E7E9F0] text-tranquil-velvet">
+              <div className="absolute -bottom-2 -right-2 flex h-10 w-10 items-center justify-center rounded-full bg-bg-card shadow-sm border border-border-card text-tranquil-velvet">
                 <Camera className="h-4 w-4" />
               </div>
             </div>
@@ -124,10 +124,10 @@ export default function ProfilePage() {
       </ProfileCardFrame>
 
       <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
-          <ProfileCardFrame className="p-5 bg-[#FBFBFF] border border-[#E7E9F0]">
-            <div className="flex items-center gap-2 border-b border-[#E7E9F0] pb-4">
+          <ProfileCardFrame className="p-5">
+            <div className="flex items-center gap-2 border-b border-border-card pb-4">
               <Shield className="h-4 w-4 text-tranquil-velvet" />
-              <p className="text-sm font-bold text-black">Identity</p>
+              <p className="text-sm font-bold text-black dark:text-white">Identity</p>
             </div>
             <div className="mt-4 space-y-4">
               <ProfileInfoRow label="User ID" value={profileData.userId} code />
@@ -138,7 +138,7 @@ export default function ProfilePage() {
             </div>
           </ProfileCardFrame>
 
-          <ProfileCardFrame className="p-5 bg-[#FBFBFF] border border-[#E7E9F0]">
+          <ProfileCardFrame className="p-5">
             <div className="flex items-center justify-between gap-4">
               <p className="text-sm font-bold text-black">Scopes</p>
               <button
@@ -157,13 +157,13 @@ export default function ProfilePage() {
           </ProfileCardFrame>
         </div>
 
-      <ProfileCardFrame className="p-6 bg-[#FBFBFF] border border-[#E7E9F0]">
+      <ProfileCardFrame className="p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-bold text-black">Reachable modules</p>
-            <p className="text-xs text-dark-grey">12 active modules</p>
+            <p className="text-sm font-bold text-black dark:text-white">Reachable modules</p>
+            <p className="text-xs text-text-secondary">12 active modules</p>
           </div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F5FF] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">
+          <div className="inline-flex items-center gap-2 rounded-full bg-bg-hover px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-tranquil-velvet">
             <CheckCircle2 className="h-3 w-3 text-tranquil-velvet" /> Active
           </div>
         </div>
@@ -207,43 +207,43 @@ export default function ProfilePage() {
       >
         <form id="profileForm" onSubmit={handleSaveProfile} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-2 text-sm text-dark-grey">
+            <label className="space-y-2 text-sm text-text-secondary">
               <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Display name</span>
               <input
                 value={formData.displayName}
                 onChange={(e) => handleChange('displayName', e.target.value)}
-                className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                className="w-full rounded-2xl border border-border-card bg-bg-hover px-4 py-3 text-sm text-text-primary focus:outline-none"
               />
             </label>
-            <label className="space-y-2 text-sm text-dark-grey">
+            <label className="space-y-2 text-sm text-text-secondary">
               <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Email</span>
               <input
                 value={formData.email}
                 onChange={(e) => handleChange('email', e.target.value)}
-                className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                className="w-full rounded-2xl border border-border-card bg-bg-hover px-4 py-3 text-sm text-text-primary focus:outline-none"
               />
             </label>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="space-y-2 text-sm text-dark-grey">
+            <label className="space-y-2 text-sm text-text-secondary">
               <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Role</span>
               <select
                 value={formData.role}
                 onChange={(e) => handleChange('role', e.target.value)}
-                className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                className="w-full rounded-2xl border border-border-card bg-bg-hover px-4 py-3 text-sm text-text-primary focus:outline-none"
               >
                 <option>ADMIN</option>
                 <option>MANAGER</option>
                 <option>EDITOR</option>
               </select>
             </label>
-            <label className="space-y-2 text-sm text-dark-grey">
+            <label className="space-y-2 text-sm text-text-secondary">
               <span className="block text-[10px] font-bold uppercase tracking-[0.18em]">Sub role</span>
               <input
                 value={formData.subRole}
                 onChange={(e) => handleChange('subRole', e.target.value)}
-                className="w-full rounded-2xl border border-medium-grey bg-[#F7F8FC] px-4 py-3 text-sm text-black focus:outline-none"
+                className="w-full rounded-2xl border border-border-card bg-bg-hover px-4 py-3 text-sm text-text-primary focus:outline-none"
               />
             </label>
           </div>
@@ -279,11 +279,11 @@ export default function ProfilePage() {
         }
       >
         <div className="space-y-4">
-          <div className="rounded-3xl border border-medium-grey/40 bg-[#F7F8FC] p-5 text-sm text-dark-grey">
+          <div className="rounded-3xl border border-border-card/40 bg-bg-hover p-5 text-sm text-text-secondary">
             <p className="font-bold text-black dark:text-white">Profile photo</p>
             <p className="mt-2 text-xs">Select an image to refresh the profile avatar shown in the header card.</p>
           </div>
-          <label className="flex items-center gap-3 rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-sm text-dark-grey cursor-pointer hover:border-tranquil-velvet/50 transition">
+          <label className="flex items-center gap-3 rounded-2xl border border-border-card/40 bg-bg-card px-4 py-3 text-sm text-text-secondary cursor-pointer hover:border-tranquil-velvet/50 transition">
             <UploadCloud className="h-4 w-4 text-tranquil-velvet" />
             <span>Add photo file</span>
             <input type="file" accept="image/*" className="hidden" />
@@ -305,9 +305,9 @@ export default function ProfilePage() {
         <div className="space-y-4">
           {activeModule ? (
             <div className="space-y-3">
-              <div className="text-sm text-dark-grey">Module route</div>
-              <div className="rounded-2xl border border-medium-grey/40 bg-[#F7F8FC] px-4 py-3 text-sm font-semibold text-black">{activeModule.path}</div>
-              <div className="text-sm text-dark-grey">Tap Close when you are done reviewing this module entry.</div>
+              <div className="text-sm text-text-secondary">Module route</div>
+              <div className="rounded-2xl border border-border-card/40 bg-bg-hover px-4 py-3 text-sm font-semibold text-text-primary">{activeModule.path}</div>
+              <div className="text-sm text-text-secondary">Tap Close when you are done reviewing this module entry.</div>
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
@@ -316,7 +316,7 @@ export default function ProfilePage() {
                   key={module.title}
                   type="button"
                   onClick={() => setActiveModule(module)}
-                  className="rounded-2xl border border-medium-grey/40 bg-white px-4 py-3 text-left text-sm font-semibold text-black hover:border-tranquil-velvet/50 transition"
+                  className="rounded-2xl border border-border-card/40 bg-bg-card px-4 py-3 text-left text-sm font-semibold text-text-primary hover:border-tranquil-velvet/50 transition"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <span>{module.title}</span>

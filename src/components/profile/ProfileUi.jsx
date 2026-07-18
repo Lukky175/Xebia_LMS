@@ -11,7 +11,7 @@ import { X } from 'lucide-react';
 
 export function ProfileCardFrame({ children, className = '' }) {
   return (
-    <div className={`rounded-3xl border border-[#E7E9F0] bg-white dark:bg-[#16171F] shadow-sm ${className}`}>
+    <div className={`rounded-3xl border border-border-card bg-bg-card shadow-sm ${className}`}>
       {children}
     </div>
   );
@@ -20,7 +20,7 @@ export function ProfileCardFrame({ children, className = '' }) {
 export function ProfileActionButton({ children, tone = 'primary', className = '', ...rest }) {
   const toneClasses = {
     primary: 'bg-tranquil-velvet hover:bg-bright-velvet text-white',
-    secondary: 'bg-white border border-[#E7E9F0] text-tranquil-velvet hover:bg-[#F4E5F5] hover:text-tranquil-velvet',
+    secondary: 'bg-bg-card border border-border-card text-tranquil-velvet hover:bg-bg-hover hover:text-tranquil-velvet',
     success: 'bg-emerald text-white hover:bg-emerald/90',
     warning: 'bg-cta-orange hover:bg-[#E05600] text-white',
   };
@@ -74,12 +74,12 @@ export function ScopePill({ children }) {
 
 export function ModuleLinkRow({ title, path, highlight }) {
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-[#E7E9F0] bg-[#F7F8FC] px-4 py-3 text-sm text-dark-grey shadow-sm transition hover:border-tranquil-velvet/30">
+    <div className="flex items-center justify-between rounded-2xl border border-border-card bg-bg-hover px-4 py-3 text-sm text-text-secondary shadow-sm transition hover:border-tranquil-velvet/30">
       <div>
-        <p className="font-semibold text-black">{title}</p>
+        <p className="font-semibold text-black dark:text-white">{title}</p>
       </div>
       <div className="flex items-center gap-2">
-        <span className="rounded-full border border-[#E7E9F0] bg-white px-3 py-1 text-[11px] font-semibold text-dark-grey">{path}</span>
+        <span className="rounded-full border border-border-card bg-bg-card px-3 py-1 text-[11px] font-semibold text-text-secondary">{path}</span>
         {highlight && <ProfileBadge tone="accent">{highlight}</ProfileBadge>}
       </div>
     </div>
@@ -100,19 +100,19 @@ export function ProfileActionModal({ open, onClose, title, description, children
             initial={{ y: 20, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 20, opacity: 0, scale: 0.98 }}
-            className="w-full max-w-2xl rounded-[28px] bg-white dark:bg-[#16171F] border border-medium-grey shadow-2xl overflow-hidden"
+            className="w-full max-w-2xl rounded-[28px] bg-bg-card border border-border-card shadow-2xl overflow-hidden"
           >
-            <div className="flex items-center justify-between border-b border-medium-grey/30 px-6 py-4">
+            <div className="flex items-center justify-between border-b border-border-card/30 px-6 py-4">
               <div>
                 <h3 className="text-lg font-extrabold text-black dark:text-white">{title}</h3>
-                {description && <p className="text-xs text-dark-grey mt-1">{description}</p>}
+                {description && <p className="text-xs text-text-secondary mt-1">{description}</p>}
               </div>
-              <button onClick={onClose} className="rounded-full p-2 text-dark-grey hover:bg-[#F7F8FC] dark:hover:bg-[#0F1015] transition">
+              <button onClick={onClose} className="rounded-full p-2 text-text-secondary hover:bg-bg-hover transition">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="p-6">{children}</div>
-            {footer && <div className="border-t border-medium-grey/30 px-6 py-4 bg-[#FAFBFF] dark:bg-[#11131A]">{footer}</div>}
+            {footer && <div className="border-t border-border-card/30 px-6 py-4 bg-bg-hover">{footer}</div>}
           </motion.div>
         </motion.div>
       )}
