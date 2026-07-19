@@ -1,4 +1,4 @@
-import { initialCourses, initialTutors, initialUsers, initialOrganisations } from '@/data/mockData.js';
+import { initialCourses, initialTutors, initialUsers, initialOrganisations, initialRoles, initialModules, initialDomains } from '@/data/mockData.js';
 
 // Helper to simulate network latency
 const delay = (ms = 400) => new Promise(resolve => setTimeout(resolve, ms));
@@ -174,6 +174,68 @@ Thapar institute of engineering and technology, Patiala
     };
     const updated = [newOrg, ...orgs];
     setStorageItem('lms_organisations', updated);
+    return updated;
+  },
+
+  // Domains API
+  async getDomains() {
+    await delay();
+    return getStorageItem('lms_domains', initialDomains);
+  },
+
+  async addDomain(domainData) {
+    await delay();
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const newDomain = {
+      id: domains.length ? Math.max(...domains.map(d => d.id)) + 1 : 1,
+      status: 'Active',
+      ...domainData
+    };
+    const updated = [...domains, newDomain];
+    setStorageItem('lms_domains', updated);
+    return updated;
+  },
+
+  async deleteDomain(id) {
+    await delay();
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const updated = domains.filter(d => d.id !== id);
+    setStorageItem('lms_domains', updated);
+    return updated;
+  },
+
+  async updateDomain(id, updates) {
+    await delay();
+    const domains = getStorageItem('lms_domains', initialDomains);
+    const updated = domains.map(d => d.id === id ? { ...d, ...updates } : d);
+    setStorageItem('lms_domains', updated);
+    return updated;
+  },
+
+  // Roles & Modules API
+  async getRoles() {
+    await delay();
+    return getStorageItem('lms_roles', initialRoles);
+  },
+
+  async getModules() {
+    await delay();
+    return getStorageItem('lms_modules', initialModules);
+  },
+
+  async updateRole(id, roleData) {
+    await delay();
+    const roles = getStorageItem('lms_roles', initialRoles);
+    const updated = roles.map(r => r.id === id ? { ...r, ...roleData } : r);
+    setStorageItem('lms_roles', updated);
+    return updated;
+  },
+
+  async deleteRole(id) {
+    await delay();
+    const roles = getStorageItem('lms_roles', initialRoles);
+    const updated = roles.filter(r => r.id !== id);
+    setStorageItem('lms_roles', updated);
     return updated;
   }
 };

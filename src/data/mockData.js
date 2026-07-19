@@ -181,3 +181,58 @@ export const initialOrganisations = [
     status: "ACTIVE"
   }
 ];
+
+export const initialRoles = [
+  {
+    id: 'superadmin',
+    name: 'Superadmin',
+    description: 'Absolute administrative controls.',
+    permissions: [
+      { module: 'ADM', permissions: { view: true, create: true, edit: true, delete: true } },
+      { module: 'SCHEDULING', permissions: { view: true, create: true, edit: true, delete: true } }
+    ]
+  },
+  {
+    id: 'admin',
+    name: 'Admin',
+    description: 'Full platform management.',
+    permissions: [
+      { module: 'ADM', permissions: { view: true, create: true, edit: true, delete: true } }
+    ]
+  },
+  {
+    id: 'trainer',
+    name: 'Trainer',
+    description: 'Teach batches and manage courses.',
+    permissions: []
+  },
+  {
+    id: 'student',
+    name: 'Student',
+    description: 'Access catalog and track progress.',
+    permissions: []
+  }
+];
+
+export const initialModules = [
+  { id: 'ADM', name: 'Administration', key: 'ADM', title: 'Administration', route: '/admin', submodules: '—', order: 1, active: true },
+  { id: 'SCHEDULING', name: 'Scheduling', key: 'SCHEDULING', title: 'Scheduling', route: '/scheduling', submodules: '—', order: 2, active: true },
+  { id: 'ASSESSMENT', name: 'Assessment', key: 'ASSESSMENT', title: 'Assessment', route: '/assessment', submodules: '—', order: 3, active: true },
+  { id: 'ORG', name: 'Organisations', key: 'ORG', title: 'Organisations', route: '/organisations', submodules: '—', order: 4, active: true },
+  { id: 'DOMAIN', name: 'Domains', key: 'DOMAIN', title: 'Domains', route: '/domains', submodules: '—', order: 5, active: true },
+  { id: 'LEARNERS', name: 'Learners', key: 'LEARNERS', title: 'Learners', route: '/learners', submodules: '—', order: 6, active: true },
+  { id: 'PARENTS', name: 'Parents', key: 'PARENTS', title: 'Parents', route: '/parents', submodules: '—', order: 7, active: false },
+  { id: 'USERS', name: 'Users', key: 'USERS', title: 'Users', route: '/users', submodules: '—', order: 8, active: true },
+  { id: 'COURSES', name: 'Courses', key: 'COURSES', title: 'Courses', route: '/courses', submodules: '—', order: 9, active: true },
+  { id: 'REPORTS', name: 'Reports', key: 'REPORTS', title: 'Reports', route: '/reports', submodules: '—', order: 10, active: true },
+  { id: 'TUTORS', name: 'Tutors', key: 'TUTORS', title: 'Tutors', route: '/trainer', submodules: '—', order: 11, active: true },
+];
+
+export const initialDomains = [
+  { id: 1, name: 'React Development', code: 'REACT', category: 'Frontend', parentId: null, status: 'Active' },
+  { id: 2, name: 'Node.js Microservices', code: 'NODEJS', category: 'Backend', parentId: null, status: 'Active' },
+  { id: 3, name: 'Kubernetes Orchestration', code: 'K8S', category: 'DevOps', parentId: null, status: 'Active' },
+  { id: 4, name: 'Tailwind CSS Styling', code: 'TAILWIND', category: 'Frontend', parentId: 1, status: 'Active' },
+  { id: 5, name: 'Machine Learning Basics', code: 'ML', category: 'Data Science', parentId: null, status: 'Inactive' },
+  { id: 6, name: 'Cloud Security Compliance', code: 'SEC', category: 'Security', parentId: null, status: 'Active' },
+];

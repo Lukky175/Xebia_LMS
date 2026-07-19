@@ -8,7 +8,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Building2, CircleCheckBig, Eye, GraduationCap, PencilLine, Plus, Trash2, Users, XCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 import { ProfileActionButton, ProfileActionModal, ProfileBadge, ProfileCardFrame } from '@/components/profile/ProfileUi.jsx';
 
@@ -41,9 +40,10 @@ const initialRequests = [
   },
 ];
 
-export default function BatchesPage() {
+export default function BatchesPage({ searchQuery }) {
   const { theme } = useTheme();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
+  const activeSearch = searchQuery !== undefined ? searchQuery : localSearch;
   const [activeTab, setActiveTab] = useState('All');
   const [page, setPage] = useState(1);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -61,7 +61,7 @@ export default function BatchesPage() {
   const pageSize = 5;
 
   const filteredBatches = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query = activeSearch.trim().toLowerCase();
     return batches.filter((batch) => {
       const matchesTab = activeTab === 'All' || batch.status.toLowerCase().includes(activeTab.toLowerCase());
       const matchesQuery = !query || [batch.name, batch.organisation, batch.createdBy, batch.duration, batch.status]
@@ -70,7 +70,7 @@ export default function BatchesPage() {
         .includes(query);
       return matchesTab && matchesQuery;
     });
-  }, [activeTab, batches, searchQuery]);
+  }, [activeTab, batches, activeSearch]);
 
   const totalPages = Math.max(1, Math.ceil(filteredBatches.length / pageSize));
   const pageRows = filteredBatches.slice((page - 1) * pageSize, page * pageSize);
@@ -79,7 +79,7 @@ export default function BatchesPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [activeTab, searchQuery]);
+  }, [activeTab, activeSearch]);
 
   useEffect(() => {
     setPage((current) => Math.min(current, totalPages));
@@ -150,7 +150,7 @@ export default function BatchesPage() {
   };
 
   return (
-    <DashboardLayout onSearchChange={(event) => setSearchQuery(event.target.value)} searchValue={searchQuery}>
+    <>
       <div className="space-y-6">
         <div className="flex flex-col gap-4 rounded-3xl border border-white/60 dark:border-border-card bg-white/80 dark:bg-[#16171F]/90 backdrop-blur-sm p-6 shadow-sm">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -404,6 +404,6 @@ export default function BatchesPage() {
           </div>
         </form>
       </ProfileActionModal>
-    </DashboardLayout>
+    </>
   );
 }

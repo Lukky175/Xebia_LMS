@@ -7,7 +7,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Search, SlidersHorizontal, ChevronLeft, ChevronRight, Mail, Building2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react';
-import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
 import { ProfileActionModal } from '@/components/profile/ProfileUi.jsx';
 import { useTheme } from '@/context/ThemeContext.jsx';
 
@@ -102,9 +101,10 @@ const initialLearners = [
   },
 ];
 
-export default function LearnersPage() {
+export default function LearnersPage({ searchQuery }) {
   const { theme } = useTheme();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [localSearch, setLocalSearch] = useState('');
+  const activeSearch = searchQuery !== undefined ? searchQuery : localSearch;
   const [page, setPage] = useState(1);
   const [learners, setLearners] = useState(initialLearners);
   const [showLearnerModal, setShowLearnerModal] = useState(false);
@@ -213,7 +213,7 @@ export default function LearnersPage() {
   };
 
   const filteredLearners = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query = activeSearch.trim().toLowerCase();
     return learners.filter((learner) => {
       if (filterStatus !== 'All' && learner.status !== filterStatus) return false;
       if (filterType !== 'All' && learner.type !== filterType) return false;
@@ -223,7 +223,7 @@ export default function LearnersPage() {
         .toLowerCase()
         .includes(query);
     });
-  }, [learners, searchQuery, filterStatus, filterType]);
+  }, [learners, activeSearch, filterStatus, filterType]);
 
   const totalPages = Math.max(1, Math.ceil(filteredLearners.length / pageSize));
   const pageRows = filteredLearners.slice((page - 1) * pageSize, page * pageSize);
@@ -232,7 +232,7 @@ export default function LearnersPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery]);
+  }, [activeSearch]);
 
   useEffect(() => {
     setPage((current) => Math.min(current, totalPages));
@@ -260,7 +260,7 @@ export default function LearnersPage() {
   };
 
   return (
-    <DashboardLayout onSearchChange={(event) => setSearchQuery(event.target.value)} searchValue={searchQuery}>
+    <>
       <div className="space-y-6">
         <div className="flex flex-col gap-4 rounded-3xl border border-white/60 dark:border-border-card bg-white/80 dark:bg-[#16171F]/90 backdrop-blur-sm p-6 shadow-sm">
           {/* Header Section */}
@@ -693,6 +693,6 @@ export default function LearnersPage() {
             </select>
           </label>
         </div>
-      </ProfileActionModal>    </DashboardLayout>
+      </ProfileActionModal>    </>
   );
 }

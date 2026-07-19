@@ -4,9 +4,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout.jsx';
 import DashboardHome from '@/pages/Dashboard/DashboardHome.jsx';
 import UsersPage from '@/pages/Users/UsersPage.jsx';
 import CoursesPage from '@/pages/Courses/CoursesPage.jsx';
-import AnalyticsPage from '@/pages/Analytics/AnalyticsPage.jsx';
 import RevenuePage from '@/pages/Revenue/RevenuePage.jsx';
-import ReportsPage from '@/pages/Reports/ReportsPage.jsx';
 import SettingsPage from '@/pages/Settings/SettingsPage.jsx';
 import ModulesPage from '@/pages/Modules/ModulesPage.jsx';
 import OrganisationsPage from '@/pages/Organisations/OrganisationsPage.jsx';
@@ -17,6 +15,13 @@ import TutorsPage from '@/pages/Tutors/TutorsPage.jsx';
 import AuditLogPage from '@/AuditLog/pages/AuditLogPage.jsx';
 import { AuditLogProvider } from '@/AuditLog/redux/AuditLogProvider.jsx';
 import { api } from '@/services/api.js';
+
+// Feature Pages
+import PermissionsPage from '@/pages/Permissions/PermissionsPage.jsx';
+import RolesGrantsPage from '@/pages/RolesGrants/RolesGrantsPage.jsx';
+import DomainsPage from '@/pages/Domains/DomainsPage.jsx';
+import BatchesPage from '@/pages/Batches/BatchesPage.jsx';
+import LearnersPage from '@/pages/Learners/LearnersPage.jsx';
 
 
 export default function Dashboard({ courses, handleSimulateProgress, handleAddCourse, handleApproveCourse, handleDeleteCourse, coursesLoading }) {
@@ -65,14 +70,14 @@ export default function Dashboard({ courses, handleSimulateProgress, handleAddCo
       <Routes>
         <Route path="/" element={<DashboardHome searchQuery={searchQuery} tutors={tutors} />} />
         <Route path="/modules" element={<ModulesPage />} />
-        <Route path="/permissions" element={<BlankPage name="Permissions" />} />
-        <Route path="/roles-grants" element={<BlankPage name="Roles & Grants" />} />
+        <Route path="/permissions" element={<PermissionsPage />} />
+        <Route path="/roles-grants" element={<RolesGrantsPage />} />
         <Route path="/users" element={<UsersPage searchQuery={searchQuery} />} />
         <Route path="/organisations" element={<OrganisationsPage searchQuery={searchQuery} />} />
-        <Route path="/domains" element={<BlankPage name="Domains" />} />
+        <Route path="/domains" element={<DomainsPage />} />
         <Route path="/parents" element={<BlankPage name="Parents" />} />
-        <Route path="/learners" element={<BlankPage name="Learners" />} />
-        <Route path="/batches" element={<BlankPage name="Batches" />} />
+        <Route path="/learners" element={<LearnersPage searchQuery={searchQuery} />} />
+        <Route path="/batches" element={<BatchesPage searchQuery={searchQuery} />} />
         <Route
           path="/courses"
           element={
